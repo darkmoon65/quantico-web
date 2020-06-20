@@ -1,6 +1,6 @@
 import React,{Component} from 'react'
 import {Link} from 'react-router-dom'
-import { NavLink } from 'react-router-dom'
+import { NavLink, Redirect} from 'react-router-dom'
 
 class Login extends Component {
 
@@ -18,32 +18,40 @@ class Login extends Component {
       const {name, value} = e.target;
 
       this.setState({
-        name: value
+        [name]: value
+      },()=>{
+        console.log(this.state.correo)
+        console.log(this.state.contraseña)
       })
-      console.log(name)
-      console.log(value)
+
       //this.fetchQuery(value,name);
       //console.log(name);
       }
 
   ingresar(){
-    fetch('http://107.23.50.10/loginAdmin',{
+    fetch(`http://107.23.50.10/loginAdmin`,
+          {
+            mode:'cors',
             method: 'POST',
-            body: JSON.stringify({
+           body: JSON.stringify({
                 correo: this.state.correo,
-                contrasena: this.state.contraseña
+                contrasena: this.state.contraseña,
             }),
             headers: {
                 'Accept' : 'application/json',
                 'Content-type' : 'application/json'
             }
-          }).then(res =>res.json())
+          }
+        )
+          .then(res =>res.json())
           .then(data => {
-            if(data.response==true){
+            if(data.respuesta==true){
               console.log(data)
               this.setState({redirect:true })
             }
             else{
+              console.log(data)
+              console.log("pepe es huevonaso")
             }
         }).catch((error)=> {
           console.log('Hubo un problema con la petición Fetch:' + error.message);
