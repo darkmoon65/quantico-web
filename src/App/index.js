@@ -15,9 +15,10 @@ const AdminLayout = Loadable({
     loading: Loader
 });
 
-console.log(localStorage.getItem('token'));
+
+
 class App extends Component {
-    
+
     render() {
         const menu = routes.map((route, index) => {
           return (route.component) ? (

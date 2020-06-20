@@ -40,6 +40,6 @@
   ],
   "devDependencies": {
     "react-to-print": "^2.1.1",
-    "react-scripts": "^3.0.0"  
+    "react-scripts": "^3.0.0"
   }
 }

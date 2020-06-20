@@ -7,6 +7,54 @@ import Breadcrumb from "../../App/layout/AdminLayout/Breadcrumb";
 import DEMO from "../../store/constant";
 
 class IndexLogin extends React.Component {
+
+  constructor(){
+    super();
+    this.state = {
+      redirect: false,
+      email: '',
+      password: ''
+    }
+    this.handleChange = this.handleChange.bind(this);
+    this.LoginSend = this.LoginSend.bind(this);
+  }
+  handleChange(e){
+      const {name, value} = e.target;
+
+      this.setState({
+        [name]: value
+      })
+    }
+
+  LoginSend(){
+      fetch(`http://107.23.50.10/loginAdmin`,
+            {
+
+             method: 'POST',
+             body: JSON.stringify({
+                  correo: this.state.email,
+                  contrasena: this.state.password,
+              }),
+              headers: {
+                  'Accept' : 'application/json',
+                  'Content-type' : 'application/json'
+              }
+            }
+          )
+            .then(res =>res.json())
+            .then(data => {
+              if(data.respuesta==true){
+                localStorage.setItem('token',data.token)
+              }
+              else{
+                console.log("error datos invalidos")
+              }
+          }).catch((error)=> {
+            console.log('Hubo un problema con la petición Fetch:' + error.message);
+        });
+    }
+
+
     render () {
         return(
             <Aux>
@@ -26,10 +74,10 @@ class IndexLogin extends React.Component {
                                 </div>
                                 <h3 className="mb-4">Login</h3>
                                 <div className="input-group mb-3">
-                                    <input type="email" className="form-control" placeholder="Email"/>
+                                    <input type="email" className="form-control" placeholder="Email" onChange={this.handleChange} name="email"/>
                                 </div>
                                 <div className="input-group mb-4">
-                                    <input type="password" className="form-control" placeholder="password"/>
+                                    <input type="password" className="form-control" placeholder="password" onChange={this.handleChange} name="password"/>
                                 </div>
                                 {/* <div className="form-group text-left">
                                     <div className="checkbox checkbox-fill d-inline">
@@ -37,7 +85,7 @@ class IndexLogin extends React.Component {
                                             <label htmlFor="checkbox-fill-a1" className="cr"> Save credentials</label>
                                     </div>
                                 </div> */}
-                                <a style={{"color": 'white'}} href={DEMO.BLANK_LINK} onClick={()=>{localStorage.setItem('token', "token")}} className="btn btn-primary shadow-2 mb-4">Login</a>
+                                <a style={{"color": 'white'}} href={DEMO.BLANK_LINK} onClick={()=>{this.LoginSend()}} className="btn btn-primary shadow-2 mb-4">Login</a>
                                 {/* <p className="mb-2 text-muted">Forgot password? <NavLink to="/auth/reset-password-1">Reset</NavLink></p>
                                 <p className="mb-0 text-muted">Don’t have an account? <NavLink to="/auth/signup-1">Signup</NavLink></p> */}
                             </div>
