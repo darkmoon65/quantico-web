@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Row, Col, Table, Card} from 'react-bootstrap';
-
+import Config from '../../config'
 import Aux from "../../hoc/_Aux";
 // import Card from "../../App/components/MainCard";
 
@@ -18,7 +18,7 @@ class IndexCompras extends Component {
                                 <Table responsive>
                                     <thead>
                                     <tr>
-                                        <th>#</th>
+                                        <th>{Config.api}</th>
                                         <th>First Name</th>
                                         <th>Last Name</th>
                                         <th>Username</th>
