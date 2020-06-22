@@ -3,26 +3,35 @@ import {Row, Col,Modal} from 'react-bootstrap';
 
 import Aux from "../../hoc/_Aux";
 import Card from "../../App/components/MainCard";
-
+import cogoToast from "cogo-toast";
 
 
 class IndexUsuarios extends Component {
   constructor(){
     super();
     this.state = {
+      //fetch arrays
       tb_users:[],
       membresia_tb:[],
       rol_tb:[],
+
       id:'',
       nombre:'',
       apellido:'',
       membresia:'',
       membresiaId:'',
+      membresiaIdMod:'',
       rol:'',
       rolId:'',
-      bloqueado:'',
-      cambiarModalUsers:false
-
+      rolIdMod:'',
+      blackList:'',
+      blackListId:'',
+      blackListIdMod:'',
+      estadoModalUsers:false,
+      // operaciones post comprobantes
+      opeRol:'',
+      opeMembre:'',
+      opeBlackList:''
     }
     this.handleChange = this.handleChange.bind(this);
   }
@@ -58,7 +67,17 @@ class IndexUsuarios extends Component {
           estadoModalUsers: !this.state.estadoModalUsers
       })
   }
-  editarUsers(id,nombres,apellidos,membresia,membresiaId,rol,rolId,bloqueado){
+  editarUsers(id,nombres,apellidos,membresia,membresiaId,rol,rolId,bloqueado,bloqueadoId){
+
+    if (bloqueado){
+      bloqueado = "si";
+      bloqueadoId = 1;
+    }
+    else {
+      bloqueado = "no";
+      bloqueadoId = 2;
+    }
+
     this.setState({
       id: id,
       nombre: nombres,
@@ -66,11 +85,14 @@ class IndexUsuarios extends Component {
       membresia: membresia,
       membresiaId: membresiaId,
       membresiaIdMod: membresiaId,
+      rol: rol,
       rolId: rolId,
       rolIdMod: rolId,
-      rol: rol,
-      bloqueado: bloqueado
+      blackList: bloqueado,
+      blackListId: bloqueadoId,
+      blackListIdMod: bloqueadoId,
     },()=>{
+      console.log(this.state.blackList)
       this.fetchRol();
       this.fetchMembresia();
       this.cambiarModalUsers();
@@ -111,22 +133,138 @@ class IndexUsuarios extends Component {
   });
 }
 
+  clean(){
+    this.setState({
+      estadoModalUsers: false,
+    },()=>this.fetchTable())
+  }
   async sendUsuariosMod(){
 
      let a = await this.exe();
-     console.log("ok creo")
-  }
-  async exe(){
-     if(this.state.membresiaId != this.state.membresiaIdMod){
-      let a = await this.sendMembresiaMod();
-     }
-     if(this.state.rolId != this.state.rolIdMod){
-      let b = await this.sendRolMod();
-     }
+     let count = 0;
+     await a.map((op)=>{
+       if (op == "a"){
+         if(this.state.opeMembre){
+           cogoToast.success("Membresia cambiada");
+         }
+         else{
+           cogoToast.error("Error no se cambio la membresia")
+           count++
+         }
+       }
+       if(op == "b"){
+         if(this.state.opeRol){
+           cogoToast.success("Rol cambiado")
+         }
+         else{
+           cogoToast.error("Error no se cambio el rol")
+           count++
+         }
+       }
+       if(op == "c"){
+         if(this.state.opeBlackList){
+           cogoToast.success("BlackList modificada")
+         }
+         else{
+           cogoToast.error("Error en la blacklist")
+           count++
+         }
+       }
+       return count;
+     })
+      if(count <= 3){
+        this.clean();
+      }
   }
 
-  sendRolMod(){
-    fetch('http://107.23.50.10/usuarios/editarRol',
+  async exe(){
+    let op = [];
+    let a
+    let b
+
+     if(this.state.membresiaId != this.state.membresiaIdMod){
+       a = await this.sendMembresiaMod();
+       op.push("a");
+     }
+     if(this.state.rolId != this.state.rolIdMod){
+       b = await this.sendRolMod();
+       op.push("b");
+     }
+     if(this.state.blackListId != this.state.blackListIdMod){
+       if(this.state.blackListIdMod == 1){
+         await this.sendBlackListBan();
+       }else{
+         await this.sendBlackListUnBan();
+       }
+       op.push("c")
+     }
+     return op;
+  }
+
+  async sendBlackListBan(){
+    await fetch('http://107.23.50.10/usuarios/bloquear',
+      {
+        mode:'cors',
+        method: 'POST',
+        body: JSON.stringify({
+              id: this.state.id,
+         }),
+        headers: {
+            'Accept' : 'application/json',
+            'Content-type' : 'application/json'
+        }
+      }
+    )
+      .then(res =>res.json())
+      .then(data => {
+        if(data){
+          console.log("baneado")
+          this.setState({opeBlackList:true});
+        }
+        else{
+          this.setState({opeBlackList:false});
+          console.log("hubo un error con la peticion")
+        }
+    }).catch((error)=> {
+      this.setState({opeBlackList:false})
+      console.log('Hubo un problema con la petición Fetch:' + error.message);
+  });
+  return true;
+ }
+
+  async sendBlackListUnBan(){
+   await fetch('http://107.23.50.10/usuarios/desbloquear',
+     {
+       mode:'cors',
+       method: 'POST',
+       body: JSON.stringify({
+             id: this.state.id,
+        }),
+       headers: {
+           'Accept' : 'application/json',
+           'Content-type' : 'application/json'
+       }
+     }
+   )
+     .then(res =>res.json())
+     .then(data => {
+       if(data.respuesta==true){
+         console.log("Desbaneado papu")
+         this.setState({opeBlackList:true})
+       }
+       else{
+         this.setState({opeBlackList:false})
+         console.log("hubo un error con la peticion")
+       }
+   }).catch((error)=> {
+     this.setState({opeBlackList:false})
+     console.log('Hubo un problema con la petición Fetch:' + error.message);
+ });
+ return true;
+}
+
+  async sendRolMod(){
+    await fetch('http://107.23.50.10/usuarios/editarRol',
       {
         mode:'cors',
         method: 'POST',
@@ -142,26 +280,28 @@ class IndexUsuarios extends Component {
     )
       .then(res =>res.json())
       .then(data => {
-        if(data){
-          console.log("rol cambiado")
-          console.log(data)
+        if(data.respuesta==true){
+          console.log("true pe")
+          this.setState({opeRol: true})
         }
         else{
-          console.log(data)
           console.log("hubo un error con la peticion")
+          this.setState({opeRol: false})
         }
     }).catch((error)=> {
       console.log('Hubo un problema con la petición Fetch:' + error.message);
+      this.setState({opeRol: false})
   });
+  return true;
  }
 
-  sendMembresiaMod(){
-    fetch('http://107.23.50.10/usuarios/editarMembresias',
+  async sendMembresiaMod(){
+     await fetch('http://107.23.50.10/usuarios/editarMembresia',
       {
         mode:'cors',
         method: 'POST',
         body: JSON.stringify({
-              id: this.state.id,
+             id: this.state.id,
              membresia: this.state.membresiaIdMod
          }),
         headers: {
@@ -172,17 +312,19 @@ class IndexUsuarios extends Component {
     )
       .then(res =>res.json())
       .then(data => {
-        if(data){
-          console.log(data)
+        if(data.respuesta==true){
           console.log("membresia cambiada")
+          this.setState({opeMembre: true})
         }
         else{
-          console.log(data)
           console.log("hubo un error con la peticion")
+          this.setState({opeMembre: false})
         }
     }).catch((error)=> {
       console.log('Hubo un problema con la petición Fetch:' + error.message);
+      this.setState({opeMembre: false})
   });
+   return true;
 }
 
   handleChange(e){
@@ -232,7 +374,9 @@ class IndexUsuarios extends Component {
                                                       <td>{task.apellidos}</td>
                                                       <td>{task.membresia}</td>
                                                       <td>{task.rol}</td>
-                                                      <td>{task.bloqueado}</td>
+                                                      {task.bloqueado ?
+                                                         <td>si</td>
+                                                       : <td>No</td>}
                                                       <th>
                                                       <button className="btn btn-sm btn-primary ver" type="button" onClick={()=>this.editarUsers(
                                                           task.id,
@@ -243,7 +387,6 @@ class IndexUsuarios extends Component {
                                                           task.rol,
                                                           task.rolId,
                                                           task.bloqueado,
-
                                                       )}><i className="feather icon-trending-up"/></button>
                                                       </th>
                                                   </tr>
@@ -281,7 +424,7 @@ class IndexUsuarios extends Component {
                                                           this.state.membresia_tb ?
                                                           this.state.membresia_tb.map(element=>{
                                                           return (
-                                                          <option value={element.id}>{element.nombre}</option>
+                                                          <option key={element.id} value={element.id}>{element.nombre}</option>
                                                           );
                                                       })
                                                        : null
@@ -295,13 +438,20 @@ class IndexUsuarios extends Component {
                                                           this.state.rol_tb ?
                                                           this.state.rol_tb.map(element=>{
                                                           return (
-                                                          <option value={element.id}>{element.nombre}</option>
+                                                          <option key={element.id} value={element.id}>{element.nombre}</option>
                                                           );
                                                       })
                                                        : null
                                                       }
                                                   </select>
                                               </div><br/>
+                                              <label>Blacklist:</label><br/>
+                                                <div className="input-group">
+                                                    <select className="form-control" name="blackListIdMod" id="tipoProducto" style={{width: '50%'}} onChange={this.handleChange} value={this.state.blackListIdMod}>
+                                                          <option key={1} value="1">Si</option>
+                                                          <option key={2} value="2">No</option>
+                                                    </select>
+                                                </div><br/>
                                               <div className="input-group">
                                                 <button className="btn btn-sm btn-primary ver" onClick={()=>this.sendUsuariosMod()}> Editar</button>
                                               </div>

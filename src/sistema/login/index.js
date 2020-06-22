@@ -1,5 +1,5 @@
 import React from 'react';
-import {NavLink} from 'react-router-dom';
+import {NavLink, Redirect} from 'react-router-dom';
 
 import './../../assets/scss/style.scss';
 import Aux from "../../hoc/_Aux";
@@ -13,7 +13,8 @@ class IndexLogin extends React.Component {
     this.state = {
       redirect: false,
       email: '',
-      password: ''
+      password: '',
+      logged:''
     }
     this.handleChange = this.handleChange.bind(this);
     this.LoginSend = this.LoginSend.bind(this);
@@ -43,8 +44,10 @@ class IndexLogin extends React.Component {
           )
             .then(res =>res.json())
             .then(data => {
-              if(data.respuesta==true){
-                localStorage.setItem('token',data.token)
+              if(data.respuesta == true){
+                let g = data.api_token
+                localStorage.setItem('token',data.api_token);
+                window.location.href="/"
               }
               else{
                 console.log("error datos invalidos")
@@ -53,7 +56,6 @@ class IndexLogin extends React.Component {
             console.log('Hubo un problema con la petición Fetch:' + error.message);
         });
     }
-
 
     render () {
         return(
@@ -85,8 +87,7 @@ class IndexLogin extends React.Component {
                                             <label htmlFor="checkbox-fill-a1" className="cr"> Save credentials</label>
                                     </div>
                                 </div> */}
-                                <a style={{"color": 'white'}} href={DEMO.BLANK_LINK} onClick={()=>{this.LoginSend()}} className="btn btn-primary shadow-2 mb-4">Login</a>
-                                {/* <p className="mb-2 text-muted">Forgot password? <NavLink to="/auth/reset-password-1">Reset</NavLink></p>
+                                <input type="button" style={{"color": 'white'}}  onClick={()=>this.LoginSend()} className="btn btn-primary shadow-2 mb-4" value="Login"/>                                {/* <p className="mb-2 text-muted">Forgot password? <NavLink to="/auth/reset-password-1">Reset</NavLink></p>
                                 <p className="mb-0 text-muted">Don’t have an account? <NavLink to="/auth/signup-1">Signup</NavLink></p> */}
                             </div>
                         </div>
