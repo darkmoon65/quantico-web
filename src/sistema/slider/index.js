@@ -15,10 +15,24 @@ class IndexSlider extends Component {
       tituloCrear:'',
       linkCrear:'',
       imagen:'',
+      idEditar: '',
+      tituloEditar: '',
+      linkEditar: '',
+      imagenEditar: '',
       //modales
-      estadoModalSliders:false
+      estadoModalCrearSliders:false,
+      estadoModalEditarSliders:false
     }
     this.handleChange = this.handleChange.bind(this);
+  }
+
+  clean(){
+    this.setState({
+      estadoModalCrearSliders: false,
+      imagen: '',
+      tituloCrear: '',
+      linkCrear: ''
+    },()=>this.fetchSliders())
   }
 
   fetchSliders(){
@@ -47,18 +61,30 @@ class IndexSlider extends Component {
       console.log('Hubo un problema con la petición Fetch:' + error.message);
   });  }
 
-  handleChange(e){
-      const {name, value} = e.target;
-      this.setState({
-        [name]: value
-      },()=>{
+  editarSlider(id,titulo,url,imagen){
 
+    this.setState({
+       idEditar: id,
+       tituloEditar: titulo,
+       linkEditar: url,
+       imagenEditar: imagen
+    },()=>{
+      this.cambiarModalEditarSliders();
+    })
+  }
+
+  cambiarModalCrearSliders(){
+        this.setState({
+          estadoModalCrearSliders: !this.state.estadoModalCrearSliders
+        })
+  }
+
+  cambiarModalEditarSliders(){
+    this.setState({
+      estadoModalEditarSliders: !this.state.estadoModalEditarSliders
       })
-    }
+  }
 
-  crearSlider(){
-    this.cambiarModalSliders();
-    }
   enviarCrearSlider(){
     if(this.state.imagen && this.state.tituloCrear && this.state.linkCrear){
       fetch('http://107.23.50.10/slider/crear',
@@ -80,7 +106,8 @@ class IndexSlider extends Component {
         .then(res =>res.json())
         .then(data => {
           if(data.respuesta==true){
-            console.log("exitoso")
+            cogoToast.success("Slider creado");
+            this.clean();
           }
           else{
             console.log(data)
@@ -91,15 +118,81 @@ class IndexSlider extends Component {
     });
   }
 }
-  cambiarModalSliders(){
 
-    this.setState({
-      estadoModalSliders: !this.state.estadoModalSliders
-      })
+  eliminarSlider(idS){
+  fetch('http://107.23.50.10/slider/eliminar',
+    {
+      mode:'cors',
+      method: 'POST',
+      body: JSON.stringify({
+          id: idS
+        }
+      ),
+      headers: {
+          'Accept' : 'application/json',
+          'Content-type' : 'application/json'
+      }
     }
+  )
+    .then(res =>res.json())
+    .then(data => {
+      if(data.respuesta==true){
+        cogoToast.success("eliminado exitosamente");
+        this.fetchSliders();
+      }
+      else{
+        console.log(data)
+        console.log("hubo un error con la peticion")
+      }
+  }).catch((error)=> {
+    console.log('Hubo un problema con la petición Fetch:' + error.message);
+  });
+}
 
+  enviarEditarSlider(){
+  if(this.state.imagen && this.state.tituloEditar && this.state.linkEditar){
+    fetch('http://107.23.50.10/slider/editar',
+      {
+        mode:'cors',
+        method: 'POST',
+        body: JSON.stringify({
+            imagen: this.state.imagen,
+            titulo: this.state.tituloEditar,
+            url: this.state.linkEditar
+          }
+        ),
+        headers: {
+            'Accept' : 'application/json',
+            'Content-type' : 'application/json'
+        }
+      }
+    )
+      .then(res =>res.json())
+      .then(data => {
+        if(data.respuesta==true){
+          cogoToast.success("Slider modificado");
+          this.clean();
+        }
+        else{
+          console.log(data)
+          console.log("hubo un error con la peticion")
+        }
+    }).catch((error)=> {
+      console.log('Hubo un problema con la petición Fetch:' + error.message);
+  });
+}
+}
 
-    handleChangeFile (e){
+  handleChange(e){
+    const {name, value} = e.target;
+    this.setState({
+      [name]: value
+    },()=>{
+
+    })
+  }
+
+  handleChangeFile (e){
         var file = e.target.files[0];
         var fileData = new FileReader();
         if(file){
@@ -112,7 +205,6 @@ class IndexSlider extends Component {
           this.setState({imagen: fileData.result},
             ()=>{
               cogoToast.success("Imagen Lista")
-              console.log(fileData.result);
               }
             );
 
@@ -145,7 +237,7 @@ class IndexSlider extends Component {
                                   <tr>
                                       <th><h4 className="card-title">Buscar </h4></th>
                                       <th><input type="text" onChange={this.handleChangeBuscador} /></th>
-                                      <th><button className="btn btn-sm btn-primary ver" type="button" onClick={()=>this.crearSlider()}>Crear Slider</button></th>
+                                      <th><button className="btn btn-sm btn-primary ver" type="button" onClick={()=>this.cambiarModalCrearSliders()}>Crear Slider</button></th>
                                   </tr>
                                   <tr>
                                       <th>Titulo</th>
@@ -161,11 +253,15 @@ class IndexSlider extends Component {
                                                   <td>{task.titulo}</td>
                                                   <td>{task.url}</td>
                                                   <th>
-                                                  <button className="btn btn-sm btn-primary ver" type="button" onClick={()=>this.editarUsers(
-                                                      task.id,
-                                                      task.titulo,
-                                                      task.url,
-                                                  )}><i className="feather icon-trending-up"/></button>
+                                                    <button className="btn btn-sm btn-primary ver" type="button" onClick={()=>this.editarSlider(
+                                                        task.id,
+                                                        task.titulo,
+                                                        task.url,
+                                                        task.imagen
+                                                    )}><i className="feather icon-trending-up"/></button>
+                                                    <button className="btn btn-sm btn-danger "  type="button" onClick={()=>this.eliminarSlider(task.id)}>
+                                                      <i className="fa fa-trash" ></i>
+                                                    </button>
                                                   </th>
                                               </tr>
                                           );
@@ -178,8 +274,8 @@ class IndexSlider extends Component {
                 </Row>
                 <Modal
                     size="lg"
-                    show={this.state.estadoModalSliders}
-                    onHide={() => this.cambiarModalSliders()}
+                    show={this.state.estadoModalCrearSliders}
+                    onHide={() => this.cambiarModalCrearSliders()}
                     >
                     <Modal.Header closeButton>
                       <Modal.Title id="example-custom-modal-styling-title">
@@ -214,6 +310,45 @@ class IndexSlider extends Component {
 
                     </Modal.Body>
                   </Modal>
+                  <Modal
+                      size="lg"
+                      show={this.state.estadoModalEditarSliders}
+                      onHide={() => this.cambiarModalEditarSliders()}
+                      >
+                      <Modal.Header closeButton>
+                        <Modal.Title id="example-custom-modal-styling-title">
+                          Editar Slider
+                        </Modal.Title>
+                      </Modal.Header>
+                      <Modal.Body>
+                              <div className="card w-75">
+                                  <div className="modal-body">
+                                      <div className="card-body">
+                                            <div>
+                                              <label>Titulo:</label>
+                                              <input type="text" className="form-control" value={this.state.tituloEditar} name="tituloEditar" onChange={this.handleChange} />
+                                            </div>
+                                            <div>
+                                              <label>Link:</label>
+                                              <input type="text" className="form-control" value={this.state.linkEditar} name="linkEditar" onChange={this.handleChange}/>
+                                            </div>
+                                            <label>Imagen actual: </label>
+                                            <div className="p-2">
+                                              <img src={this.state.imagenEditar} width="400" height="400"/>
+                                            </div>
+                                            <label>Imagen nueva: </label>
+                                            <div className="p-2">
+                                              <input type="file" className="form-control-file" onChange={e =>this.handleChangeFile(e)}/>
+                                            </div>
+                                            <div className="mx-auto p-2">
+                                              <button type="button" className="btn btn-sm btn-primary ver" onClick={()=>this.enviarEditarSlider()}>Editar</button>
+                                            </div>
+                                          </div>
+                                    </div>
+                                  </div>
+
+                      </Modal.Body>
+                    </Modal>
             </Aux>
 
 
