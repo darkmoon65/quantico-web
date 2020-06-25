@@ -38,6 +38,12 @@ class IndexMembresias extends Component {
             estadoModalCrearMembresias: !this.state.estadoModalCrearMembresias
           })
     }
+    cambiarModalEditarMembresias(){
+          this.setState({
+            estadoModalEditarMembresias: !this.state.estadoModalEditarMembresias
+          })
+    }
+
     editarMembresia(id,nombre,periodo,oculto,costo,tarjeta,curso,detalles){
       let p
       let o
@@ -71,47 +77,6 @@ class IndexMembresias extends Component {
         estadoModalEditarMembresias: false,
 
       },()=>this.fetchMembresias())
-    }
-
-
-    cambiarModalEditarMembresias(){
-          this.setState({
-            estadoModalEditarMembresias: !this.state.estadoModalEditarMembresias
-          })
-    }
-    fetchMembresias(){
-      fetch('http://107.23.50.10/membresia/mostrar',
-        {
-          mode:'cors',
-          method: 'GET',
-          headers: {
-              'Accept' : 'application/json',
-              'Content-type' : 'application/json'
-          }
-        }
-      )
-        .then(res =>res.json())
-        .then(data => {
-          if(data){
-            this.setState({
-              tb_membresias: data
-            },()=>{console.log(this.state.tb_membresias)})
-          }
-          else{
-            console.log(data)
-            console.log("hubo un error con la peticion")
-          }
-      }).catch((error)=> {
-        console.log('Hubo un problema con la petición Fetch:' + error.message);
-    });  }
-
-    handleChange(e){
-      const {name, value} = e.target;
-      this.setState({
-        [name]: value
-      },()=>{
-        console.log(value)
-      })
     }
 
     exeEnviar(){
@@ -176,14 +141,15 @@ class IndexMembresias extends Component {
           }
           else{
             console.log(data)
+            cogoToast.error("No se creo,verifique los datos")
             console.log("hubo un error con la peticion")
           }
       }).catch((error)=> {
+        cogoToast.error("No se creo la membresia")
         console.log('Hubo un problema con la petición Fetch:' + error.message);
     });
 }
-
-enviarEditarMembresia(){
+    enviarEditarMembresia(){
   fetch('http://107.23.50.10/membresia/editar',
     {
       mode:'cors',
@@ -209,21 +175,23 @@ enviarEditarMembresia(){
     .then(data => {
       if(data.respuesta==true){
         cogoToast.success("Membresia creada");
+        cogoToast.error("Se edito la membresia")
         this.clean();
       }
       else{
         console.log(data)
+        cogoToast.error("No se edito la membresia")
         console.log("hubo un error con la peticion")
       }
   }).catch((error)=> {
+    cogoToast.error("No se edito la membresia")
     console.log('Hubo un problema con la petición Fetch:' + error.message);
 });
 }
-
-    componentDidMount(){
-      this.fetchMembresias();
-      console.log(localStorage.getItem('token'));
+    eliminarMembresia(){
+      
     }
+
     addBoxes(){
         let a = this.state.boxes
         a.push(1)
@@ -252,6 +220,15 @@ enviarEditarMembresia(){
           detallesEditar: a
         },()=>console.log(this.state.detallesEditar))
     }
+
+    handleChange(e){
+      const {name, value} = e.target;
+      this.setState({
+        [name]: value
+      },()=>{
+        console.log(value)
+      })
+    }
     handleChangeFile (e){
           var file = e.target.files[0];
           var fileData = new FileReader();
@@ -279,6 +256,36 @@ enviarEditarMembresia(){
                 );
               }
           }
+      }
+
+    fetchMembresias(){
+        fetch('http://107.23.50.10/membresia/mostrar',
+          {
+            mode:'cors',
+            method: 'GET',
+            headers: {
+                'Accept' : 'application/json',
+                'Content-type' : 'application/json'
+            }
+          }
+        )
+          .then(res =>res.json())
+          .then(data => {
+            if(data){
+              this.setState({
+                tb_membresias: data
+              },()=>{console.log(this.state.tb_membresias)})
+            }
+            else{
+              console.log(data)
+              console.log("hubo un error con la peticion")
+            }
+        }).catch((error)=> {
+          console.log('Hubo un problema con la petición Fetch:' + error.message);
+      });  }
+    componentDidMount(){
+        this.fetchMembresias();
+        console.log(localStorage.getItem('token'));
       }
 
     render() {
@@ -331,7 +338,7 @@ enviarEditarMembresia(){
                                         } )   : null
                                     }
                                 </tbody>
-                              </table>
+                            </table>
                         </Card>
                     </Col>
                   </Row>
