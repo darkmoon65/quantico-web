@@ -13,9 +13,13 @@ class IndexProductos extends Component {
       tb_productos:[],
 
       detallesExtras:[],
+      tipoCrearId:1,
+      productoCrearId:0,
       //modales
       estadoModalCrearProductos:false,
-      estadoModalEditarProductos:false
+      estadoModalEditarProductos:false,
+      imagen:'',
+
     }
     this.handleChange = this.handleChange.bind(this);
   }
@@ -31,7 +35,15 @@ class IndexProductos extends Component {
         })
   }
 
-  exeEnviar(){
+
+    clean(){
+      this.setState({
+        estadoModalCrearProductos: false,
+        estadoModalEditarProductos: false,
+
+      },()=>this.fetchProductos())
+    }
+    exeEnviar(){
     let a = this.state.countMembresia
     let r = []
     for(let i = 0; i <= a.length;i++){
@@ -68,7 +80,7 @@ class IndexProductos extends Component {
     }
 
     enviarCrearProducto(){
-
+      if(this.state.tipoCrearId == 2){
         fetch('http://107.23.50.10/productos/crear',
           {
             mode:'cors',
@@ -92,7 +104,7 @@ class IndexProductos extends Component {
           .then(res =>res.json())
           .then(data => {
             if(data.respuesta==true){
-              cogoToast.success("Producto creada");
+              cogoToast.success("Producto creado");
               this.clean();
             }
             else{
@@ -101,9 +113,55 @@ class IndexProductos extends Component {
               console.log("hubo un error con la peticion")
             }
         }).catch((error)=> {
-          cogoToast.error("No se creo la membresia")
+          cogoToast.error("No se creo el producto")
           console.log('Hubo un problema con la petición Fetch:' + error.message);
       });
+    }
+    if (this.state.tipoCrearId == 1 || this.state.tipoCrearId == 3){
+          fetch('http://107.23.50.10/productos/crear',
+            {
+              mode:'cors',
+              method: 'POST',
+              body: JSON.stringify({
+                  tipo : this.state.tipoCrearId,
+                  prodPropio: this.state.productoCrearId,
+                  nombre: this.state.nombreCrear,
+                  descripcion: this.state.descripcionCrear,
+                  costo: this.state.costoCrear,
+                  imagen: this.state.imagen,
+                  descuentos: this.state.descuentosArray,
+                  expositor: this.state.expositorCrear,
+                  duracion: this.state.duracionCrear,
+                  horaInicio: this.state.horaInicioCrear,
+                  horaFin: this.state.horaFinCrear,
+                  inicio: this.state.fechaInicioCrear,
+                  fin: this.state.fechaFinCrear
+                }
+              ),
+              headers: {
+                  'Accept' : 'application/json',
+                  'Content-type' : 'application/json'
+              }
+            }
+          )
+            .then(res =>res.json())
+            .then(data => {
+              if(data.respuesta==true){
+                cogoToast.success("Producto creada");
+                this.clean();
+              }
+              else{
+                console.log(data)
+                cogoToast.error("No se creo,verifique los datos")
+                console.log("hubo un error con la peticion")
+              }
+          }).catch((error)=> {
+            cogoToast.error("No se creo el producto")
+            console.log('Hubo un problema con la petición Fetch:' + error.message);
+        });
+    }
+
+
     }
     eliminarProducto(id){
 
@@ -224,11 +282,12 @@ class IndexProductos extends Component {
           fileData.onload = (event)=> {
               this.setState({imagen: fileData.result},
                 ()=>{
-                    cogoToast.success("Imagen de tarjeta lista")
+                    cogoToast.success("Imagen lista ");
+                    console.log(this.state.imagen)
                     }
                 );
               }
-          }
+    }
 
     componentDidMount(){
       this.fetchProductos();
@@ -308,7 +367,7 @@ class IndexProductos extends Component {
                                           </div>
                                           <div>
                                             <label>Producto propio:</label>
-                                            <select className="form-control" name="periodoCrearId" style={{width: '50%'}} onChange={this.handleChange} value={this.state.productoCrearId}>
+                                            <select className="form-control" name="productoCrearId" style={{width: '50%'}} onChange={this.handleChange} value={this.state.productoCrearId}>
                                                 <option key={1} value={0}>Si</option>
                                                 <option key={2} value={1}>No</option>
                                             </select>

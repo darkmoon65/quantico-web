@@ -31,8 +31,41 @@ class IndexVerificaciones extends Component {
     this.cambiarModalVerVerificaciones();
   }
 
-  sendDenegar(){
-    cogoToast.warn("denegado")
+  imagenDenegada(){
+
+  }
+
+  sendDenegar(id,estado,concepto){
+        fetch('http://107.23.50.10/verificaciones/verificarCompra',
+          {
+            mode:'cors',
+            method: 'POST',
+            body: JSON.stringify({
+                id: id,
+                estado : estado,
+                concepto : concepto,
+                mensaje: this.state.comentario
+              }
+            ),
+            headers: {
+                'Accept' : 'application/json',
+                'Content-type' : 'application/json'
+            }
+          }
+        )
+          .then(res =>res.json())
+          .then(data => {
+            if(data.respuesta==true){
+              cogoToast.success("Imagen Denegada");
+              this.imagenDenegada();
+            }
+            else{
+              console.log(data)
+              console.log("hubo un error con la peticion")
+            }
+        }).catch((error)=> {
+          console.log('Hubo un problema con la petición Fetch:' + error.message);
+      });
   }
   sendAceptar(){
     cogoToast.success("aceptado")
@@ -170,18 +203,18 @@ class IndexVerificaciones extends Component {
                                      this.state.arrayImagenes.map((task,index) =>{
                                          return (
                                             <div>
-                                            <div>
-                                              <label>Imagen:</label><br/>
-                                              <img src={task.dato} width="400" height="500"/>
-                                            </div>
-                                            <div>
-                                              <button className="btn btn-danger" onClick={()=>this.sendDenegar(task.id)} ><i className="fa fa-remove"></i></button>
-                                              <button className="btn btn-success" onClick={()=>this.sendAceptar(task.id)}><i className="fa fa-check"></i></button>
-                                            </div>
-                                            <div className="p-2">
-                                                <label>Comentario:</label><br/>
-                                            <textarea name={'comentario'+task.id} cols="50" rows="6" onChange={this.handleChange}></textarea>
-                                            </div>
+                                                <div>
+                                                  <label>Imagen:</label><br/>
+                                                  <img src={task.dato} width="400" height="500"/>
+                                                </div>
+                                                <div>
+                                                  <button className="btn btn-danger" onClick={()=>this.sendDenegar(task.id,2,task.concepto)} ><i className="fa fa-remove"></i></button>
+                                                  <button className="btn btn-success" onClick={()=>this.sendAceptar(task.id)}><i className="fa fa-check"></i></button>
+                                                </div>
+                                                <div className="p-2">
+                                                    <label>Comentario:</label><br/>
+                                                    <textarea name={'comentario'+task.id} cols="50" rows="6" onChange={this.handleChange}></textarea>
+                                                </div>
                                             </div>
 
                                           )
