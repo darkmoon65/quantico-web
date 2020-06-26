@@ -49,6 +49,20 @@ export default {
                     icon: 'feather icon-home',
                 },
                 {
+                    id: 'comprobantes',
+                    title: 'Comprobantes',
+                    type: 'item',
+                    url: '/comprobantes',
+                    icon: 'feather icon-home',
+                },
+                {
+                    id: 'completos',
+                    title: 'Completos',
+                    type: 'item',
+                    url: '/completos',
+                    icon: 'feather icon-home',
+                },
+                {
                     id: 'compras',
                     title: 'Compras',
                     type: 'item',

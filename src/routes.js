@@ -13,49 +13,63 @@ const Membresias = React.lazy(() => import('./sistema/membresias/index'));
 const Productos  = React.lazy(() => import('./sistema/productos/index'));
 const Compras    = React.lazy(() => import('./sistema/compras/index'));
 const Verificaciones = React.lazy(() => import('./sistema/verificaciones/index'));
+const Completos = React.lazy(() => import('./sistema/completos/index'));
+const Comprobantes = React.lazy(() => import('./sistema/comprobantes/index'));
 
 const routes = [
-    { 
-        path: '/login', 
-        exact: true, 
-        name: 'Login', 
-        component: Login 
+    {
+        path: '/login',
+        exact: true,
+        name: 'Login',
+        component: Login
     },
-    { 
-        path: '/usuarios', 
-        exact: true, 
-        name: 'Usuarios', 
-        component: Usuarios 
+    {
+        path: '/usuarios',
+        exact: true,
+        name: 'Usuarios',
+        component: Usuarios
     },
-    { 
-        path: '/slider', 
-        exact: true, 
-        name: 'Slider', 
-        component: Slider 
+    {
+        path: '/slider',
+        exact: true,
+        name: 'Slider',
+        component: Slider
     },
-    { 
-        path: '/membresias', 
-        exact: true, 
-        name: 'Membresias', 
-        component: Membresias 
+    {
+        path: '/membresias',
+        exact: true,
+        name: 'Membresias',
+        component: Membresias
     },
-    { 
-        path: '/productos', 
-        exact: true, 
-        name: 'Productos', 
-        component: Productos 
+    {
+        path: '/productos',
+        exact: true,
+        name: 'Productos',
+        component: Productos
     },
-    { 
-        path: '/verificaciones', 
-        exact: true, 
-        name: 'Verificaciones', 
-        component: Verificaciones 
+    {
+        path: '/verificaciones',
+        exact: true,
+        name: 'Verificaciones',
+        component: Verificaciones
     },
-    { 
-        path: '/compras', 
-        exact: true, 
-        name: 'Compras', 
-        component: Compras 
+    {
+        path: '/completos',
+        exact: true,
+        name: 'Verificaciones',
+        component: Completos
+    },
+    {
+        path: '/comprobantes',
+        exact: true,
+        name: 'Verificaciones',
+        component: Comprobantes 
+    },
+    {
+        path: '/compras',
+        exact: true,
+        name: 'Compras',
+        component: Compras
     },
 ];
 

@@ -5,38 +5,27 @@ import Aux from "../../hoc/_Aux";
 import Card from "../../App/components/MainCard";
 import cogoToast from "cogo-toast";
 
-class IndexVerificaciones extends Component {
+class IndexCompletos extends Component {
   constructor(){
     super();
     this.state = {
-      tb_verificaciones:[],
-      arrayImagenes:[],
+      tb_verificaciones:[{id: 1, nombre:"ejemplo"}],
       //modales
-      estadoModalVerVerificaciones:false,
-
+      estadoModalVerVerCompletos:false,
     }
     this.handleChange = this.handleChange.bind(this);
   }
 
-  cambiarModalVerVerificaciones(){
+  cambiarModalVerCompletos(){
         this.setState({
-          estadoModalVerVerificaciones: !this.state.estadoModalVerVerificaciones
+          estadoModalVerVerCompletos: !this.state.estadoModalVerVerCompletos
         })
   }
 
-  verVerificaciones(imagenes){
-    this.setState({
-      arrayImagenes: imagenes
-    },()=>console.log(this.state.arrayImagenes))
-    this.cambiarModalVerVerificaciones();
+  verResultado(){
+    this.cambiarModalVerCompletos();
   }
 
-  sendDenegar(){
-    cogoToast.warn("denegado")
-  }
-  sendAceptar(){
-    cogoToast.success("aceptado")
-  }
 
   handleChange(e){
     const {name, value} = e.target;
@@ -44,7 +33,6 @@ class IndexVerificaciones extends Component {
       [name]: value
     },()=>{
       console.log(value)
-      console.log(name)
     })
   }
   handleChangeFile (e){
@@ -82,16 +70,14 @@ class IndexVerificaciones extends Component {
           mode:'cors',
           method: 'GET',
           headers: {
-              'estado' : '1',
               'Accept' : 'application/json',
-              'Content-type' : 'application/json',
+              'Content-type' : 'application/json'
           }
         }
       )
         .then(res =>res.json())
         .then(data => {
           if(data){
-            console.log(data)
             this.setState({
               tb_verificaciones: data
             },()=>{console.log(this.state.tb_verificaciones)})
@@ -104,7 +90,7 @@ class IndexVerificaciones extends Component {
         console.log('Hubo un problema con la petición Fetch:' + error.message);
     });  }
   componentDidMount(){
-      this.fetchVerificaciones();
+      //this.fetchVerificaciones();
       console.log(localStorage.getItem('token'));
     }
     render() {
@@ -112,7 +98,7 @@ class IndexVerificaciones extends Component {
             <Aux>
                 <Row>
                     <Col>
-                        <Card title='Verificaciones' isOption>
+                        <Card title='Completos' isOption>
                         <table id="tb_membresia" className="table table-striped" style={{width:'100%'}}>
                             <thead>
                                 <tr>
@@ -121,25 +107,20 @@ class IndexVerificaciones extends Component {
                                 </tr>
                                 <tr>
                                     <th>Nombres</th>
-                                    <th>Apellidos</th>
-                                    <th>Concepto</th>
-                                    <th>Descripcion</th>
                                 </tr>
                               </thead>
                               <tbody>
                                    {
                                     this.state.tb_verificaciones ?
-                                    this.state.tb_verificaciones.map((task,index) =>{
+                                    this.state.tb_verificaciones.map(task =>{
                                         return (
-                                            <tr key={index}>
-                                                <td>{task.usuario.nombres}</td>
-                                                <td>{task.usuario.apellidos}</td>
-                                                <td>{task.concepto}</td>
-                                                <td>{task.descripcion}</td>
+                                            <tr key={task.id}>
+                                                <td>{task.nombre}</td>
                                                 <td>
-                                                  <button className="btn btn-sm btn-primary ver" type="button" onClick={()=>this.verVerificaciones(
-                                                      task.imagenes
-                                                  )}><i className="fa fa-pencil"/></button>
+                                                  <button className="btn btn-sm btn-info"  type="button" onClick={()=>this.verResultado(task.id)}>
+                                                    <i className="fa fa-eye" ></i>
+                                                  </button>
+
                                                 </td>
                                             </tr>
                                         );
@@ -152,41 +133,30 @@ class IndexVerificaciones extends Component {
                 </Row>
                 <Modal
                     size="lg"
-                    show={this.state.estadoModalVerVerificaciones}
-                    onHide={() => this.cambiarModalVerVerificaciones()}
+                    show={this.state.estadoModalVerVerCompletos}
+                    onHide={() => this.cambiarModalVerCompletos()}
                     >
                     <Modal.Header closeButton>
                       <Modal.Title id="example-custom-modal-styling-title">
-                        Ver verificaciones
+                        Ver registros completos
                       </Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                             <div className="card w-100">
                                 <div className="modal-body">
                                     <div className="card-body text-center">
-
-                                    {
-                                     this.state.arrayImagenes ?
-                                     this.state.arrayImagenes.map((task,index) =>{
-                                         return (
-                                            <div>
-                                            <div>
-                                              <label>Imagen:</label><br/>
-                                              <img src={task.dato} width="400" height="500"/>
-                                            </div>
-                                            <div>
-                                              <button className="btn btn-danger" onClick={()=>this.sendDenegar(task.id)} ><i className="fa fa-remove"></i></button>
-                                              <button className="btn btn-success" onClick={()=>this.sendAceptar(task.id)}><i className="fa fa-check"></i></button>
-                                            </div>
-                                            <div className="p-2">
-                                                <label>Comentario:</label><br/>
-                                            <textarea name={'comentario'+task.id} cols="50" rows="6" onChange={this.handleChange}></textarea>
-                                            </div>
-                                            </div>
-
-                                          )
-                                    }):null
-                                  }
+                                          <div>
+                                            <label>Imagen:</label><br/>
+                                            <img src={this.state.imagenEditar} width="400" height="500"/>
+                                          </div>
+                                          <div>
+                                            <button className="btn btn-danger" ><i className="fa fa-remove"></i></button>
+                                            <button className="btn btn-success" ><i className="fa fa-check"></i></button>
+                                          </div>
+                                          <div className="p-2">
+                                              <label>Comentario:</label><br/>
+                                              <textarea name="comentario" cols="50" rows="6" onChange={this.handleChange}></textarea>
+                                          </div>
                                       </div>
                                   </div>
                               </div>
@@ -197,4 +167,4 @@ class IndexVerificaciones extends Component {
     }
 }
 
-export default IndexVerificaciones;
+export default IndexCompletos;

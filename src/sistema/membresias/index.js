@@ -174,8 +174,7 @@ class IndexMembresias extends Component {
     .then(res =>res.json())
     .then(data => {
       if(data.respuesta==true){
-        cogoToast.success("Membresia creada");
-        cogoToast.error("Se edito la membresia")
+        cogoToast.success("Se edito la membresia")
         this.clean();
       }
       else{
@@ -189,7 +188,7 @@ class IndexMembresias extends Component {
 });
 }
     eliminarMembresia(){
-      
+
     }
 
     addBoxes(){
