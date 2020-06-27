@@ -9,7 +9,7 @@ class IndexCompletos extends Component {
   constructor(){
     super();
     this.state = {
-      tb_verificaciones:[{id: 1, nombre:"ejemplo"}],
+      tb_completos:[],
       //modales
       estadoModalVerVerCompletos:false,
     }
@@ -64,14 +64,15 @@ class IndexCompletos extends Component {
         }
     }
 
-  fetchVerificaciones(){
+  fetchCompletos(){
       fetch('http://107.23.50.10/verificaciones/mostrar',
         {
           mode:'cors',
           method: 'GET',
           headers: {
               'Accept' : 'application/json',
-              'Content-type' : 'application/json'
+              'Content-type' : 'application/json',
+              'estado': '3'
           }
         }
       )
@@ -79,8 +80,8 @@ class IndexCompletos extends Component {
         .then(data => {
           if(data){
             this.setState({
-              tb_verificaciones: data
-            },()=>{console.log(this.state.tb_verificaciones)})
+              tb_completos: data
+            },()=>{console.log(this.state.tb_completos)})
           }
           else{
             console.log(data)
@@ -90,7 +91,7 @@ class IndexCompletos extends Component {
         console.log('Hubo un problema con la petición Fetch:' + error.message);
     });  }
   componentDidMount(){
-      //this.fetchVerificaciones();
+      this.fetchCompletos();
       console.log(localStorage.getItem('token'));
     }
     render() {
@@ -107,15 +108,25 @@ class IndexCompletos extends Component {
                                 </tr>
                                 <tr>
                                     <th>Nombres</th>
+                                    <th>Apellidos</th>
+                                    <th>Total</th>
+                                    <th>Concepto</th>
+                                    <th>Descripcion</th>
+                                    <th>Estado</th>
                                 </tr>
                               </thead>
                               <tbody>
                                    {
-                                    this.state.tb_verificaciones ?
-                                    this.state.tb_verificaciones.map(task =>{
+                                    this.state.tb_completos ?
+                                    this.state.tb_completos.map(task =>{
                                         return (
                                             <tr key={task.id}>
-                                                <td>{task.nombre}</td>
+                                                <td>{task.usuario.nombres}</td>
+                                                <td>{task.usuario.apellidos}</td>
+                                                <td>{task.total}</td>
+                                                <td>{task.concepto}</td>
+                                                <td>{task.descripcion}</td>
+                                                <td>Completo</td>
                                                 <td>
                                                   <button className="btn btn-sm btn-info"  type="button" onClick={()=>this.verResultado(task.id)}>
                                                     <i className="fa fa-eye" ></i>

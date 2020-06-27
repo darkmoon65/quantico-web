@@ -258,6 +258,9 @@ class IndexProductos extends Component {
         if(value==1){
           this.setState({detallesExtras:[1]})
         }
+        if(value==2){
+          this.setState({detallesExtras:[0]})
+        }
         if(value==3){
           this.setState({detallesExtras:[1]})
         }
@@ -390,7 +393,7 @@ class IndexProductos extends Component {
                                           </div>
 
                                             {
-                                                this.state.detallesExtras ?
+                                                (this.state.detallesExtras==1) ?
                                                 this.state.detallesExtras.map((a,index)=>{
                                                 return(
                                                   <div key={index} >

@@ -31,11 +31,16 @@ class IndexVerificaciones extends Component {
     this.cambiarModalVerVerificaciones();
   }
 
-  imagenDenegada(){
-
+  imagenQuitar(index){
+    let a = this.state.arrayImagenes
+        a.splice(index,1)
+    this.setState({
+      arrayImagenes: a
+    })
+    this.fetchVerificaciones()
   }
 
-  sendDenegar(id,estado,concepto){
+  sendDenegar(id,estado,concepto,index){
         fetch('http://107.23.50.10/verificaciones/verificarCompra',
           {
             mode:'cors',
@@ -57,7 +62,7 @@ class IndexVerificaciones extends Component {
           .then(data => {
             if(data.respuesta==true){
               cogoToast.success("Imagen Denegada");
-              this.imagenDenegada();
+              this.imagenQuitar(index);
             }
             else{
               console.log(data)
@@ -67,9 +72,38 @@ class IndexVerificaciones extends Component {
           console.log('Hubo un problema con la petición Fetch:' + error.message);
       });
   }
-  sendAceptar(){
-    cogoToast.success("aceptado")
-  }
+  sendAceptar(id,estado,concepto,index){
+    fetch('http://107.23.50.10/verificaciones/verificarCompra',
+      {
+        mode:'cors',
+        method: 'POST',
+        body: JSON.stringify({
+            id: id,
+            estado : estado,
+            concepto : concepto,
+          }
+        ),
+        headers: {
+            'Accept' : 'application/json',
+            'Content-type' : 'application/json'
+        }
+      }
+    )
+      .then(res =>res.json())
+      .then(data => {
+        if(data.respuesta==true){
+          cogoToast.success("Imagen aceptada");
+          this.imagenQuitar(index);
+        }
+        else{
+          console.log(data)
+          console.log("hubo un error con la peticion")
+        }
+    }).catch((error)=> {
+      console.log('Hubo un problema con la petición Fetch:' + error.message);
+  });
+}
+
 
   handleChange(e){
     const {name, value} = e.target;
@@ -205,11 +239,12 @@ class IndexVerificaciones extends Component {
                                             <div>
                                                 <div>
                                                   <label>Imagen:</label><br/>
+                                                  <label>{task.concepto}</label><br/>
                                                   <img src={task.dato} width="400" height="500"/>
                                                 </div>
                                                 <div>
-                                                  <button className="btn btn-danger" onClick={()=>this.sendDenegar(task.id,2,task.concepto)} ><i className="fa fa-remove"></i></button>
-                                                  <button className="btn btn-success" onClick={()=>this.sendAceptar(task.id)}><i className="fa fa-check"></i></button>
+                                                  <button className="btn btn-danger" onClick={()=>this.sendDenegar(task.id,2,task.concepto,index)} ><i className="fa fa-remove"></i></button>
+                                                  <button className="btn btn-success" onClick={()=>this.sendAceptar(task.id,1,task.concepto,index)}><i className="fa fa-check"></i></button>
                                                 </div>
                                                 <div className="p-2">
                                                     <label>Comentario:</label><br/>
