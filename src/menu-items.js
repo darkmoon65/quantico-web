@@ -69,6 +69,13 @@ export default {
                     url: '/compras',
                     icon: 'feather icon-shopping-cart',
                 },
+                {
+                    id: 'notificaciones',
+                    title: 'Notificaciones',
+                    type: 'item',
+                    url: '/notificaciones',
+                    icon: 'feather icon-shopping-cart',
+                },
             ]
         },
     ]

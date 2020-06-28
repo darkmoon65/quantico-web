@@ -16,6 +16,8 @@ const Verificaciones = React.lazy(() => import('./sistema/verificaciones/index')
 const Completos = React.lazy(() => import('./sistema/completos/index'));
 const Comprobantes = React.lazy(() => import('./sistema/comprobantes/index'));
 
+const Notificaciones = React.lazy(() => import('./sistema/notificaciones/index'));
+
 const routes = [
     {
         path: '/login',
@@ -70,6 +72,12 @@ const routes = [
         exact: true,
         name: 'Compras',
         component: Compras
+    },
+    {
+        path: '/notificaciones',
+        exact: true,
+        name: 'Notificaciones',
+        component: Notificaciones
     },
 ];
 
