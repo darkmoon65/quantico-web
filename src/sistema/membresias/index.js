@@ -4,6 +4,7 @@ import {Row, Col, Modal} from 'react-bootstrap';
 import Aux from "../../hoc/_Aux";
 import Card from "../../App/components/MainCard";
 import cogoToast from "cogo-toast";
+import Config from "../../config"
 
 class IndexMembresias extends Component {
     constructor(){
@@ -113,7 +114,7 @@ class IndexMembresias extends Component {
     }
 
     enviarCrearMembresia(){
-      fetch('http://107.23.50.10/membresia/crear',
+      fetch(`${Config.api}membresia/crear`,
         {
           mode:'cors',
           method: 'POST',
@@ -150,7 +151,7 @@ class IndexMembresias extends Component {
     });
 }
     enviarEditarMembresia(){
-  fetch('http://107.23.50.10/membresia/editar',
+  fetch(`${Config.api}membresia/editar`,
     {
       mode:'cors',
       method: 'POST',
@@ -258,7 +259,7 @@ class IndexMembresias extends Component {
       }
 
     fetchMembresias(){
-        fetch('http://107.23.50.10/membresia/mostrar',
+        fetch(`${Config.api}membresia/mostrar`,
           {
             mode:'cors',
             method: 'GET',
@@ -327,7 +328,7 @@ class IndexMembresias extends Component {
                                                           task.tarjetaImg,
                                                           task.imagen,
                                                           task.detalles
-                                                      )}><i className="feather icon-trending-up"/></button>
+                                                      )}><i className="fa fa-pencil"/></button>
                                                       <button className="btn btn-sm btn-danger "  type="button" onClick={()=>this.eliminarMembresia(task.id)}>
                                                         <i className="fa fa-trash" ></i>
                                                       </button>

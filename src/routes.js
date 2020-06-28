@@ -11,10 +11,12 @@ const Usuarios   = React.lazy(() => import('./sistema/usuarios/index'));
 const Slider     = React.lazy(() => import('./sistema/slider/index'));
 const Membresias = React.lazy(() => import('./sistema/membresias/index'));
 const Productos  = React.lazy(() => import('./sistema/productos/index'));
-const Compras    = React.lazy(() => import('./sistema/compras/index'));
 const Verificaciones = React.lazy(() => import('./sistema/verificaciones/index'));
-const Completos = React.lazy(() => import('./sistema/completos/index'));
 const Comprobantes = React.lazy(() => import('./sistema/comprobantes/index'));
+const Completos = React.lazy(() => import('./sistema/completos/index'));
+const Socios = React.lazy(() => import('./sistema/socios/index'));
+const Contactos = React.lazy(() => import('./sistema/contactos/index'));
+
 
 const Notificaciones = React.lazy(() => import('./sistema/notificaciones/index'));
 
@@ -65,13 +67,13 @@ const routes = [
         path: '/comprobantes',
         exact: true,
         name: 'Verificaciones',
-        component: Comprobantes 
+        component: Comprobantes
     },
     {
-        path: '/compras',
+        path: '/socios',
         exact: true,
-        name: 'Compras',
-        component: Compras
+        name: 'Socios',
+        component: Socios
     },
     {
         path: '/notificaciones',
@@ -79,6 +81,13 @@ const routes = [
         name: 'Notificaciones',
         component: Notificaciones
     },
+    {
+        path: '/contactos',
+        exact: true,
+        name: 'Contactos',
+        component: Contactos
+    },
+
 ];
 
 export default routes;

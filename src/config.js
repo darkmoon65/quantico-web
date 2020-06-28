@@ -1,5 +1,6 @@
 export default {
-    api: '192.168',
+
+    api: 'http://107.23.50.10/',
     defaultPath: '/quantico',
     basename: '/', // only at build time to set, like /datta-able
     layout: 'vertical', // vertical, horizontal (not available in lite version)

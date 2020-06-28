@@ -6,27 +6,30 @@ import Card from "../../App/components/MainCard";
 import cogoToast from "cogo-toast";
 import Config from "../../config"
 
-class IndexCompletos extends Component {
+class IndexContactos extends Component {
   constructor(){
     super();
     this.state = {
-      tb_completos:[],
+      tb_contactos:[],
       //modales
-      estadoModalVerVerCompletos:false,
+      estadoModalCrearContactos:false,
     }
     this.handleChange = this.handleChange.bind(this);
   }
 
-  cambiarModalVerCompletos(){
+  cambiarModalCrearContactos(){
         this.setState({
-          estadoModalVerVerCompletos: !this.state.estadoModalVerVerCompletos
+          estadoModalCrearContactos: !this.state.estadoModalCrearContactos
         })
   }
 
-  verResultado(){
-    this.cambiarModalVerCompletos();
+  clean(){
+    this.setState({
+      estadoModalCrearContactos: false,
+      nombreCrear:'',
+      numeroCrear:''
+    },()=>this.fetchContactos())
   }
-
 
   handleChange(e){
     const {name, value} = e.target;
@@ -65,15 +68,75 @@ class IndexCompletos extends Component {
         }
     }
 
-  fetchCompletos(){
-      fetch(`${Config.api}verificaciones/mostrar`,
+  crearContacto(){
+    fetch(`${Config.api}contactos/crear`,
+      {
+        mode:'cors',
+        method: 'POST',
+        body: JSON.stringify({
+              nombre: this.state.nombreCrear,
+              numero: this.state.numeroCrear,
+          }
+        ),
+        headers: {
+            'Accept' : 'application/json',
+            'Content-type' : 'application/json'
+        }
+      }
+    )
+      .then(res =>res.json())
+      .then(data => {
+        if(data.respuesta==true){
+          cogoToast.success("Contacto creado");
+          this.clean();
+        }
+        else{
+          cogoToast.error("Error al crear el contacto")
+          console.log("hubo un error con la peticion")
+        }
+    }).catch((error)=> {
+      cogoToast.error("Hubo un error al crear el contacto")
+      console.log('Hubo un problema con la petición Fetch:' + error.message);
+  });
+}
+  eliminarContacto(id){
+    fetch(`${Config.api}contactos/eliminar`,
+      {
+        mode:'cors',
+        method: 'POST',
+        body: JSON.stringify({
+              id:id
+          }
+        ),
+        headers: {
+            'Accept' : 'application/json',
+            'Content-type' : 'application/json'
+        }
+      }
+    )
+      .then(res =>res.json())
+      .then(data => {
+        if(data.respuesta==true){
+          cogoToast.success("Contacto eliminado");
+          this.clean();
+        }
+        else{
+          cogoToast.error("Error al crear el contacto")
+          console.log("hubo un error con la peticion")
+        }
+    }).catch((error)=> {
+      cogoToast.error("Hubo un error al crear el contacto")
+      console.log('Hubo un problema con la petición Fetch:' + error.message);
+  });
+}
+  fetchContactos(){
+      fetch(`${Config.api}contactos/mostrar`,
         {
           mode:'cors',
           method: 'GET',
           headers: {
               'Accept' : 'application/json',
               'Content-type' : 'application/json',
-              'estado': '3'
           }
         }
       )
@@ -81,8 +144,8 @@ class IndexCompletos extends Component {
         .then(data => {
           if(data){
             this.setState({
-              tb_completos: data
-            },()=>{console.log(this.state.tb_completos)})
+              tb_contactos: data
+            },()=>{console.log(this.state.tb_contactos)})
           }
           else{
             console.log(data)
@@ -92,7 +155,7 @@ class IndexCompletos extends Component {
         console.log('Hubo un problema con la petición Fetch:' + error.message);
     });  }
   componentDidMount(){
-      this.fetchCompletos();
+      this.fetchContactos();
       console.log(localStorage.getItem('token'));
     }
     render() {
@@ -100,39 +163,31 @@ class IndexCompletos extends Component {
             <Aux>
                 <Row>
                     <Col>
-                        <Card title='Completos' isOption>
+                        <Card title='Contactos' isOption>
                         <table id="tb_membresia" className="table table-striped" style={{width:'100%'}}>
                             <thead>
                                 <tr>
                                     <th><h4 className="card-title">Buscar </h4></th>
                                     <th><input type="text" onChange={this.handleChangeBuscador} /></th>
+                                    <th><button type="button" className="btn btn-primary" onClick={()=>this.cambiarModalCrearContactos()}>Crear contactos</button></th>
                                 </tr>
                                 <tr>
                                     <th>Nombres</th>
-                                    <th>Apellidos</th>
-                                    <th>Total</th>
-                                    <th>Concepto</th>
-                                    <th>Descripcion</th>
-                                    <th>Estado</th>
+                                    <th>Numero</th>
                                 </tr>
                               </thead>
                               <tbody>
                                    {
-                                    this.state.tb_completos ?
-                                    this.state.tb_completos.map(task =>{
+                                    this.state.tb_contactos ?
+                                    this.state.tb_contactos.map(task =>{
                                         return (
                                             <tr key={task.id}>
-                                                <td>{task.usuario.nombres}</td>
-                                                <td>{task.usuario.apellidos}</td>
-                                                <td>{task.total}</td>
-                                                <td>{task.concepto}</td>
-                                                <td>{task.descripcion}</td>
-                                                <td>Completo</td>
+                                                <td>{task.nombre}</td>
+                                                <td>{task.numero}</td>
                                                 <td>
-                                                  <button className="btn btn-sm btn-info"  type="button" onClick={()=>this.verResultado(task.id)}>
-                                                    <i className="fa fa-eye" ></i>
+                                                  <button className="btn btn-sm btn-danger" type="button" onClick={()=>this.eliminarContacto(task.id)}>
+                                                    <i className="fa fa-trash" ></i>
                                                   </button>
-
                                                 </td>
                                             </tr>
                                         );
@@ -145,29 +200,28 @@ class IndexCompletos extends Component {
                 </Row>
                 <Modal
                     size="lg"
-                    show={this.state.estadoModalVerVerCompletos}
-                    onHide={() => this.cambiarModalVerCompletos()}
+                    show={this.state.estadoModalCrearContactos}
+                    onHide={() => this.cambiarModalCrearContactos()}
                     >
                     <Modal.Header closeButton>
                       <Modal.Title id="example-custom-modal-styling-title">
-                        Ver registros completos
+                        Crear Contactos
                       </Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                             <div className="card w-100">
                                 <div className="modal-body">
-                                    <div className="card-body text-center">
+                                    <div className="card-body">
                                           <div>
-                                            <label>Imagen:</label><br/>
-                                            <img src={this.state.imagenEditar} width="400" height="500"/>
+                                            <label>Nombre:</label><br/>
+                                            <input type="text" name="nombreCrear" className="form-control" onChange={this.handleChange}/>
                                           </div>
                                           <div>
-                                            <button className="btn btn-danger" ><i className="fa fa-remove"></i></button>
-                                            <button className="btn btn-success" ><i className="fa fa-check"></i></button>
+                                            <label>Numero:</label><br/>
+                                            <input type="number" name="numeroCrear" className="form-control" onChange={this.handleChange}/>
                                           </div>
                                           <div className="p-2">
-                                              <label>Comentario:</label><br/>
-                                              <textarea name="comentario" cols="50" rows="6" onChange={this.handleChange}></textarea>
+                                            <button type="button" className="btn btn-primary" onClick={()=>this.crearContacto()} >Crear contacto</button>
                                           </div>
                                       </div>
                                   </div>
@@ -179,4 +233,4 @@ class IndexCompletos extends Component {
     }
 }
 
-export default IndexCompletos;
+export default IndexContactos;

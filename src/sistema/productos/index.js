@@ -4,6 +4,7 @@ import {Row, Col,Modal} from 'react-bootstrap';
 import Aux from "../../hoc/_Aux";
 import Card from "../../App/components/MainCard";
 import cogoToast from "cogo-toast";
+import Config from "../../config"
 
 class IndexProductos extends Component {
 
@@ -18,6 +19,7 @@ class IndexProductos extends Component {
       //modales
       estadoModalCrearProductos:false,
       estadoModalEditarProductos:false,
+      estadoModalCrearTipoProductos:false,
       imagen:'',
 
     }
@@ -27,6 +29,11 @@ class IndexProductos extends Component {
   cambiarModalCrearProductos(){
         this.setState({
           estadoModalCrearProductos: !this.state.estadoModalCrearProductos
+        })
+  }
+  cambiarModalCrearTipoProductos(){
+        this.setState({
+          estadoModalCrearTipoProductos: !this.state.estadoModalCrearTipoProductos
         })
   }
   cambiarModalEditarProductos(){
@@ -43,6 +50,7 @@ class IndexProductos extends Component {
 
       },()=>this.fetchProductos())
     }
+
     exeEnviar(){
     let a = this.state.countMembresia
     let r = []
@@ -81,7 +89,7 @@ class IndexProductos extends Component {
 
     enviarCrearProducto(){
       if(this.state.tipoCrearId == 2){
-        fetch('http://107.23.50.10/productos/crear',
+        fetch(`${Config.api}productos/crear`,
           {
             mode:'cors',
             method: 'POST',
@@ -118,7 +126,7 @@ class IndexProductos extends Component {
       });
     }
     if (this.state.tipoCrearId == 1 || this.state.tipoCrearId == 3){
-          fetch('http://107.23.50.10/productos/crear',
+          fetch(`${Config.api}productos/crear`,
             {
               mode:'cors',
               method: 'POST',
@@ -165,7 +173,7 @@ class IndexProductos extends Component {
     }
     eliminarProducto(id){
 
-        fetch('http://107.23.50.10/productos/eliminar',
+        fetch(`${Config.api}productos/eliminar`,
           {
             mode:'cors',
             method: 'POST',
@@ -198,8 +206,41 @@ class IndexProductos extends Component {
     editarProducto(){
 
     }
+
+    enviarCrearTipoProducto(){
+          fetch(`${Config.api}productos/crearTipo`,
+            {
+              mode:'cors',
+              method: 'POST',
+              body: JSON.stringify({
+                  nombre : this.state.nombreTipoProducto,
+                }
+              ),
+              headers: {
+                  'Accept' : 'application/json',
+                  'Content-type' : 'application/json'
+              }
+            }
+          )
+            .then(res =>res.json())
+            .then(data => {
+              if(data.respuesta==true){
+                cogoToast.success("Tipo de producto creado");
+                this.clean();
+              }
+              else{
+                console.log(data)
+                cogoToast.error("No se creo,verifique los datos")
+                console.log("hubo un error con la peticion")
+              }
+          }).catch((error)=> {
+            cogoToast.error("No se creo el tipo de producto")
+            console.log('Hubo un problema con la petición Fetch:' + error.message);
+        });
+    }
+
     fetchProductos(){
-      fetch('http://107.23.50.10/productos/mostrar',
+      fetch(`${Config.api}productos/mostrar`,
         {
           mode:'cors',
           method: 'GET',
@@ -224,7 +265,7 @@ class IndexProductos extends Component {
         console.log('Hubo un problema con la petición Fetch:' + error.message);
     });  }
     fetchMembresias(){
-        fetch('http://107.23.50.10/membresia/mostrar',
+        fetch(`${Config.api}membresia/mostrar`,
           {
             mode:'cors',
             method: 'GET',
@@ -310,6 +351,7 @@ class IndexProductos extends Component {
                                   <tr>
                                       <th><h4 className="card-title">Buscar </h4></th>
                                       <th><input type="text" onChange={this.handleChangeBuscador} /></th>
+                                      <th><button className="btn btn-sm btn-primary ver" type="button" onClick={()=>this.cambiarModalCrearTipoProductos()}>Crear Tipo de productos</button></th>
                                       <th><button className="btn btn-sm btn-primary ver" type="button" onClick={()=>this.cambiarModalCrearProductos()}>Crear Producto</button></th>
                                   </tr>
                                   <tr>
@@ -332,7 +374,7 @@ class IndexProductos extends Component {
                                                         task.id,
                                                         task.nombre,
                                                         task.costo,
-                                                    )}><i className="feather icon-trending-up"/></button>
+                                                    )}><i className="fa fa-pencil"/></button>
                                                     <button className="btn btn-sm btn-danger "  type="button" onClick={()=>this.eliminarProducto(task.id)}>
                                                       <i className="fa fa-trash" ></i>
                                                     </button>
@@ -458,6 +500,33 @@ class IndexProductos extends Component {
 
                     </Modal.Body>
                   </Modal>
+                  <Modal
+                      size="lg"
+                      show={this.state.estadoModalCrearTipoProductos}
+                      onHide={() => this.cambiarModalCrearTipoProductos()}
+                      >
+                      <Modal.Header closeButton>
+                        <Modal.Title id="example-custom-modal-styling-title">
+                          Crear tipo de producto
+                        </Modal.Title>
+                      </Modal.Header>
+                      <Modal.Body>
+                              <div className="card w-75">
+                                  <div className="modal-body">
+                                      <div className="card-body">
+                                            <div>
+                                              <label>Nombre :</label>
+                                              <input type="text" className="form-control" name="nombreTipoProducto" onChange={this.handleChange} />
+                                            </div>
+                                            <div className="mx-auto p-2">
+                                              <button type="button" className="btn btn-sm btn-primary ver" onClick={()=>this.enviarCrearTipoProducto()}>Crear tipo de producto</button>
+                                            </div>
+                                          </div>
+                                    </div>
+                                  </div>
+
+                      </Modal.Body>
+                    </Modal>
 
             </Aux>
         );

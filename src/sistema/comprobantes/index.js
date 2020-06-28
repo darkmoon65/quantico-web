@@ -4,6 +4,7 @@ import {Row, Col,Modal} from 'react-bootstrap';
 import Aux from "../../hoc/_Aux";
 import Card from "../../App/components/MainCard";
 import cogoToast from "cogo-toast";
+import Config from "../../config"
 
 class IndexComprobantes extends Component {
   constructor(){
@@ -45,7 +46,7 @@ class IndexComprobantes extends Component {
   }
 
   fetchComprobantes(){
-      fetch('http://107.23.50.10/verificaciones/mostrar',
+      fetch(`${Config.api}verificaciones/mostrar`,
         {
           mode:'cors',
           method: 'GET',
@@ -76,7 +77,7 @@ class IndexComprobantes extends Component {
       },()=>this.fetchComprobantes())
     }
   sendComprobante(){
-    fetch('http://107.23.50.10/verificaciones/enviarComprobante',
+    fetch(`${Config.api}verificaciones/enviarComprobante`,
       {
         mode:'cors',
         method: 'POST',

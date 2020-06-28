@@ -18,7 +18,7 @@ export default {
                     title: 'Usuarios',
                     type: 'item',
                     url: '/usuarios',
-                    icon: 'feather icon-home',
+                    icon: 'fa fa-user-circle',
                 },
                 {
                     id: 'slider',
@@ -63,11 +63,18 @@ export default {
                     icon: 'feather icon-home',
                 },
                 {
-                    id: 'compras',
-                    title: 'Compras',
+                    id: 'socios',
+                    title: 'Socios',
                     type: 'item',
-                    url: '/compras',
-                    icon: 'feather icon-shopping-cart',
+                    url: '/socios',
+                    icon: 'feather icon-home',
+                },
+                {
+                    id: 'contactos',
+                    title: 'Contactos',
+                    type: 'item',
+                    url: '/contactos',
+                    icon: 'fa fa-address-book',
                 },
                 {
                     id: 'notificaciones',
@@ -76,6 +83,7 @@ export default {
                     url: '/notificaciones',
                     icon: 'feather icon-shopping-cart',
                 },
+
             ]
         },
     ]
