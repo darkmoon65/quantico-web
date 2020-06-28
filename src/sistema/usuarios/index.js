@@ -78,6 +78,9 @@ class IndexUsuarios extends Component {
       bloqueado = "no";
       bloqueadoId = 2;
     }
+    if(membresiaId !=2 && membresiaId != 6 && membresiaId != 7){
+      membresiaId = 0;
+    }
 
     this.setState({
       id: id,
@@ -421,6 +424,7 @@ class IndexUsuarios extends Component {
                                             <label>Membresia: </label>
                                               <div className="input-group">
                                                   <select className="form-control" name="membresiaIdMod" id="tipoProducto" style={{width: '50%'}} onChange={this.handleChange} value={this.state.membresiaIdMod}>
+                                                      <option key={0} value={0}> Escoje una opcion</option>
                                                       {
                                                           this.state.membresia_tb ?
                                                           this.state.membresia_tb.map(element=>{

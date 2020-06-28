@@ -27,7 +27,8 @@ class IndexSocios extends Component {
     this.setState({
       estadoModalCrearSocios: false,
       nombreCrear:'',
-      numeroCrear:''
+      imagen:'',
+      link:''
     },()=>this.fetchSocios())
   }
 
