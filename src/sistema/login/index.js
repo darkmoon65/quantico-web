@@ -5,6 +5,7 @@ import './../../assets/scss/style.scss';
 import Aux from "../../hoc/_Aux";
 import Breadcrumb from "../../App/layout/AdminLayout/Breadcrumb";
 import DEMO from "../../store/constant";
+import Config from "../../config"
 
 class IndexLogin extends React.Component {
 
@@ -28,7 +29,7 @@ class IndexLogin extends React.Component {
     }
 
   LoginSend(){
-      fetch(`http://107.23.50.10/loginAdmin`,
+      fetch(`${Config.api}loginAdmin`,
             {
 
              method: 'POST',

@@ -4,7 +4,7 @@ import {Row, Col, Modal} from 'react-bootstrap';
 import Aux from "../../hoc/_Aux";
 import Card from "../../App/components/MainCard";
 import cogoToast from "cogo-toast";
-
+import Config from "../../config"
 
 class IndexSlider extends Component {
 
@@ -29,6 +29,7 @@ class IndexSlider extends Component {
   clean(){
     this.setState({
       estadoModalCrearSliders: false,
+      estadoModalEditarSliders:false,
       imagen: '',
       tituloCrear: '',
       linkCrear: ''
@@ -36,7 +37,7 @@ class IndexSlider extends Component {
   }
 
   fetchSliders(){
-    fetch('http://107.23.50.10/slider/mostrar',
+    fetch(`${Config.api}slider/mostrar`,
       {
         mode:'cors',
         method: 'GET',
@@ -87,7 +88,7 @@ class IndexSlider extends Component {
 
   enviarCrearSlider(){
     if(this.state.imagen && this.state.tituloCrear && this.state.linkCrear){
-      fetch('http://107.23.50.10/slider/crear',
+      fetch(`${Config.api}slider/crear` ,
         {
           mode:'cors',
           method: 'POST',
@@ -120,7 +121,7 @@ class IndexSlider extends Component {
 }
 
   eliminarSlider(idS){
-  fetch('http://107.23.50.10/slider/eliminar',
+  fetch(`${Config.api}slider/eliminar`,
     {
       mode:'cors',
       method: 'POST',
@@ -151,11 +152,12 @@ class IndexSlider extends Component {
 
   enviarEditarSlider(){
   if(this.state.imagen && this.state.tituloEditar && this.state.linkEditar){
-    fetch('http://107.23.50.10/slider/editar',
+    fetch(`${Config.api}slider/editar`,
       {
         mode:'cors',
         method: 'POST',
         body: JSON.stringify({
+                id: this.state.idEditar,
             imagen: this.state.imagen,
             titulo: this.state.tituloEditar,
             url: this.state.linkEditar
@@ -258,7 +260,7 @@ class IndexSlider extends Component {
                                                         task.titulo,
                                                         task.url,
                                                         task.imagen
-                                                    )}><i className="feather icon-trending-up"/></button>
+                                                    )}><i className="fa fa-pencil"/></button>
                                                     <button className="btn btn-sm btn-danger "  type="button" onClick={()=>this.eliminarSlider(task.id)}>
                                                       <i className="fa fa-trash" ></i>
                                                     </button>

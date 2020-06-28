@@ -4,6 +4,7 @@ import {Row, Col,Modal} from 'react-bootstrap';
 import Aux from "../../hoc/_Aux";
 import Card from "../../App/components/MainCard";
 import cogoToast from "cogo-toast";
+import Config from "../../config"
 
 class IndexVerificaciones extends Component {
   constructor(){
@@ -41,7 +42,7 @@ class IndexVerificaciones extends Component {
   }
 
   sendDenegar(id,estado,concepto,index){
-        fetch('http://107.23.50.10/verificaciones/verificarCompra',
+        fetch(`${Config.api}verificaciones/verificarCompra`,
           {
             mode:'cors',
             method: 'POST',
@@ -73,7 +74,7 @@ class IndexVerificaciones extends Component {
       });
   }
   sendAceptar(id,estado,concepto,index){
-    fetch('http://107.23.50.10/verificaciones/verificarCompra',
+    fetch(`${Config.api}verificaciones/verificarCompra`,
       {
         mode:'cors',
         method: 'POST',
@@ -144,7 +145,7 @@ class IndexVerificaciones extends Component {
     }
 
   fetchVerificaciones(){
-      fetch('http://107.23.50.10/verificaciones/mostrar',
+      fetch(`${Config.api}verificaciones/mostrar`,
         {
           mode:'cors',
           method: 'GET',

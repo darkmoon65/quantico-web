@@ -4,6 +4,7 @@ import {Row, Col,Modal} from 'react-bootstrap';
 import Aux from "../../hoc/_Aux";
 import Card from "../../App/components/MainCard";
 import cogoToast from "cogo-toast";
+import Config from "../../config"
 
 
 class IndexUsuarios extends Component {
@@ -36,7 +37,7 @@ class IndexUsuarios extends Component {
     this.handleChange = this.handleChange.bind(this);
   }
   fetchTable(){
-    fetch('http://107.23.50.10/usuarios/mostrar',
+    fetch(`${Config.api}usuarios/mostrar`,
       {
         mode:'cors',
         method: 'GET',
@@ -99,7 +100,7 @@ class IndexUsuarios extends Component {
     })
   }
   fetchRol(){
-    fetch('http://107.23.50.10/usuarios/mostrarRoles')
+    fetch(`${Config.api}usuarios/mostrarRoles`)
       .then(res =>res.json())
       .then(data => {
         if(data){
@@ -116,7 +117,7 @@ class IndexUsuarios extends Component {
 }
 
   fetchMembresia(){
-    fetch('http://107.23.50.10/usuarios/mostrarMembresias')
+    fetch(`${Config.api}usuarios/mostrarMembresias`)
       .then(res =>res.json())
       .then(data => {
         if(data){
@@ -202,7 +203,7 @@ class IndexUsuarios extends Component {
   }
 
   async sendBlackListBan(){
-    await fetch('http://107.23.50.10/usuarios/bloquear',
+    await fetch(`${Config.api}usuarios/bloquear`,
       {
         mode:'cors',
         method: 'POST',
@@ -233,7 +234,7 @@ class IndexUsuarios extends Component {
  }
 
   async sendBlackListUnBan(){
-   await fetch('http://107.23.50.10/usuarios/desbloquear',
+   await fetch(`${Config.api}usuarios/desbloquear`,
      {
        mode:'cors',
        method: 'POST',
@@ -264,7 +265,7 @@ class IndexUsuarios extends Component {
 }
 
   async sendRolMod(){
-    await fetch('http://107.23.50.10/usuarios/editarRol',
+    await fetch(`${Config.api}usuarios/editarRol`,
       {
         mode:'cors',
         method: 'POST',
@@ -296,7 +297,7 @@ class IndexUsuarios extends Component {
  }
 
   async sendMembresiaMod(){
-     await fetch('http://107.23.50.10/usuarios/editarMembresia',
+     await fetch(`${Config.api}usuarios/editarMembresia`,
       {
         mode:'cors',
         method: 'POST',
@@ -387,7 +388,7 @@ class IndexUsuarios extends Component {
                                                           task.rol,
                                                           task.rolId,
                                                           task.bloqueado,
-                                                      )}><i className="feather icon-trending-up"/></button>
+                                                      )}><i className="fa fa-pencil"/></button>
                                                       </th>
                                                   </tr>
                                               );
