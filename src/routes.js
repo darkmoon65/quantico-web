@@ -18,6 +18,8 @@ const Socios = React.lazy(() => import('./sistema/socios/index'));
 const Contactos = React.lazy(() => import('./sistema/contactos/index'));
 
 
+const Notificaciones = React.lazy(() => import('./sistema/notificaciones/index'));
+
 const routes = [
     {
         path: '/login',
@@ -72,6 +74,12 @@ const routes = [
         exact: true,
         name: 'Socios',
         component: Socios
+    },
+    {
+        path: '/notificaciones',
+        exact: true,
+        name: 'Notificaciones',
+        component: Notificaciones
     },
     {
         path: '/contactos',

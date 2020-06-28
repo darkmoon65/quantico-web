@@ -76,6 +76,13 @@ export default {
                     url: '/contactos',
                     icon: 'fa fa-address-book',
                 },
+                {
+                    id: 'notificaciones',
+                    title: 'Notificaciones',
+                    type: 'item',
+                    url: '/notificaciones',
+                    icon: 'feather icon-shopping-cart',
+                },
 
             ]
         },
