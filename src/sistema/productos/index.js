@@ -14,8 +14,8 @@ class IndexProductos extends Component {
       tb_productos:[],
 
       detallesExtras:[],
-      tipoCrearId:1,
-      productoCrearId:0,
+      tipoCrearId:'',
+      productoCrearId:'',
       //modales
       estadoModalCrearProductos:false,
       estadoModalEditarProductos:false,
@@ -47,6 +47,19 @@ class IndexProductos extends Component {
       this.setState({
         estadoModalCrearProductos: false,
         estadoModalEditarProductos: false,
+        tipo : '',
+        prodPropio: '',
+        nombre: '',
+        descripcion: '',
+        costo: '',
+        imagen: '',
+        descuentos: '',
+        expositor: '',
+        duracion: '',
+        horaInicio: '',
+        horaFin: '',
+        inicio: '',
+        fin: ''
 
       },()=>this.fetchProductos())
     }
@@ -405,6 +418,7 @@ class IndexProductos extends Component {
                                           <div>
                                             <label>Tipo:</label>
                                             <select className="form-control" name="tipoCrearId" style={{width: '50%'}} onChange={this.handleChange} value={this.state.tipoCrearId}>
+                                                <option key={0} value={''}>--Escoje una opcion--</option>
                                                 <option key={1} value={1}>Curso</option>
                                                 <option key={2} value={2}>Libro</option>
                                                 <option key={3} value={3}>Evento</option>
@@ -413,6 +427,7 @@ class IndexProductos extends Component {
                                           <div>
                                             <label>Producto propio:</label>
                                             <select className="form-control" name="productoCrearId" style={{width: '50%'}} onChange={this.handleChange} value={this.state.productoCrearId}>
+                                                <option key={0} value={''}>--Escoje una opcion--</option>
                                                 <option key={1} value={0}>Si</option>
                                                 <option key={2} value={1}>No</option>
                                             </select>
