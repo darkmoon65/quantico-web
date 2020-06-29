@@ -81,7 +81,7 @@ class IndexCompletos extends Component {
         .then(data => {
           if(data){
             this.setState({
-              tb_completos: data
+              tb_completos: data['data']
             },()=>{console.log(this.state.tb_completos)})
           }
           else{

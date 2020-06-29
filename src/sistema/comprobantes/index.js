@@ -61,7 +61,7 @@ class IndexComprobantes extends Component {
         .then(data => {
           if(data){
             this.setState({
-              tb_comprobantes: data
+              tb_comprobantes: data['data']
             },()=>{console.log(this.state.tb_comprobantes)})
           }
           else{
