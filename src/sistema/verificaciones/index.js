@@ -161,7 +161,7 @@ class IndexVerificaciones extends Component {
           if(data){
             console.log(data)
             this.setState({
-              tb_verificaciones: data
+              tb_verificaciones: data["data"]
             },()=>{console.log(this.state.tb_verificaciones)})
           }
           else{
@@ -241,7 +241,7 @@ class IndexVerificaciones extends Component {
                                                 <div>
                                                   <label>Imagen:</label><br/>
                                                   <label>{task.concepto}</label><br/>
-                                                  <img src={task.dato} width="400" height="500"/>
+                                                  <img src={task.imagen} width="400" height="500"/>
                                                 </div>
                                                 <div>
                                                   <button className="btn btn-danger" onClick={()=>this.sendDenegar(task.id,2,task.concepto,index)} ><i className="fa fa-remove"></i></button>
