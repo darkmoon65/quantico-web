@@ -18,13 +18,16 @@ class IndexMembresias extends Component {
         ocultoCrearId: 1,
         costoCrear:'',
         detalles:'',
+
         imagenTarjeta:'',
         imagenCurso:'',
+        imagenTarjetaBase:'',
+        imagenCursoBase:'',
 
         idEditar:'',
         nombreEditar:'',
-        periodoEditarId: 1,
-        ocultoEditarId: 1,
+        periodoEditarId: '',
+        ocultoEditarId: '',
         costoEditar:'',
         detallesEditar:[],
         //modales
@@ -76,14 +79,16 @@ class IndexMembresias extends Component {
       this.setState({
         estadoModalCrearMembresias: false,
         estadoModalEditarMembresias: false,
-
+        imagenTarjetaBase:'',
+        imagenCursoBase:'',
       },()=>this.fetchMembresias())
     }
 
-    exeEnviar(){
+    exeEnviarCrear(){
       let a = this.state.boxes
       let b = this.state.detalles
       let r = []
+      let oculto
       if(b){
         r.push(b)
       }
@@ -94,12 +99,20 @@ class IndexMembresias extends Component {
           r.push(ok)
         }
       }
+      if (this.state.ocultoCrearId == 1){
+        oculto = true
+      }
+      if(this.state.ocultoCrearId == 2){
+        oculto = false
+      }
       this.setState({
-        detallesArray: r
+        detallesArray: r,
+        ocultoCrearId: oculto
       },()=>this.enviarCrearMembresia())
     }
     exeEnviarEditar(){
       let b = this.state.detallesEditar
+      let oculto
 
       for(let i = 0; i < b.length;i++){
         let z = `this.state.detallesEditar${i}`
@@ -108,9 +121,16 @@ class IndexMembresias extends Component {
           b[i] = ok
         }
       }
+      if (this.state.ocultoEditarId == 1){
+        oculto = true
+      }
+      if(this.state.ocultoEditarId == 2){
+        oculto = false
+      }
       this.setState({
-        detallesEditar: b
-      },this.enviarEditarMembresia())
+        detallesEditar: b,
+        ocultoEditarId: oculto
+      },()=>this.enviarEditarMembresia())
     }
 
     enviarCrearMembresia(){
@@ -123,8 +143,8 @@ class IndexMembresias extends Component {
                periodo: this.state.periodoCrearId,
                oculto: this.state.ocultoCrearId,
                costo: this.state.costoCrear,
-               tarjetaImg: this.state.imagenTarjeta,
-               imagen: this.state.imagenCurso,
+               tarjetaImg: this.state.imagenTarjetaBase,
+               imagen: this.state.imagenCursoBase,
                detalles: this.state.detallesArray
             }
           ),
@@ -151,42 +171,42 @@ class IndexMembresias extends Component {
     });
 }
     enviarEditarMembresia(){
-  fetch(`${Config.api}membresia/editar`,
-    {
-      mode:'cors',
-      method: 'POST',
-      body: JSON.stringify({
-                id:this.state.idEditar,
-           nombre: this.state.nombreEditar,
-           periodo: this.state.periodoEditarId,
-           oculto: this.state.ocultoEditarId,
-           costo: this.state.costoEditar,
-           tarjetaImg: this.state.imagenTarjeta,
-           imagen: this.state.imagenCurso,
-           detalles: this.state.detallesEditar
+      fetch(`${Config.api}membresia/editar`,
+        {
+          mode:'cors',
+          method: 'POST',
+          body: JSON.stringify({
+                    id:this.state.idEditar,
+               nombre: this.state.nombreEditar,
+               periodo: this.state.periodoEditarId,
+               oculto: this.state.ocultoEditarId,
+               costo: this.state.costoEditar,
+               tarjetaImg: this.state.imagenTarjetaBase,
+               imagen: this.state.imagenCursoBase,
+               detalles: this.state.detallesEditar
+            }
+          ),
+          headers: {
+              'Accept' : 'application/json',
+              'Content-type' : 'application/json'
+          }
         }
-      ),
-      headers: {
-          'Accept' : 'application/json',
-          'Content-type' : 'application/json'
-      }
-    }
-  )
-    .then(res =>res.json())
-    .then(data => {
-      if(data.respuesta==true){
-        cogoToast.success("Se edito la membresia")
-        this.clean();
-      }
-      else{
-        console.log(data)
+      )
+        .then(res =>res.json())
+        .then(data => {
+          if(data.respuesta==true){
+            cogoToast.success("Se edito la membresia")
+            this.clean();
+          }
+          else{
+            console.log(data)
+            cogoToast.error("No se edito la membresia")
+            console.log("hubo un error con la peticion")
+          }
+      }).catch((error)=> {
         cogoToast.error("No se edito la membresia")
-        console.log("hubo un error con la peticion")
-      }
-  }).catch((error)=> {
-    cogoToast.error("No se edito la membresia")
-    console.log('Hubo un problema con la petición Fetch:' + error.message);
-});
+        console.log('Hubo un problema con la petición Fetch:' + error.message);
+    });
 }
     eliminarMembresia(){
 
@@ -194,10 +214,16 @@ class IndexMembresias extends Component {
 
     addBoxes(){
         let a = this.state.boxes
-        a.push(1)
-        this.setState({
-          boxes: a
-        },()=>console.log(this.state.boxes))
+        if(a.length < 2){
+          a.push(1)
+          this.setState({
+            boxes: a
+          },()=>console.log(this.state.boxes))
+        }
+        else{
+          cogoToast.warn("Solo se permiten maximo 3 detalles")
+        }
+
     }
     deleteBoxes(){
         let a = this.state.boxes
@@ -208,17 +234,23 @@ class IndexMembresias extends Component {
     }
     addBoxesEdit(){
         let a = this.state.detallesEditar
-        a.push(1)
-        this.setState({
-          detallesEditar: a
-        },()=>console.log(this.state.detallesEditar))
+        if(a.length < 3){
+          a.push('')
+          this.setState({
+            detallesEditar: a
+          },()=>console.log(this.state.detallesEditar))
+        }
+        else{
+          cogoToast.warn("Solo se permiten maximo 3 detalles")
+        }
     }
     deleteBoxesEdit(){
         let a = this.state.detallesEditar
+
         a.pop()
         this.setState({
-          detallesEditar: a
-        },()=>console.log(this.state.detallesEditar))
+            detallesEditar: a
+          },()=>console.log(this.state.detallesEditar))
     }
 
     handleChange(e){
@@ -240,7 +272,7 @@ class IndexMembresias extends Component {
           }
           if(e.target.name == "imgTarjeta"){
             fileData.onload = (event)=> {
-              this.setState({imagenTarjeta: fileData.result},
+              this.setState({imagenTarjetaBase: fileData.result},
                 ()=>{
                     cogoToast.success("Imagen de tarjeta lista")
                   }
@@ -249,7 +281,7 @@ class IndexMembresias extends Component {
           }
           else if (e.target.name == "imgCurso") {
             fileData.onload = (event)=> {
-              this.setState({imagenCurso: fileData.result},
+              this.setState({imagenCursoBase: fileData.result},
                 ()=>{
                     cogoToast.success("Imagen de curso lista")
                   }
@@ -378,33 +410,40 @@ class IndexMembresias extends Component {
                                               <label>Costo:</label>
                                               <input type="text" className="form-control" name="costoCrear" onChange={this.handleChange} />
                                             </div>
+
                                             <label>Imagen de Tarjeta: </label>
                                             <div className="input-group p-1">
                                               <input type="file" className="form-control-file" name="imgTarjeta" onChange={e =>this.handleChangeFile(e)}/>
                                             </div>
+
                                             <label>Imagen de curso: </label>
                                             <div className="input-group p-1">
                                               <input type="file" className="form-control-file" name="imgCurso" onChange={e =>this.handleChangeFile(e)}/>
                                             </div>
 
-                                            <div className="p-2" >
-                                              <label>Detalles:</label>
-                                              <button type="button" className="btn btn-sm btn-primary" onClick={()=>this.addBoxes()} ><i className="fa fa-plus" ></i></button>
-                                              <button type="button" className="btn btn-sm btn-danger" onClick={()=>this.deleteBoxes()} ><i className="fa fa-remove" ></i></button>
+                                            <div className="p-3" >
+                                              <label className="p-2">Detalles:</label>
+                                                <button type="button" className="btn btn-sm btn-primary" onClick={()=>this.addBoxes()} ><i className="fa fa-plus" ></i></button>
+                                                <button type="button" className="btn btn-sm btn-danger" onClick={()=>this.deleteBoxes()} ><i className="fa fa-remove" ></i></button>
                                               <br/>
-
-                                              <textarea name="detalles" cols="50" rows="6" onChange={this.handleChange}></textarea>
+                                           </div>
+                                           <div>
+                                              <label>Detalle 1:</label>
+                                              <input type="text" className="form-control"  name="detalles" onChange={this.handleChange}></input>
                                               {
                                                 this.state.boxes?
                                                 this.state.boxes.map((a,index)=>{
                                                     return(
-                                                      <textarea name={'detalles'+index} cols="50" rows="6" onChange={this.handleChange}></textarea>
+                                                      <div>
+                                                        <label>Detalle {index+2}:</label>
+                                                        <input type="text" className="form-control"  name={'detalles'+index}  onChange={this.handleChange}></input>
+                                                      </div>
                                                     )
                                                 }):null
                                               }
                                             </div>
-                                            <div className="mx-auto" style={{padding:'4'}}>
-                                              <button type="button" className="btn btn-sm btn-primary ver" onClick={()=>this.exeEnviar()}>Crear</button>
+                                            <div className="mx-auto p-4">
+                                              <button type="button" className="btn btn-sm btn-primary ver" onClick={()=>this.exeEnviarCrear()}>Crear Membresia</button>
                                             </div>
                                           </div>
                                     </div>
@@ -448,31 +487,48 @@ class IndexMembresias extends Component {
                                                 <label>Costo:</label>
                                                 <input type="text" className="form-control" name="costoEditar" onChange={this.handleChange} value={this.state.costoEditar}/>
                                               </div>
-                                              <label>Imagen de Tarjeta: </label>
+
+                                              <label>Imagen de Tarjeta (Actual): </label>
+                                              <div className="input-group p-1">
+                                                  <img src={this.state.imagenTarjeta} width="400" height="400"/>
+                                              </div>
+
+                                              <label>Cambiar la imagen de Tarjeta: </label>
                                               <div className="input-group p-1">
                                                 <input type="file" className="form-control-file" name="imgTarjeta" onChange={e =>this.handleChangeFile(e)}/>
                                               </div>
-                                              <label>Imagen de curso: </label>
+
+                                              <label>Imagen de curso (Actual): </label>
+                                              <div className="input-group p-1">
+                                                  <img src={this.state.imagenCurso} width="400" height="400"/>
+                                              </div>
+
+                                              <label>Cambiar la imagen de Curso: </label>
                                               <div className="input-group p-1">
                                                 <input type="file" className="form-control-file" name="imgCurso" onChange={e =>this.handleChangeFile(e)}/>
                                               </div>
 
                                               <div className="p-2" >
-                                                <label>Detalles:</label>
-                                                <button type="button" className="btn btn-sm btn-primary" onClick={()=>this.addBoxesEdit()} ><i className="fa fa-plus" ></i></button>
-                                                <button type="button" className="btn btn-sm btn-danger" onClick={()=>this.deleteBoxesEdit()} ><i className="fa fa-remove" ></i></button>
+                                                <label className="p-2">Detalles:</label>
+                                                  <button type="button" className="btn btn-sm btn-primary" onClick={()=>this.addBoxesEdit()} ><i className="fa fa-plus" ></i></button>
+                                                  <button type="button" className="btn btn-sm btn-danger" onClick={()=>this.deleteBoxesEdit()} ><i className="fa fa-remove" ></i></button>
                                                 <br/>
+                                              </div>
+                                              <div className="p-2">
                                                   {
                                                     this.state.detallesEditar ?
                                                     this.state.detallesEditar.map((a,index)=>{
                                                         return(
-                                                          <textarea name={'detallesEditar'+index} cols="50" rows="6" onChange={this.handleChange} defaultValue={a}></textarea>
+                                                          <div>
+                                                              <label>Detalle {index+1}:</label>
+                                                              <input className="form-control" name={'detallesEditar'+index}  onChange={this.handleChange} defaultValue={a}></input>
+                                                          </div>
                                                         )
                                                     }):null
                                                   }
                                               </div>
-                                              <div className="mx-auto" style={{padding:'4'}}>
-                                                <button type="button" className="btn btn-sm btn-primary ver" onClick={()=>this.exeEnviarEditar()}>Crear</button>
+                                              <div className="mx-auto p-4">
+                                                <button type="button" className="btn btn-sm btn-primary ver" onClick={()=>this.exeEnviarEditar()}>Editar Membresia</button>
                                               </div>
                                             </div>
                                       </div>

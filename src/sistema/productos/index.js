@@ -438,7 +438,7 @@ class IndexProductos extends Component {
                                           </div>
                                           <div>
                                             <label>Descripcion:</label>
-                                            <textarea name="descripcionCrear" cols="50" rows="5" onChange={this.handleChange}></textarea>
+                                            <input type="text" className="form-control" name="descripcionCrear" onChange={this.handleChange}/>
                                           </div>
                                           <div>
                                             <label>Costo:</label>
