@@ -16,7 +16,7 @@ const Comprobantes = React.lazy(() => import('./sistema/comprobantes/index'));
 const Completos = React.lazy(() => import('./sistema/completos/index'));
 const Socios = React.lazy(() => import('./sistema/socios/index'));
 const Contactos = React.lazy(() => import('./sistema/contactos/index'));
-
+const TipoProductos = React.lazy(() => import('./sistema/tiposProductos/index'));
 
 const Notificaciones = React.lazy(() => import('./sistema/notificaciones/index'));
 
@@ -86,6 +86,12 @@ const routes = [
         exact: true,
         name: 'Contactos',
         component: Contactos
+    },
+    {
+        path: '/tipoProductos',
+        exact: true,
+        name: 'TipoProductos',
+        component: TipoProductos
     },
 
 ];

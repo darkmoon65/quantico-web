@@ -37,11 +37,23 @@ class IndexVerificaciones extends Component {
         a.splice(index,1)
     this.setState({
       arrayImagenes: a
+
     })
     this.fetchVerificaciones()
   }
+  exeEnviar(id,estado,concepto,index){
 
-  sendDenegar(id,estado,concepto,index){
+  let z = `this.state.comentario${id}`
+  let ok = eval(z)
+
+  this.setState({
+    comentarioEnviar: ok,
+  },()=>{
+    this.sendDenegar(id,estado,concepto,index)
+  })
+}
+
+  sendDenegar(id,estado,concepto,index,msg){
         fetch(`${Config.api}verificaciones/verificarCompra`,
           {
             mode:'cors',
@@ -50,7 +62,7 @@ class IndexVerificaciones extends Component {
                 id: id,
                 estado : estado,
                 concepto : concepto,
-                mensaje: this.state.comentario
+                mensaje: msg
               }
             ),
             headers: {
@@ -62,12 +74,18 @@ class IndexVerificaciones extends Component {
           .then(res =>res.json())
           .then(data => {
             if(data.respuesta==true){
-              cogoToast.success("Imagen Denegada");
-              this.imagenQuitar(index);
+              console.log(data)
+              if(data.mensaje){
+                  cogoToast.warn(data.mensaje);
+              }
+              else{
+                  cogoToast.success("Imagen denegada");
+                  this.imagenQuitar(index);
+              }
             }
             else{
               console.log(data)
-              console.log("hubo un error con la peticion")
+              console.log("No se puede denegar la membresia")
             }
         }).catch((error)=> {
           console.log('Hubo un problema con la petición Fetch:' + error.message);
@@ -93,8 +111,14 @@ class IndexVerificaciones extends Component {
       .then(res =>res.json())
       .then(data => {
         if(data.respuesta==true){
-          cogoToast.success("Imagen aceptada");
-          this.imagenQuitar(index);
+          console.log(data)
+          if(data.mensaje){
+              cogoToast.warn(data.mensaje);
+          }
+          else{
+              cogoToast.success("Imagen aceptada");
+              this.imagenQuitar(index);
+          }
         }
         else{
           console.log(data)
@@ -244,12 +268,12 @@ class IndexVerificaciones extends Component {
                                                   <img src={task.imagen} width="400" height="500"/>
                                                 </div>
                                                 <div>
-                                                  <button className="btn btn-danger" onClick={()=>this.sendDenegar(task.id,2,task.concepto,index)} ><i className="fa fa-remove"></i></button>
+                                                  <button className="btn btn-danger" onClick={()=>this.sendDenegar(task.id,2,task.concepto,index,this.state['comentario'+task.id])} ><i className="fa fa-remove"></i></button>
                                                   <button className="btn btn-success" onClick={()=>this.sendAceptar(task.id,1,task.concepto,index)}><i className="fa fa-check"></i></button>
                                                 </div>
                                                 <div className="p-2">
                                                     <label>Comentario:</label><br/>
-                                                    <textarea name={'comentario'+task.id} cols="50" rows="6" onChange={this.handleChange}></textarea>
+                                                    <textarea name={'comentario'+task.id} cols="50" rows="6" value={this.state['comentario'+task.id]}  onChange={this.handleChange}></textarea>
                                                 </div>
                                             </div>
 

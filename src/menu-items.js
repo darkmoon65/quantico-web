@@ -42,6 +42,13 @@ export default {
                     icon: 'feather icon-home',
                 },
                 {
+                    id: 'tipoProductos',
+                    title: 'TipoProductos',
+                    type: 'item',
+                    url: '/tipoProductos',
+                    icon: 'feather icon-home',
+                },
+                {
                     id: 'verificaciones',
                     title: 'Verificaciones',
                     type: 'item',
