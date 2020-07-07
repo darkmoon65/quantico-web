@@ -43,7 +43,7 @@ export default {
                 },
                 {
                     id: 'tipoProductos',
-                    title: 'TipoProductos',
+                    title: 'Tipos de Productos',
                     type: 'item',
                     url: '/tipoProductos',
                     icon: 'feather icon-home',

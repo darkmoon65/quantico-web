@@ -27,7 +27,8 @@ class IndexContactos extends Component {
     this.setState({
       estadoModalCrearContactos: false,
       nombreCrear:'',
-      numeroCrear:''
+      numeroCrear:'',
+      cargoCrear:''
     },()=>this.fetchContactos())
   }
 
@@ -76,6 +77,7 @@ class IndexContactos extends Component {
         body: JSON.stringify({
               nombre: this.state.nombreCrear,
               numero: this.state.numeroCrear,
+              cargo: this.state.cargoCrear
           }
         ),
         headers: {
@@ -174,6 +176,7 @@ class IndexContactos extends Component {
                                 <tr>
                                     <th>Nombres</th>
                                     <th>Numero</th>
+                                    <th>Cargo</th>
                                 </tr>
                               </thead>
                               <tbody>
@@ -184,6 +187,7 @@ class IndexContactos extends Component {
                                             <tr key={task.id}>
                                                 <td>{task.nombre}</td>
                                                 <td>{task.numero}</td>
+                                                <td>{task.cargo}</td>
                                                 <td>
                                                   <button className="btn btn-sm btn-danger" type="button" onClick={()=>this.eliminarContacto(task.id)}>
                                                     <i className="fa fa-trash" ></i>
@@ -219,6 +223,10 @@ class IndexContactos extends Component {
                                           <div>
                                             <label>Numero:</label><br/>
                                             <input type="number" name="numeroCrear" className="form-control" onChange={this.handleChange}/>
+                                          </div>
+                                          <div>
+                                            <label>Cargo:</label><br/>
+                                            <input type="text" name="cargoCrear" className="form-control" onChange={this.handleChange}/>
                                           </div>
                                           <div className="p-2">
                                             <button type="button" className="btn btn-primary" onClick={()=>this.crearContacto()} >Crear contacto</button>

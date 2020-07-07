@@ -37,7 +37,6 @@ class IndexVerificaciones extends Component {
         a.splice(index,1)
     this.setState({
       arrayImagenes: a
-
     })
     this.fetchVerificaciones()
   }
@@ -77,6 +76,7 @@ class IndexVerificaciones extends Component {
               console.log(data)
               if(concepto=="Membresia"){
                   cogoToast.warn(data.mensaje);
+                  this.imagenQuitar(index);
               }
               else{
                   cogoToast.success("Imagen denegada");
@@ -113,6 +113,7 @@ class IndexVerificaciones extends Component {
         if(data.respuesta==true){
           if(concepto=="Membresia"){
             cogoToast.warn(data.mensaje);
+            this.imagenQuitar(index);
           }
           else{
               console.log(data)

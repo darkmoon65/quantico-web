@@ -12,7 +12,7 @@ class IndexProductos extends Component {
     super();
     this.state = {
       tb_productos:[],
-
+      tb_tipoProductos:[],
       detallesExtras:[],
       tipoCrearId:'',
       productoCrearId:'',
@@ -113,6 +113,8 @@ class IndexProductos extends Component {
               descripcion: this.state.descripcionCrear,
               costo: this.state.costoCrear,
               imagen: this.state.imagen,
+              linkppt: this.state.linkppt,
+              linkSala: this.state.linkSala,
               descuentos: this.state.descuentosArray
               }
             ),
@@ -138,7 +140,7 @@ class IndexProductos extends Component {
           console.log('Hubo un problema con la petición Fetch:' + error.message);
       });
     }
-    if (this.state.tipoCrearId == 1 || this.state.tipoCrearId == 3){
+    else {
           fetch(`${Config.api}productos/crear`,
             {
               mode:'cors',
@@ -156,7 +158,9 @@ class IndexProductos extends Component {
                   horaInicio: this.state.horaInicioCrear,
                   horaFin: this.state.horaFinCrear,
                   inicio: this.state.fechaInicioCrear,
-                  fin: this.state.fechaFinCrear
+                  fin: this.state.fechaFinCrear,
+                  linkppt: this.state.linkppt,
+                  linkSala: this.state.linkSala
                 }
               ),
               headers: {
@@ -216,41 +220,6 @@ class IndexProductos extends Component {
           console.log('Hubo un problema con la petición Fetch:' + error.message);
       });
     }
-    editarProducto(){
-
-    }
-
-    enviarCrearTipoProducto(){
-          fetch(`${Config.api}productos/crearTipo`,
-            {
-              mode:'cors',
-              method: 'POST',
-              body: JSON.stringify({
-                  nombre : this.state.nombreTipoProducto,
-                }
-              ),
-              headers: {
-                  'Accept' : 'application/json',
-                  'Content-type' : 'application/json'
-              }
-            }
-          )
-            .then(res =>res.json())
-            .then(data => {
-              if(data.respuesta==true){
-                cogoToast.success("Tipo de producto creado");
-                this.clean();
-              }
-              else{
-                console.log(data)
-                cogoToast.error("No se creo,verifique los datos")
-                console.log("hubo un error con la peticion")
-              }
-          }).catch((error)=> {
-            cogoToast.error("No se creo el tipo de producto")
-            console.log('Hubo un problema con la petición Fetch:' + error.message);
-        });
-    }
 
     fetchProductos(){
       fetch(`${Config.api}productos/mostrar`,
@@ -306,17 +275,42 @@ class IndexProductos extends Component {
           console.log('Hubo un problema con la petición Fetch:' + error.message);
       });  }
 
+    fetchTipoProductos(){
+          fetch(`${Config.api}productos/mostrarTipos`,
+            {
+              mode:'cors',
+              method: 'GET',
+              headers: {
+                  'Accept' : 'application/json',
+                  'Content-type' : 'application/json',
+                  'estado': '3'
+              }
+            }
+          )
+            .then(res =>res.json())
+            .then(data => {
+              if(data){
+                console.log(data)
+                this.setState({
+                  tb_tipoProductos: data
+                },()=>{console.log(this.state.tb_tipoProductos)})
+              }
+              else{
+                console.log(data)
+                console.log("hubo un error con la peticion")
+              }
+          }).catch((error)=> {
+            console.log('Hubo un problema con la petición Fetch:' + error.message);
+        });  }
+
     handleChange(e){
       const {name, value} = e.target;
       if(name == "tipoCrearId"){
-        if(value==1){
-          this.setState({detallesExtras:[1]})
-        }
-        if(value==2){
+        if(value==2 || value==''){
           this.setState({detallesExtras:[0]})
         }
-        if(value==3){
-          this.setState({detallesExtras:[1]})
+        else{
+            this.setState({detallesExtras:[1]})
         }
       }
 
@@ -348,6 +342,7 @@ class IndexProductos extends Component {
 
     componentDidMount(){
       this.fetchProductos();
+      this.fetchTipoProductos();
       this.fetchMembresias();
       console.log(localStorage.getItem('token'));
     }
@@ -364,7 +359,6 @@ class IndexProductos extends Component {
                                   <tr>
                                       <th><h4 className="card-title">Buscar </h4></th>
                                       <th><input type="text" onChange={this.handleChangeBuscador} /></th>
-                                      <th><button className="btn btn-sm btn-primary ver" type="button" onClick={()=>this.cambiarModalCrearTipoProductos()}>Crear Tipo de productos</button></th>
                                       <th><button className="btn btn-sm btn-primary ver" type="button" onClick={()=>this.cambiarModalCrearProductos()}>Crear Producto</button></th>
                                   </tr>
                                   <tr>
@@ -419,9 +413,15 @@ class IndexProductos extends Component {
                                             <label>Tipo:</label>
                                             <select className="form-control" name="tipoCrearId" style={{width: '50%'}} onChange={this.handleChange} value={this.state.tipoCrearId}>
                                                 <option key={0} value={''}>--Escoje una opcion--</option>
-                                                <option key={1} value={1}>Curso</option>
-                                                <option key={2} value={2}>Libro</option>
-                                                <option key={3} value={3}>Evento</option>
+                                                {
+                                                this.state.tb_tipoProductos?
+                                                this.state.tb_tipoProductos.map((data,index)=>{
+                                                 return(
+                                                    <option key={data.id} value={data.id}>{data.nombre}</option>
+                                                 )
+                                               }):null
+                                                }
+
                                             </select>
                                           </div>
                                           <div>
@@ -442,7 +442,7 @@ class IndexProductos extends Component {
                                           </div>
                                           <div>
                                             <label>Costo:</label>
-                                            <input type="text" className="form-control" name="costoCrear" onChange={this.handleChange} />
+                                            <input type="number" className="form-control" name="costoCrear" onChange={this.handleChange} />
                                           </div>
                                           <label>Imagen: </label>
                                           <div className="input-group p-1">
@@ -482,6 +482,14 @@ class IndexProductos extends Component {
                                                 )
                                               }):null
                                             }
+                                            <div>
+                                              <label>Link de power point:</label>
+                                              <input type="text" className="form-control" name="linkppt" onChange={this.handleChange} />
+                                            </div>
+                                            <div>
+                                              <label>Link de sala:</label>
+                                              <input type="text" className="form-control" name="linkSala" onChange={this.handleChange} />
+                                            </div>
                                             <div className="p-2">
                                               <label>Descuentos: </label><br/>
                                                 <table id="tb_membresia" className="table table-striped" style={{width:'100%'}}>
@@ -507,7 +515,7 @@ class IndexProductos extends Component {
                                               </table>
                                           </div>
                                           <div className="mx-auto p-3">
-                                            <button type="button" className="btn btn-sm btn-primary ver" onClick={()=>this.exeEnviar()}>Crear</button>
+                                            <button type="button" className="btn btn-sm btn-primary ver" onClick={()=>this.exeEnviar()}>Crear producto</button>
                                           </div>
                                         </div>
                                   </div>
@@ -515,34 +523,6 @@ class IndexProductos extends Component {
 
                     </Modal.Body>
                   </Modal>
-                  <Modal
-                      size="lg"
-                      show={this.state.estadoModalCrearTipoProductos}
-                      onHide={() => this.cambiarModalCrearTipoProductos()}
-                      >
-                      <Modal.Header closeButton>
-                        <Modal.Title id="example-custom-modal-styling-title">
-                          Crear tipo de producto
-                        </Modal.Title>
-                      </Modal.Header>
-                      <Modal.Body>
-                              <div className="card w-75">
-                                  <div className="modal-body">
-                                      <div className="card-body">
-                                            <div>
-                                              <label>Nombre :</label>
-                                              <input type="text" className="form-control" name="nombreTipoProducto" onChange={this.handleChange} />
-                                            </div>
-                                            <div className="mx-auto p-2">
-                                              <button type="button" className="btn btn-sm btn-primary ver" onClick={()=>this.enviarCrearTipoProducto()}>Crear tipo de producto</button>
-                                            </div>
-                                          </div>
-                                    </div>
-                                  </div>
-
-                      </Modal.Body>
-                    </Modal>
-
             </Aux>
         );
     }
