@@ -75,7 +75,7 @@ class IndexVerificaciones extends Component {
           .then(data => {
             if(data.respuesta==true){
               console.log(data)
-              if(data.mensaje){
+              if(concepto=="Membresia"){
                   cogoToast.warn(data.mensaje);
               }
               else{
@@ -111,15 +111,15 @@ class IndexVerificaciones extends Component {
       .then(res =>res.json())
       .then(data => {
         if(data.respuesta==true){
-          console.log(data)
-          if(data.mensaje){
-              cogoToast.warn(data.mensaje);
+          if(concepto=="Membresia"){
+            cogoToast.warn(data.mensaje);
           }
           else{
+              console.log(data)
               cogoToast.success("Imagen aceptada");
               this.imagenQuitar(index);
+            }
           }
-        }
         else{
           console.log(data)
           console.log("hubo un error con la peticion")
