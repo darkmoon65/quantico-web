@@ -35,10 +35,12 @@ class IndexVerificaciones extends Component {
   imagenQuitar(index){
     let a = this.state.arrayImagenes
         a.splice(index,1)
-    this.setState({
-      arrayImagenes: a
-    })
-    this.fetchVerificaciones()
+
+      this.setState({
+        arrayImagenes: a
+      },()=>{
+        this.fetchVerificaciones()
+      })
   }
   exeEnviar(id,estado,concepto,index){
 
@@ -111,16 +113,9 @@ class IndexVerificaciones extends Component {
       .then(res =>res.json())
       .then(data => {
         if(data.respuesta==true){
-          if(concepto=="Membresia"){
-            cogoToast.warn(data.mensaje);
+            cogoToast.success("Imagen aceptada");
             this.imagenQuitar(index);
-          }
-          else{
-              console.log(data)
-              cogoToast.success("Imagen aceptada");
-              this.imagenQuitar(index);
             }
-          }
         else{
           console.log(data)
           console.log("hubo un error con la peticion")
