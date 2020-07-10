@@ -115,7 +115,7 @@ class IndexVerificaciones extends Component {
         if(data.respuesta==true){
             cogoToast.success("Imagen aceptada");
             this.imagenQuitar(index);
-            }
+          }
         else{
           console.log(data)
           console.log("hubo un error con la peticion")
