@@ -186,15 +186,11 @@ class IndexProductos extends Component {
         });
       }
     }
-<<<<<<< HEAD
 
     editarProducto(){
 
     }
-=======
     
->>>>>>> 5858054d3b8e0822abc482990fef1a0aeac4e082
-
     eliminarProducto(id){
 
         fetch(`${Config.api}productos/eliminar`,
