@@ -185,9 +185,7 @@ class IndexProductos extends Component {
             console.log('Hubo un problema con la petición Fetch:' + error.message);
         });
     }
-    editarProducto(){
-
-    }
+    
 
     }
     eliminarProducto(id){
