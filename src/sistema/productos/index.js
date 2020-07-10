@@ -184,12 +184,13 @@ class IndexProductos extends Component {
             cogoToast.error("No se creo el producto")
             console.log('Hubo un problema con la petición Fetch:' + error.message);
         });
+      }
     }
+
     editarProducto(){
 
     }
 
-    }
     eliminarProducto(id){
 
         fetch(`${Config.api}productos/eliminar`,
