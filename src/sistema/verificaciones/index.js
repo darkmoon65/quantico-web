@@ -118,7 +118,7 @@ class IndexVerificaciones extends Component {
           }
         else{
           console.log(data)
-          console.log("hubo un error con la peticion")
+          cogoToast.error(data.mensaje)
         }
     }).catch((error)=> {
       console.log('Hubo un problema con la petición Fetch:' + error.message);
