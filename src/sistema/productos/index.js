@@ -13,6 +13,7 @@ class IndexProductos extends Component {
     this.state = {
       tb_productos:[],
       tb_tipoProductos:[],
+      tb_membresias:[],
       detallesExtras:[],
       tipoCrearId:'',
       productoCrearId:'',
@@ -90,7 +91,7 @@ class IndexProductos extends Component {
   }
 
     membresiaCount(){
-      let a = this.state.tb_membresias
+      let a = this.state.tb_membresias.datos
       let r = []
       a.map((b,index)=>{
         r.push(index)
@@ -262,7 +263,7 @@ class IndexProductos extends Component {
         )
           .then(res =>res.json())
           .then(data => {
-            if(data){
+            if(data.respuesta==true){
               this.setState({
                 tb_membresias: data
               },()=>{
@@ -292,7 +293,7 @@ class IndexProductos extends Component {
           )
             .then(res =>res.json())
             .then(data => {
-              if(data){
+              if(data.respuesta==true){
                 console.log(data)
                 this.setState({
                   tb_tipoProductos: data
@@ -417,8 +418,8 @@ class IndexProductos extends Component {
                                             <select className="form-control" name="tipoCrearId" style={{width: '50%'}} onChange={this.handleChange} value={this.state.tipoCrearId}>
                                                 <option key={0} value={''}>--Escoje una opcion--</option>
                                                 {
-                                                this.state.tb_tipoProductos?
-                                                this.state.tb_tipoProductos.map((data,index)=>{
+                                                this.state.tb_tipoProductos.datos?
+                                                this.state.tb_tipoProductos.datos.map((data,index)=>{
                                                  return(
                                                     <option key={data.id} value={data.id}>{data.nombre}</option>
                                                  )
@@ -504,8 +505,8 @@ class IndexProductos extends Component {
                                                     </thead>
                                                   <tbody>
                                                   {
-                                                   this.state.tb_membresias ?
-                                                   this.state.tb_membresias.map(task =>{
+                                                   this.state.tb_membresias.datos ?
+                                                   this.state.tb_membresias.datos.map(task =>{
                                                        return (
                                                            <tr key={task.id}>
                                                                <td>{task.nombre}</td>

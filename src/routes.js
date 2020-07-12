@@ -17,6 +17,9 @@ const Completos = React.lazy(() => import('./sistema/completos/index'));
 const Socios = React.lazy(() => import('./sistema/socios/index'));
 const Contactos = React.lazy(() => import('./sistema/contactos/index'));
 const TipoProductos = React.lazy(() => import('./sistema/tiposProductos/index'));
+const Citas = React.lazy(() => import('./sistema/citas/index'));
+const Bancos = React.lazy(() => import('./sistema/bancos/index'));
+const CuentasBancarias = React.lazy(() => import('./sistema/cuentasBancarias/index'));
 
 const Notificaciones = React.lazy(() => import('./sistema/notificaciones/index'));
 
@@ -92,6 +95,24 @@ const routes = [
         exact: true,
         name: 'TipoProductos',
         component: TipoProductos
+    },
+    {
+        path: '/bancos',
+        exact: true,
+        name: 'Bancos',
+        component: Bancos
+    },
+    {
+        path: '/citas',
+        exact: true,
+        name: 'Citas',
+        component: Citas
+    },
+    {
+        path: '/cuentasBancarias',
+        exact: true,
+        name: 'CuentasBancarias',
+        component: CuentasBancarias
     },
 
 ];

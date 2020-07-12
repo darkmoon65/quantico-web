@@ -144,7 +144,7 @@ class IndexContactos extends Component {
       )
         .then(res =>res.json())
         .then(data => {
-          if(data){
+          if(data.respuesta==true){
             this.setState({
               tb_contactos: data
             },()=>{console.log(this.state.tb_contactos)})
@@ -181,8 +181,8 @@ class IndexContactos extends Component {
                               </thead>
                               <tbody>
                                    {
-                                    this.state.tb_contactos ?
-                                    this.state.tb_contactos.map(task =>{
+                                    this.state.tb_contactos.datos ?
+                                    this.state.tb_contactos.datos.map(task =>{
                                         return (
                                             <tr key={task.id}>
                                                 <td>{task.nombre}</td>

@@ -6,34 +6,73 @@ import Card from "../../App/components/MainCard";
 import cogoToast from "cogo-toast";
 import Config from "../../config"
 
-class IndexSocios extends Component {
+class IndexBancos extends Component {
   constructor(){
     super();
     this.state = {
-      tb_socios:[],
+      tb_bancos:[],
       //modales
-      estadoModalCrearSocios:false,
+      estadoModalCrearBancos:false,
     }
     this.handleChange = this.handleChange.bind(this);
   }
 
-  cambiarModalCrearSocios(){
+  cambiarModalCrearBancos(){
         this.setState({
-          estadoModalCrearSocios: !this.state.estadoModalCrearSocios
+          estadoModalCrearBancos: !this.state.estadoModalCrearBancos
         })
   }
 
   clean(){
     this.setState({
-      estadoModalCrearSocios: false,
+      estadoModalCrearBancos: false,
       nombreCrear:'',
-      imagen:'',
-      link:''
-    },()=>this.fetchSocios())
+      imagen:''
+    },()=>this.fetchBancos())
   }
 
-  eliminarSocio(id){
-    fetch(`${Config.api}aliados/eliminar`,
+  handleChange(e){
+    const {name, value} = e.target;
+    this.setState({
+      [name]: value
+    },()=>{
+      console.log(value)
+    })
+  }
+  
+  crearBancos(){
+    fetch(`${Config.api}banco/crear`,
+      {
+        mode:'cors',
+        method: 'POST',
+        body: JSON.stringify({
+              nombre: this.state.nombreCrear,
+              imagen: this.state.imagen
+          }
+        ),
+        headers: {
+            'Accept' : 'application/json',
+            'Content-type' : 'application/json'
+        }
+      }
+    )
+      .then(res =>res.json())
+      .then(data => {
+        if(data.respuesta==true){
+          cogoToast.success("Banco creado");
+          this.clean();
+        }
+        else{
+          cogoToast.error("Error al crear el Banco")
+          console.log("hubo un error con la peticion")
+        }
+    }).catch((error)=> {
+      cogoToast.error("Hubo un error al crear el Banco")
+      console.log('Hubo un problema con la petición Fetch:' + error.message);
+  });
+}
+  eliminarBanco(id){
+    fetch(`${Config.api}banco/eliminar`,
       {
         mode:'cors',
         method: 'POST',
@@ -50,80 +89,20 @@ class IndexSocios extends Component {
       .then(res =>res.json())
       .then(data => {
         if(data.respuesta==true){
-          cogoToast.success("Socio eliminado");
+          cogoToast.success("Banco eliminado");
           this.clean();
         }
         else{
-          cogoToast.error("Error al eliminar el socio")
+          cogoToast.error("Error al crear el banco")
           console.log("hubo un error con la peticion")
         }
     }).catch((error)=> {
-      cogoToast.error("Hubo un error al eliminar el socio")
-      console.log('Hubo un problema con la petición Fetch:' + error.message);
-    });
-  }
-
-  handleChange(e){
-    const {name, value} = e.target;
-    this.setState({
-      [name]: value
-    },()=>{
-      console.log(value)
-    })
-  }
-  handleChangeFile (e){
-        var file = e.target.files[0];
-        var fileData = new FileReader();
-        if(file){
-          fileData.readAsDataURL(file);
-        }
-        else{
-          cogoToast.warn("Se quito la imagen");
-        }
-        fileData.onload = (event)=> {
-            this.setState({imagen: fileData.result},
-              ()=>{
-                  cogoToast.success("Imagen lista")
-                  }
-              );
-          }
-    }
-
-  crearSocio(){
-    fetch(`${Config.api}aliados/crear`,
-      {
-        mode:'cors',
-        method: 'POST',
-        body: JSON.stringify({
-              nombre: this.state.nombreCrear,
-              imagen: this.state.imagen,
-              url: this.state.link
-          }
-        ),
-        headers: {
-            'Accept' : 'application/json',
-            'Content-type' : 'application/json'
-        }
-      }
-    )
-      .then(res =>res.json())
-      .then(data => {
-        if(data.respuesta==true){
-          cogoToast.success("Socio creado");
-          this.clean();
-        }
-        else{
-          cogoToast.error("Error al crear el socio")
-          console.log("hubo un error con la peticion")
-        }
-    }).catch((error)=> {
-      cogoToast.error("Hubo un error al crear el socio")
+      cogoToast.error("Hubo un error al crear el banco")
       console.log('Hubo un problema con la petición Fetch:' + error.message);
   });
 }
-
-  fetchSocios(){
-      fetch(`${Config.api}aliados/mostrar`,
+  fetchBancos(){
+      fetch(`${Config.api}banco/mostrar`,
         {
           mode:'cors',
           method: 'GET',
@@ -137,8 +116,8 @@ class IndexSocios extends Component {
         .then(data => {
           if(data.respuesta==true){
             this.setState({
-              tb_socios: data
-            },()=>{console.log(this.state.tb_socios)})
+              tb_bancos: data
+            },()=>{console.log(this.state.tb_bancos)})
           }
           else{
             console.log(data)
@@ -147,8 +126,28 @@ class IndexSocios extends Component {
       }).catch((error)=> {
         console.log('Hubo un problema con la petición Fetch:' + error.message);
     });  }
+
+  handleChangeFile (e){
+      var file = e.target.files[0];
+      var fileData = new FileReader();
+      if(file){
+        fileData.readAsDataURL(file);
+      }
+      else{
+        cogoToast.warn("Se quito la imagen");
+      }
+      fileData.onload = (event)=> {
+          this.setState({imagen: fileData.result},
+            ()=>{
+                cogoToast.success("Imagen de tarjeta lista")
+              }
+            );
+          }
+      
+  }
+  
   componentDidMount(){
-      this.fetchSocios();
+      this.fetchBancos();
       console.log(localStorage.getItem('token'));
     }
     render() {
@@ -156,29 +155,25 @@ class IndexSocios extends Component {
             <Aux>
                 <Row>
                     <Col>
-                        <Card title='Socios' isOption>
+                        <Card title='Bancos' isOption>
                         <table id="tb_membresia" className="table table-striped" style={{width:'100%'}}>
                             <thead>
                                 <tr>
-                                    <th><h4 className="card-title">Buscar </h4></th>
-                                    <th><input type="text" onChange={this.handleChangeBuscador} /></th>
-                                    <th><button type="button" className="btn btn-primary" onClick={()=>this.cambiarModalCrearSocios()}>Crear Socios</button></th>
+                                    <th><button type="button" className="btn btn-primary" onClick={()=>this.cambiarModalCrearBancos()}>Crear banco</button></th>
                                 </tr>
                                 <tr>
-                                    <th>Nombres</th>
-                                    <th>link</th>
+                                    <th>Nombre</th>
                                 </tr>
                               </thead>
                               <tbody>
                                    {
-                                    this.state.tb_socios.datos ?
-                                    this.state.tb_socios.datos.map(task =>{
+                                    this.state.tb_bancos.datos ?
+                                    this.state.tb_bancos.datos.map(task =>{
                                         return (
                                             <tr key={task.id}>
                                                 <td>{task.nombre}</td>
-                                                <td>{task.url}</td>
                                                 <td>
-                                                  <button className="btn btn-sm btn-danger" type="button" onClick={()=>this.eliminarSocio(task.id)}>
+                                                  <button className="btn btn-sm btn-danger" type="button" onClick={()=>this.eliminarBanco(task.id)}>
                                                     <i className="fa fa-trash" ></i>
                                                   </button>
                                                 </td>
@@ -193,12 +188,12 @@ class IndexSocios extends Component {
                 </Row>
                 <Modal
                     size="lg"
-                    show={this.state.estadoModalCrearSocios}
-                    onHide={() => this.cambiarModalCrearSocios()}
+                    show={this.state.estadoModalCrearBancos}
+                    onHide={() => this.cambiarModalCrearBancos()}
                     >
                     <Modal.Header closeButton>
                       <Modal.Title id="example-custom-modal-styling-title">
-                        Crear Socios
+                        Crear Bancos
                       </Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
@@ -211,14 +206,12 @@ class IndexSocios extends Component {
                                           </div>
                                           <div>
                                             <label>Imagen:</label><br/>
-                                            <input type="file" className="form-control-file" name="imagen" onChange={e =>this.handleChangeFile(e)}/>
-                                          </div>
-                                          <div>
-                                            <label>Link:</label><br/>
-                                            <input type="text" name="link" className="form-control" onChange={this.handleChange}/>
+                                            <div className="input-group p-1">
+                                              <input type="file" className="form-control-file" name="imagen" onChange={e =>this.handleChangeFile(e)}/>
+                                            </div>
                                           </div>
                                           <div className="p-2">
-                                            <button type="button" className="btn btn-primary" onClick={()=>this.crearSocio()} >Crear Socio</button>
+                                            <button type="button" className="btn btn-primary" onClick={()=>this.crearBancos()}>Crear Banco</button>
                                           </div>
                                       </div>
                                   </div>
@@ -230,4 +223,4 @@ class IndexSocios extends Component {
     }
 }
 
-export default IndexSocios;
+export default IndexBancos;
