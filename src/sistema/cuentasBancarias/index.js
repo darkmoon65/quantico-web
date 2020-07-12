@@ -11,25 +11,28 @@ class IndexCuentas extends Component {
     super();
     this.state = {
       tb_cuentasBancarias:[],
+      tb_bancos:[],
+
       //modales
-      estadoModalCrearContactos:false,
+      estadoModalCrearCuentaBancaria:false,
     }
     this.handleChange = this.handleChange.bind(this);
   }
 
   cambiarModalCrearCuentaBancaria(){
         this.setState({
-          estadoModalCrearContactos: !this.state.estadoModalCrearContactos
+          estadoModalCrearCuentaBancaria: !this.state.estadoModalCrearCuentaBancaria
         })
   }
 
   clean(){
     this.setState({
-      estadoModalCrearContactos: false,
-      nombreCrear:'',
-      numeroCrear:'',
-      cargoCrear:''
-    },()=>this.fetchContactos())
+      estadoModalCrearCuentaBancaria: false,
+      banco: '',
+      titular:'',
+      cuenta:'' ,
+      cci: ''
+    },()=>this.fetchCuentasBancarias())
   }
 
   handleChange(e){
@@ -41,15 +44,16 @@ class IndexCuentas extends Component {
     })
   }
 
-  crearContacto(){
-    fetch(`${Config.api}contactos/crear`,
+  crearCuentaBancaria(){
+    fetch(`${Config.api}cuentaBancaria/crear`,
       {
         mode:'cors',
         method: 'POST',
         body: JSON.stringify({
-              nombre: this.state.nombreCrear,
-              numero: this.state.numeroCrear,
-              cargo: this.state.cargoCrear
+              banco: this.state.bancoCrearId,
+              titular: this.state.titularCrear,
+              cuenta: this.state.cuentaCrear,
+              cci: this.state.cciCrear
           }
         ),
         headers: {
@@ -61,20 +65,20 @@ class IndexCuentas extends Component {
       .then(res =>res.json())
       .then(data => {
         if(data.respuesta==true){
-          cogoToast.success("Contacto creado");
+          cogoToast.success("Cuenta bancaria creada");
           this.clean();
         }
         else{
-          cogoToast.error("Error al crear el contacto")
+          cogoToast.error("Error al crear la cuenta bancaria")
           console.log("hubo un error con la peticion")
         }
     }).catch((error)=> {
-      cogoToast.error("Hubo un error al crear el contacto")
+      cogoToast.error("Hubo un error al crear la cuenta bancaria")
       console.log('Hubo un problema con la petición Fetch:' + error.message);
   });
 }
-  eliminarContacto(id){
-    fetch(`${Config.api}contactos/eliminar`,
+  eliminarCuentaBancaria(id){
+    fetch(`${Config.api}cuentaBancaria/eliminar`,
       {
         mode:'cors',
         method: 'POST',
@@ -91,20 +95,20 @@ class IndexCuentas extends Component {
       .then(res =>res.json())
       .then(data => {
         if(data.respuesta==true){
-          cogoToast.success("Contacto eliminado");
+          cogoToast.success("Cuenta bancaria eliminada");
           this.clean();
         }
         else{
-          cogoToast.error("Error al crear el contacto")
+          cogoToast.error("Error al crear la cuenta bancaria")
           console.log("hubo un error con la peticion")
         }
     }).catch((error)=> {
-      cogoToast.error("Hubo un error al crear el contacto")
+      cogoToast.error("Hubo un error al crear la cuenta bancaria")
       console.log('Hubo un problema con la petición Fetch:' + error.message);
   });
 }
-  fetchContactos(){
-      fetch(`${Config.api}contactos/mostrar`,
+  fetchCuentasBancarias(){
+      fetch(`${Config.api}cuentaBancaria/mostrar`,
         {
           mode:'cors',
           method: 'GET',
@@ -128,8 +132,35 @@ class IndexCuentas extends Component {
       }).catch((error)=> {
         console.log('Hubo un problema con la petición Fetch:' + error.message);
     });  }
+
+  fetchBancos(){
+      fetch(`${Config.api}banco/mostrar`,
+        {
+          mode:'cors',
+          method: 'GET',
+          headers: {
+              'Accept' : 'application/json',
+              'Content-type' : 'application/json',
+          }
+        }
+      )
+        .then(res =>res.json())
+        .then(data => {
+          if(data.respuesta==true){
+            this.setState({
+              tb_bancos: data
+            },()=>{console.log(this.state.tb_bancos)})
+          }
+          else{
+            console.log(data)
+            console.log("hubo un error con la peticion")
+          }
+      }).catch((error)=> {
+        console.log('Hubo un problema con la petición Fetch:' + error.message);
+    });  }
   componentDidMount(){
-      this.fetchContactos();
+      this.fetchCuentasBancarias();
+      this.fetchBancos();
       console.log(localStorage.getItem('token'));
     }
     render() {
@@ -176,12 +207,12 @@ class IndexCuentas extends Component {
                 </Row>
                 <Modal
                     size="lg"
-                    show={this.state.estadoModalCrearContactos}
+                    show={this.state.estadoModalCrearCuentaBancaria}
                     onHide={() => this.cambiarModalCrearCuentaBancaria()}
                     >
                     <Modal.Header closeButton>
                       <Modal.Title id="example-custom-modal-styling-title">
-                        Crear Contactos
+                        Crear Cuenta bancaria
                       </Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
@@ -189,16 +220,34 @@ class IndexCuentas extends Component {
                                 <div className="modal-body">
                                     <div className="card-body">
                                           <div>
-                                            <label>Nombre:</label><br/>
-                                            <input type="text" name="nombreCrear" className="form-control" onChange={this.handleChange}/>
+                                            <label>Banco:</label><br/>
+                                            <select className="form-control" name="bancoCrearId" style={{width: '50%'}} onChange={this.handleChange} value={this.state.bancoCrearId}>
+                                                <option key={0} value={''}>--Escoje una opcion--</option>
+                                                {
+                                                this.state.tb_bancos.datos?
+                                                this.state.tb_bancos.datos.map((data,index)=>{
+                                                 return(
+                                                    <option key={data.id} value={data.id}>{data.nombre}</option>
+                                                 )
+                                               }):null
+                                                }
+
+                                            </select>
                                           </div>
                                           <div>
-                                            <label>Numero:</label><br/>
-                                            <input type="number" name="numeroCrear" className="form-control" onChange={this.handleChange}/>
+                                            <label>Titular:</label><br/>
+                                            <input type="text" name="titularCrear" className="form-control" onChange={this.handleChange}/>
                                           </div>
                                           <div>
-                                            <label>Cargo:</label><br/>
-                                            <input type="text" name="cargoCrear" className="form-control" onChange={this.handleChange}/>
+                                            <label>Cuenta:</label><br/>
+                                            <input type="text" name="cuentaCrear" className="form-control" onChange={this.handleChange}/>
+                                          </div>
+                                          <div>
+                                            <label>cci:</label><br/>
+                                            <input type="text" name="cciCrear" className="form-control" onChange={this.handleChange}/>
+                                          </div>
+                                          <div className="p-2">
+                                            <button type="button" className="btn btn-primary" onClick={()=>this.crearCuentaBancaria()} >Crear cuenta bancaria</button>
                                           </div>
                                       </div>
                                   </div>

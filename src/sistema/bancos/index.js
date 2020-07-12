@@ -26,7 +26,9 @@ class IndexBancos extends Component {
   clean(){
     this.setState({
       estadoModalCrearBancos: false,
-    },()=>this.fetchContactos())
+      nombreCrear:'',
+      imagen:''
+    },()=>this.fetchBancos())
   }
 
   handleChange(e){
@@ -39,14 +41,13 @@ class IndexBancos extends Component {
   }
   
   crearBancos(){
-    fetch(`${Config.api}contactos/crear`,
+    fetch(`${Config.api}banco/crear`,
       {
         mode:'cors',
         method: 'POST',
         body: JSON.stringify({
               nombre: this.state.nombreCrear,
-              numero: this.state.numeroCrear,
-              cargo: this.state.cargoCrear
+              imagen: this.state.imagen
           }
         ),
         headers: {
@@ -58,20 +59,20 @@ class IndexBancos extends Component {
       .then(res =>res.json())
       .then(data => {
         if(data.respuesta==true){
-          cogoToast.success("Contacto creado");
+          cogoToast.success("Banco creado");
           this.clean();
         }
         else{
-          cogoToast.error("Error al crear el contacto")
+          cogoToast.error("Error al crear el Banco")
           console.log("hubo un error con la peticion")
         }
     }).catch((error)=> {
-      cogoToast.error("Hubo un error al crear el contacto")
+      cogoToast.error("Hubo un error al crear el Banco")
       console.log('Hubo un problema con la petición Fetch:' + error.message);
   });
 }
-  eliminarContacto(id){
-    fetch(`${Config.api}contactos/eliminar`,
+  eliminarBanco(id){
+    fetch(`${Config.api}banco/eliminar`,
       {
         mode:'cors',
         method: 'POST',
@@ -88,20 +89,20 @@ class IndexBancos extends Component {
       .then(res =>res.json())
       .then(data => {
         if(data.respuesta==true){
-          cogoToast.success("Contacto eliminado");
+          cogoToast.success("Banco eliminado");
           this.clean();
         }
         else{
-          cogoToast.error("Error al crear el contacto")
+          cogoToast.error("Error al crear el banco")
           console.log("hubo un error con la peticion")
         }
     }).catch((error)=> {
-      cogoToast.error("Hubo un error al crear el contacto")
+      cogoToast.error("Hubo un error al crear el banco")
       console.log('Hubo un problema con la petición Fetch:' + error.message);
   });
 }
-  fetchContactos(){
-      fetch(`${Config.api}contactos/mostrar`,
+  fetchBancos(){
+      fetch(`${Config.api}banco/mostrar`,
         {
           mode:'cors',
           method: 'GET',
@@ -125,8 +126,28 @@ class IndexBancos extends Component {
       }).catch((error)=> {
         console.log('Hubo un problema con la petición Fetch:' + error.message);
     });  }
+
+  handleChangeFile (e){
+      var file = e.target.files[0];
+      var fileData = new FileReader();
+      if(file){
+        fileData.readAsDataURL(file);
+      }
+      else{
+        cogoToast.warn("Se quito la imagen");
+      }
+      fileData.onload = (event)=> {
+          this.setState({imagen: fileData.result},
+            ()=>{
+                cogoToast.success("Imagen de tarjeta lista")
+              }
+            );
+          }
+      
+  }
+  
   componentDidMount(){
-      this.fetchContactos();
+      this.fetchBancos();
       console.log(localStorage.getItem('token'));
     }
     render() {
@@ -152,7 +173,7 @@ class IndexBancos extends Component {
                                             <tr key={task.id}>
                                                 <td>{task.nombre}</td>
                                                 <td>
-                                                  <button className="btn btn-sm btn-danger" type="button" onClick={()=>this.eliminarContacto(task.id)}>
+                                                  <button className="btn btn-sm btn-danger" type="button" onClick={()=>this.eliminarBanco(task.id)}>
                                                     <i className="fa fa-trash" ></i>
                                                   </button>
                                                 </td>
@@ -172,7 +193,7 @@ class IndexBancos extends Component {
                     >
                     <Modal.Header closeButton>
                       <Modal.Title id="example-custom-modal-styling-title">
-                        Crear Contactos
+                        Crear Bancos
                       </Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
@@ -184,12 +205,13 @@ class IndexBancos extends Component {
                                             <input type="text" name="nombreCrear" className="form-control" onChange={this.handleChange}/>
                                           </div>
                                           <div>
-                                            <label>Numero:</label><br/>
-                                            <input type="number" name="numeroCrear" className="form-control" onChange={this.handleChange}/>
+                                            <label>Imagen:</label><br/>
+                                            <div className="input-group p-1">
+                                              <input type="file" className="form-control-file" name="imagen" onChange={e =>this.handleChangeFile(e)}/>
+                                            </div>
                                           </div>
-                                          <div>
-                                            <label>Cargo:</label><br/>
-                                            <input type="text" name="cargoCrear" className="form-control" onChange={this.handleChange}/>
+                                          <div className="p-2">
+                                            <button type="button" className="btn btn-primary" onClick={()=>this.crearBancos()}>Crear Banco</button>
                                           </div>
                                       </div>
                                   </div>
