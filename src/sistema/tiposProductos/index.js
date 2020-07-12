@@ -117,7 +117,7 @@ class IndexTipoProductos extends Component {
       )
         .then(res =>res.json())
         .then(data => {
-          if(data){
+          if(data.respuesta==true){
             console.log(data)
             this.setState({
               tb_tipoProductos: data
@@ -154,8 +154,8 @@ class IndexTipoProductos extends Component {
                               </thead>
                               <tbody>
                                    {
-                                    this.state.tb_tipoProductos ?
-                                    this.state.tb_tipoProductos.map(task =>{
+                                    this.state.tb_tipoProductos.datos ?
+                                    this.state.tb_tipoProductos.datos.map(task =>{
                                         return (
                                             <tr key={task.id}>
                                                 <td>{task.nombre}</td>

@@ -9,6 +9,7 @@ import Aux from "../hoc/_Aux";
 import ScrollToTop from './layout/ScrollToTop';
 import routes from "../route";
 import IndexLogin from '../sistema/login/index';
+import Config from "../config"
 
 const AdminLayout = Loadable({
     loader: () => import('./layout/AdminLayout'),
@@ -24,6 +25,38 @@ class App extends Component {
       this.state={
         logged: localStorage.getItem('token')
       }
+    }
+    agregarNumeros(verificaciones,comprobantes,completos){
+        localStorage.setItem('verificaciones',verificaciones);
+        localStorage.setItem('comprobantes',comprobantes);
+        localStorage.setItem('completos',completos);
+
+    }
+    fetchNumeros(){
+         fetch(`${Config.api}verificaciones/totales`,
+              {
+                mode:'cors',
+                method: 'GET',
+                headers: {
+                    'Accept' : 'application/json',
+                    'Content-type' : 'application/json',
+                }
+              }
+            )
+              .then(res =>res.json())
+              .then(data => {
+                if(data.respuesta==true){
+                  this.agregarNumeros(data.sinVerificar,data.sinComprobante,data.completos)
+                }
+                else{
+                  console.log(data)
+                  console.log("hubo un error con la peticion")
+                }
+            }).catch((error)=> {
+              console.log('Hubo un problema con la petición Fetch:' + error.message);
+          });  }
+    componentDidMount(){
+        this.fetchNumeros()
     }
 
     render() {
