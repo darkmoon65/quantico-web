@@ -243,7 +243,7 @@ class IndexSlider extends Component {
                                   </tr>
                                   <tr>
                                       <th>Titulo</th>
-                                      <th>Link</th>
+
                                   </tr>
                                 </thead>
                                 <tbody>
@@ -253,7 +253,6 @@ class IndexSlider extends Component {
                                           return (
                                               <tr key={task.id}>
                                                   <td>{task.titulo}</td>
-                                                  <td>{task.url}</td>
                                                   <th>
                                                     <button className="btn btn-sm btn-primary ver" type="button" onClick={()=>this.editarSlider(
                                                         task.id,
@@ -303,8 +302,8 @@ class IndexSlider extends Component {
                                               // <canvas ref="canvas" width={500} height={500} />
                                              }
                                           </div>
-                                          <div className="mx-auto" style={{padding:'4'}}>
-                                            <button type="button" className="btn btn-sm btn-primary ver" onClick={()=>this.enviarCrearSlider()}>Crear</button>
+                                          <div className="mx-auto p-2">
+                                            <button type="button" className="btn btn-sm btn-primary ver" onClick={()=>this.enviarCrearSlider()}>Crear Slider</button>
                                           </div>
                                         </div>
                                   </div>
@@ -343,7 +342,7 @@ class IndexSlider extends Component {
                                               <input type="file" className="form-control-file" onChange={e =>this.handleChangeFile(e)}/>
                                             </div>
                                             <div className="mx-auto p-2">
-                                              <button type="button" className="btn btn-sm btn-primary ver" onClick={()=>this.enviarEditarSlider()}>Editar</button>
+                                              <button type="button" className="btn btn-sm btn-primary ver" onClick={()=>this.enviarEditarSlider()}>Guardar</button>
                                             </div>
                                           </div>
                                     </div>

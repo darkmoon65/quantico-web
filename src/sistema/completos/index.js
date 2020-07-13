@@ -158,16 +158,11 @@ class IndexCompletos extends Component {
                                 <div className="modal-body">
                                     <div className="card-body text-center">
                                           <div>
-                                            <label>Imagen:</label><br/>
-                                            <img src={this.state.imagenEditar} width="400" height="500"/>
-                                          </div>
-                                          <div>
-                                            <button className="btn btn-danger" ><i className="fa fa-remove"></i></button>
-                                            <button className="btn btn-success" ><i className="fa fa-check"></i></button>
-                                          </div>
-                                          <div className="p-2">
-                                              <label>Comentario:</label><br/>
-                                              <textarea name="comentario" cols="50" rows="6" onChange={this.handleChange}></textarea>
+                                            <label>Nombre:</label><br/>
+                                            <label>Apellidos:</label><br/>
+                                            <label>Total:</label><br/>
+                                            <label>Concepto:</label><br/>
+                                            <label>Descripcion:</label><br/>
                                           </div>
                                       </div>
                                   </div>

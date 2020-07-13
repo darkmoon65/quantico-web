@@ -424,7 +424,7 @@ class IndexUsuarios extends Component {
                                             <label>Membresia: </label>
                                               <div className="input-group">
                                                   <select className="form-control" name="membresiaIdMod" id="tipoProducto" style={{width: '50%'}} onChange={this.handleChange} value={this.state.membresiaIdMod}>
-                                                      <option key={0} value={0}> Escoje una opcion</option>
+                                                      <option key={0} value={0}> Escoge una opcion</option>
                                                       {
                                                           this.state.membresia_tb ?
                                                           this.state.membresia_tb.map(element=>{
@@ -458,7 +458,7 @@ class IndexUsuarios extends Component {
                                                     </select>
                                                 </div><br/>
                                               <div className="input-group">
-                                                <button className="btn btn-sm btn-primary ver" onClick={()=>this.sendUsuariosMod()}> Editar</button>
+                                                <button className="btn btn-sm btn-primary ver" onClick={()=>this.sendUsuariosMod()}> Guardar</button>
                                               </div>
                                           </div>
                                         </div>

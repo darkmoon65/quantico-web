@@ -48,7 +48,7 @@ class IndexMembresias extends Component {
           })
     }
 
-    editarMembresia(id,nombre,periodo,oculto,costo,tarjeta,curso,detalles){
+    editarMembresia(id,nombre,periodo,oculto,costo,linkppt,tarjeta,curso,detalles){
       let p
       let o
       if(periodo=="mensual"){
@@ -63,12 +63,16 @@ class IndexMembresias extends Component {
       else if(oculto=="No"){
         o = 2
       }
+      if (linkppt==null){
+        linkppt =''
+      }
 
       this.setState({
         idEditar:id,
         nombreEditar:nombre,
         periodoEditarId:p,
         ocultoEditarId:o,
+        linkpptEditar:linkppt,
         imagenTarjeta:tarjeta,
         imagenCurso:curso,
         costoEditar: costo,
@@ -143,6 +147,7 @@ class IndexMembresias extends Component {
                periodo: this.state.periodoCrearId,
                oculto: this.state.ocultoCrearId,
                costo: this.state.costoCrear,
+               linkppt: this.state.linkpptCrear,
                tarjetaImg: this.state.imagenTarjetaBase,
                imagen: this.state.imagenCursoBase,
                detalles: this.state.detallesArray
@@ -181,6 +186,7 @@ class IndexMembresias extends Component {
                periodo: this.state.periodoEditarId,
                oculto: this.state.ocultoEditarId,
                costo: this.state.costoEditar,
+               linkppt: this.state.linkpptEditar,
                tarjetaImg: this.state.imagenTarjetaBase,
                imagen: this.state.imagenCursoBase,
                detalles: this.state.detallesEditar
@@ -357,13 +363,11 @@ class IndexMembresias extends Component {
                                                           task.periodo,
                                                           task.oculto,
                                                           task.costo,
+                                                          task.linkPPT,
                                                           task.tarjetaImg,
                                                           task.imagen,
                                                           task.detalles
                                                       )}><i className="fa fa-pencil"/></button>
-                                                      <button className="btn btn-sm btn-danger "  type="button" onClick={()=>this.eliminarMembresia(task.id)}>
-                                                        <i className="fa fa-trash" ></i>
-                                                      </button>
                                                     </td>
                                                 </tr>
                                             );
@@ -410,7 +414,10 @@ class IndexMembresias extends Component {
                                               <label>Costo:</label>
                                               <input type="text" className="form-control" name="costoCrear" onChange={this.handleChange} />
                                             </div>
-
+                                            <div>
+                                              <label>Link de power point:</label>
+                                              <input type="text" className="form-control" name="linkpptCrear" onChange={this.handleChange} />
+                                            </div>
                                             <label>Imagen de Tarjeta: </label>
                                             <div className="input-group p-1">
                                               <input type="file" className="form-control-file" name="imgTarjeta" onChange={e =>this.handleChangeFile(e)}/>
@@ -487,7 +494,10 @@ class IndexMembresias extends Component {
                                                 <label>Costo:</label>
                                                 <input type="text" className="form-control" name="costoEditar" onChange={this.handleChange} value={this.state.costoEditar}/>
                                               </div>
-
+                                              <div>
+                                                <label>Link de power point:</label>
+                                                <input type="text" className="form-control" name="linkpptEditar" onChange={this.handleChange} value={this.state.linkpptEditar}/>
+                                              </div>
                                               <label>Imagen de Tarjeta (Actual): </label>
                                               <div className="input-group p-1">
                                                   <img src={this.state.imagenTarjeta} width="400" height="400"/>
@@ -498,12 +508,12 @@ class IndexMembresias extends Component {
                                                 <input type="file" className="form-control-file" name="imgTarjeta" onChange={e =>this.handleChangeFile(e)}/>
                                               </div>
 
-                                              <label>Imagen de curso (Actual): </label>
+                                              <label>Imagen de Membresía (Actual): </label>
                                               <div className="input-group p-1">
                                                   <img src={this.state.imagenCurso} width="400" height="400"/>
                                               </div>
 
-                                              <label>Cambiar la imagen de Curso: </label>
+                                              <label>Cambiar la imagen de Membresía: </label>
                                               <div className="input-group p-1">
                                                 <input type="file" className="form-control-file" name="imgCurso" onChange={e =>this.handleChangeFile(e)}/>
                                               </div>

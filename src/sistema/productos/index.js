@@ -14,6 +14,7 @@ class IndexProductos extends Component {
       tb_productos:[],
       tb_tipoProductos:[],
       tb_membresias:[],
+      tb_cursosPre:[],
       detallesExtras:[],
       tipoCrearId:'',
       productoCrearId:'',
@@ -60,8 +61,8 @@ class IndexProductos extends Component {
         horaInicio: '',
         horaFin: '',
         inicio: '',
-        fin: ''
-
+        fin: '',
+        preCrearId:'',
       },()=>this.fetchProductos())
     }
 
@@ -161,7 +162,8 @@ class IndexProductos extends Component {
                   inicio: this.state.fechaInicioCrear,
                   fin: this.state.fechaFinCrear,
                   linkppt: this.state.linkppt,
-                  linkSala: this.state.linkSala
+                  linkSala: this.state.linkSala,
+                  prerrequisito: this.state.preCrearId
                 }
               ),
               headers: {
@@ -191,7 +193,7 @@ class IndexProductos extends Component {
     editarProducto(){
 
     }
-    
+
     eliminarProducto(id){
 
         fetch(`${Config.api}productos/eliminar`,
@@ -224,7 +226,22 @@ class IndexProductos extends Component {
           console.log('Hubo un problema con la petición Fetch:' + error.message);
       });
     }
-
+    tablaPulirPre(){
+      let nuevo = []
+      nuevo = this.state.tb_productos
+      let array = []
+      nuevo.data.map((data)=>{
+         if(data.tipo=="Curso"){
+           array.push({
+             id: data.id,
+             nombre: data.nombre
+           })
+         }
+      })
+      this.setState({
+        tb_cursosPre: array
+      })
+    }
     fetchProductos(){
       fetch(`${Config.api}productos/mostrar`,
         {
@@ -241,7 +258,11 @@ class IndexProductos extends Component {
           if(data){
             this.setState({
               tb_productos: data
-            },()=>{console.log(this.state.tb_productos)})
+            },()=>{
+              console.log(this.state.tb_productos);
+              this.tablaPulirPre();
+
+            })
           }
           else{
             console.log(data)
@@ -416,7 +437,7 @@ class IndexProductos extends Component {
                                           <div>
                                             <label>Tipo:</label>
                                             <select className="form-control" name="tipoCrearId" style={{width: '50%'}} onChange={this.handleChange} value={this.state.tipoCrearId}>
-                                                <option key={0} value={''}>--Escoje una opcion--</option>
+                                                <option key={0} value={''}>--escoge una opcion--</option>
                                                 {
                                                 this.state.tb_tipoProductos.datos?
                                                 this.state.tb_tipoProductos.datos.map((data,index)=>{
@@ -429,9 +450,24 @@ class IndexProductos extends Component {
                                             </select>
                                           </div>
                                           <div>
+                                            <label>Prerequisito:</label>
+                                            <select className="form-control" name="preCrearId" style={{width: '50%'}} onChange={this.handleChange} value={this.state.preCrearId}>
+                                                <option key={0} value={''}>--escoge una opcion--</option>
+                                                {
+                                                this.state.tb_cursosPre?
+                                                this.state.tb_cursosPre.map((data,index)=>{
+                                                 return(
+                                                    <option key={data.id} value={data.id}>{data.nombre}</option>
+                                                 )
+                                                }):null
+                                                }
+
+                                            </select>
+                                          </div>
+                                          <div>
                                             <label>Producto propio:</label>
                                             <select className="form-control" name="productoCrearId" style={{width: '50%'}} onChange={this.handleChange} value={this.state.productoCrearId}>
-                                                <option key={0} value={''}>--Escoje una opcion--</option>
+                                                <option key={0} value={''}>--escoge una opcion--</option>
                                                 <option key={1} value={0}>Si</option>
                                                 <option key={2} value={1}>No</option>
                                             </select>
