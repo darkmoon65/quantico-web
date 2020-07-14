@@ -46,12 +46,15 @@ class IndexVerificaciones extends Component {
 
   let z = `this.state.comentario${id}`
   let ok = eval(z)
-
-  this.setState({
-    comentarioEnviar: ok,
-  },()=>{
-    this.sendDenegar(id,estado,concepto,index)
-  })
+  if (ok==''){
+    cogoToast.error("Debe introducir algun mensaje primero")
+  }else{
+    this.setState({
+      comentarioEnviar: ok,
+    },()=>{
+      this.sendDenegar(id,estado,concepto,index)
+    })
+  }
 }
 
   sendDenegar(id,estado,concepto,index,msg){

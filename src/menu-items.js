@@ -21,6 +21,13 @@ export default {
                     icon: 'fa fa-user-circle',
                 },
                 {
+                    id: 'blacklist',
+                    title: 'BlackList',
+                    type: 'item',
+                    url: '/blacklist',
+                    icon: 'fa fa-user-circle',
+                },
+                {
                     id: 'slider',
                     title: 'Slider',
                     type: 'item',

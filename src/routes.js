@@ -20,6 +20,7 @@ const TipoProductos = React.lazy(() => import('./sistema/tiposProductos/index'))
 const Citas = React.lazy(() => import('./sistema/citas/index'));
 const Bancos = React.lazy(() => import('./sistema/bancos/index'));
 const CuentasBancarias = React.lazy(() => import('./sistema/cuentasBancarias/index'));
+const BlackList = React.lazy(() => import('./sistema/blacklist/index'));
 
 const Notificaciones = React.lazy(() => import('./sistema/notificaciones/index'));
 
@@ -35,6 +36,12 @@ const routes = [
         exact: true,
         name: 'Usuarios',
         component: Usuarios
+    },
+    {
+        path: '/blacklist',
+        exact: true,
+        name: 'BlackList',
+        component: BlackList
     },
     {
         path: '/slider',

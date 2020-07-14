@@ -97,7 +97,8 @@ class IndexSocios extends Component {
         body: JSON.stringify({
               nombre: this.state.nombreCrear,
               imagen: this.state.imagen,
-              url: this.state.link
+              url: this.state.link,
+              descripcion: this.state.descripcion
           }
         ),
         headers: {
@@ -216,6 +217,10 @@ class IndexSocios extends Component {
                                           <div>
                                             <label>Link:</label><br/>
                                             <input type="text" name="link" className="form-control" onChange={this.handleChange}/>
+                                          </div>
+                                          <div>
+                                            <label>Descripcion:</label><br/>
+                                            <input type="text" name="descripcion" className="form-control" onChange={this.handleChange}/>
                                           </div>
                                           <div className="p-2">
                                             <button type="button" className="btn btn-primary" onClick={()=>this.crearSocio()} >Crear Socio</button>
