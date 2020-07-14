@@ -6,29 +6,29 @@ import Card from "../../App/components/MainCard";
 import cogoToast from "cogo-toast";
 import Config from "../../config"
 
-class IndexCitas extends Component {
+class IndexSugerencias extends Component {
   constructor(){
     super();
     this.state = {
-      tb_citas:[],
-      estadoEditar:'',
+      tb_sugerencias:[],
       //modales
-      estadoModalEditarCitas:false,
+      estadoModalCrearContactos:false,
     }
     this.handleChange = this.handleChange.bind(this);
   }
 
-  cambiarModalEditarCitas(){
+  cambiarModalCrearContactos(){
         this.setState({
-          estadoModalEditarCitas: !this.state.estadoModalEditarCitas
+          estadoModalCrearContactos: !this.state.estadoModalCrearContactos
         })
   }
 
   clean(){
     this.setState({
-      estadoModalEditarCitas: false,
-      id:'',
-      estadoEditar:''
+      estadoModalCrearContactos: false,
+      nombreCrear:'',
+      numeroCrear:'',
+      cargoCrear:''
     },()=>this.fetchContactos())
   }
 
@@ -40,16 +40,44 @@ class IndexCitas extends Component {
       console.log(value)
     })
   }
+  handleChangeFile (e){
+        var file = e.target.files[0];
+        var fileData = new FileReader();
+        if(file){
+          fileData.readAsDataURL(file);
+        }
+        else{
+          cogoToast.warn("Se quito la imagen");
+        }
+        if(e.target.name == "imgTarjeta"){
+          fileData.onload = (event)=> {
+            this.setState({imagenTarjeta: fileData.result},
+              ()=>{
+                  cogoToast.success("Imagen de tarjeta lista")
+                }
+              );
+            }
+        }
+        else if (e.target.name == "imgCurso") {
+          fileData.onload = (event)=> {
+            this.setState({imagenCurso: fileData.result},
+              ()=>{
+                  cogoToast.success("Imagen de curso lista")
+                }
+              );
+            }
+        }
+    }
 
-  sendEditarCita(){
-    fetch(`${Config.api}citas/editarEstado`,
+  crearContacto(){
+    fetch(`${Config.api}contactos/crear`,
       {
         mode:'cors',
         method: 'POST',
         body: JSON.stringify({
-              id: this.state.id,
-              usuario: this.state.usuarioId,
-              estado: this.state.estadoEditar
+              nombre: this.state.nombreCrear,
+              numero: this.state.numeroCrear,
+              cargo: this.state.cargoCrear
           }
         ),
         headers: {
@@ -61,27 +89,23 @@ class IndexCitas extends Component {
       .then(res =>res.json())
       .then(data => {
         if(data.respuesta==true){
-          cogoToast.success("Cita editada");
+          cogoToast.success("Contacto creado");
           this.clean();
         }
         else{
-          cogoToast.error("Error al editar")
+          cogoToast.error("Error al crear el contacto")
           console.log("hubo un error con la peticion")
         }
     }).catch((error)=> {
-      cogoToast.error("Hubo un error al editar")
+      cogoToast.error("Hubo un error al crear el contacto")
       console.log('Hubo un problema con la petición Fetch:' + error.message);
   });
 }
-  editarCitas(id,estado,usuarioId){
-    this.setState({
-        id: id,
-        estadoEditar: 1,
-        usuarioId: usuarioId
-    },()=>this.cambiarModalEditarCitas())
+  eliminarContacto(id){
+
   }
   fetchContactos(){
-      fetch(`${Config.api}citas/mostrar`,
+      fetch(`${Config.api}sugerencias/mostrar`,
         {
           mode:'cors',
           method: 'GET',
@@ -95,8 +119,8 @@ class IndexCitas extends Component {
         .then(data => {
           if(data.respuesta==true){
             this.setState({
-              tb_citas: data
-            },()=>{console.log(this.state.tb_citas)})
+              tb_sugerencias: data
+            },()=>{console.log(this.state.tb_sugerencias)})
           }
           else{
             console.log(data)
@@ -114,29 +138,23 @@ class IndexCitas extends Component {
             <Aux>
                 <Row>
                     <Col>
-                        <Card title='Citas' isOption>
+                        <Card title='Sugerencias' isOption>
                         <table id="tb_membresia" className="table table-striped" style={{width:'100%'}}>
                             <thead>
                                 <tr>
-                                    <th>Nombres</th>
-                                    <th>Apellidos</th>
-                                    <th>Fecha</th>
-                                    <th>Estado</th>
+                                    <th>Nombre</th>
                                 </tr>
                               </thead>
                               <tbody>
                                    {
-                                    this.state.tb_citas.data ?
-                                    this.state.tb_citas.data.map(task =>{
+                                    this.state.tb_sugerencias.datos ?
+                                    this.state.tb_sugerencias.datos.map(task =>{
                                         return (
                                             <tr key={task.id}>
-                                                <td>{task.nombres}</td>
-                                                <td>{task.apellidos}</td>
-                                                <td>{task.fecha}</td>
-                                                <td>{task.estado}</td>
+                                                <td>{task.nombre}</td>
                                                 <td>
-                                                  <button className="btn btn-sm btn-primary" type="button" onClick={()=>this.editarCitas(task.id,task.estado,task.usuario.id)}>
-                                                    <i className="fa fa-pencil" ></i>
+                                                  <button className="btn btn-sm btn-danger" type="button" onClick={()=>this.eliminarContacto(task.id)}>
+                                                    <i className="fa fa-trash" ></i>
                                                   </button>
                                                 </td>
                                             </tr>
@@ -150,12 +168,12 @@ class IndexCitas extends Component {
                 </Row>
                 <Modal
                     size="lg"
-                    show={this.state.estadoModalEditarCitas}
-                    onHide={() => this.cambiarModalEditarCitas()}
+                    show={this.state.estadoModalCrearContactos}
+                    onHide={() => this.cambiarModalCrearContactos()}
                     >
                     <Modal.Header closeButton>
                       <Modal.Title id="example-custom-modal-styling-title">
-                        Editar estado de citas
+                        Crear Contactos
                       </Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
@@ -163,15 +181,19 @@ class IndexCitas extends Component {
                                 <div className="modal-body">
                                     <div className="card-body">
                                           <div>
-                                            <label>Estado:</label><br/>
-                                            <select className="form-control" name="estadoEditar" style={{width: '50%'}} onChange={this.handleChange} value={this.state.estadoEditar}>
-                                                  <option key={1} value={1}>Aceptar</option>
-                                                  <option key={2} value={2}>Rechazar</option>
-                                            </select>
+                                            <label>Nombre:</label><br/>
+                                            <input type="text" name="nombreCrear" className="form-control" onChange={this.handleChange}/>
                                           </div>
-
+                                          <div>
+                                            <label>Numero:</label><br/>
+                                            <input type="number" name="numeroCrear" className="form-control" onChange={this.handleChange}/>
+                                          </div>
+                                          <div>
+                                            <label>Cargo:</label><br/>
+                                            <input type="text" name="cargoCrear" className="form-control" onChange={this.handleChange}/>
+                                          </div>
                                           <div className="p-2">
-                                            <button type="button" className="btn btn-primary" onClick={()=>this.sendEditarCita()} >Guardar</button>
+                                            <button type="button" className="btn btn-primary" onClick={()=>this.crearContacto()} >Crear contacto</button>
                                           </div>
                                       </div>
                                   </div>
@@ -183,4 +205,4 @@ class IndexCitas extends Component {
     }
 }
 
-export default IndexCitas;
+export default IndexSugerencias;

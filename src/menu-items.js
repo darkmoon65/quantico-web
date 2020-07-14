@@ -112,6 +112,13 @@ export default {
                     icon: 'feather icon-home',
                 },
                 {
+                    id: 'sugerencias',
+                    title: 'Sugerencias',
+                    type: 'item',
+                    url: '/sugerencias',
+                    icon: 'feather icon-home',
+                },
+                {
                     id: 'notificaciones',
                     title: 'Notificaciones',
                     type: 'item',

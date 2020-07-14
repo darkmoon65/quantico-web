@@ -21,6 +21,7 @@ const Citas = React.lazy(() => import('./sistema/citas/index'));
 const Bancos = React.lazy(() => import('./sistema/bancos/index'));
 const CuentasBancarias = React.lazy(() => import('./sistema/cuentasBancarias/index'));
 const BlackList = React.lazy(() => import('./sistema/blacklist/index'));
+const Sugerencias = React.lazy(() => import('./sistema/sugerencias/index'));
 
 const Notificaciones = React.lazy(() => import('./sistema/notificaciones/index'));
 
@@ -120,6 +121,12 @@ const routes = [
         exact: true,
         name: 'CuentasBancarias',
         component: CuentasBancarias
+    },
+    {
+        path: '/sugerencias',
+        exact: true,
+        name: 'Sugerencias',
+        component: Sugerencias
     },
 
 ];
