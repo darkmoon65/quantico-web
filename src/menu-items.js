@@ -116,7 +116,7 @@ export default {
                     title: 'Sugerencias',
                     type: 'item',
                     url: '/sugerencias',
-                    icon: 'feather icon-home',
+                    icon: 'fa fa-lightbulb-o',
                 },
                 {
                     id: 'notificaciones',

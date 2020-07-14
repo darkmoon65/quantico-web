@@ -12,20 +12,20 @@ class IndexSugerencias extends Component {
     this.state = {
       tb_sugerencias:[],
       //modales
-      estadoModalCrearContactos:false,
+      estadoModalVerSugerencias:false,
     }
     this.handleChange = this.handleChange.bind(this);
   }
 
-  cambiarModalCrearContactos(){
+  cambiarModalVerSugerencias(){
         this.setState({
-          estadoModalCrearContactos: !this.state.estadoModalCrearContactos
+          estadoModalVerSugerencias: !this.state.estadoModalVerSugerencias
         })
   }
 
   clean(){
     this.setState({
-      estadoModalCrearContactos: false,
+      estadoModalVerSugerencias: false,
       nombreCrear:'',
       numeroCrear:'',
       cargoCrear:''
@@ -40,34 +40,6 @@ class IndexSugerencias extends Component {
       console.log(value)
     })
   }
-  handleChangeFile (e){
-        var file = e.target.files[0];
-        var fileData = new FileReader();
-        if(file){
-          fileData.readAsDataURL(file);
-        }
-        else{
-          cogoToast.warn("Se quito la imagen");
-        }
-        if(e.target.name == "imgTarjeta"){
-          fileData.onload = (event)=> {
-            this.setState({imagenTarjeta: fileData.result},
-              ()=>{
-                  cogoToast.success("Imagen de tarjeta lista")
-                }
-              );
-            }
-        }
-        else if (e.target.name == "imgCurso") {
-          fileData.onload = (event)=> {
-            this.setState({imagenCurso: fileData.result},
-              ()=>{
-                  cogoToast.success("Imagen de curso lista")
-                }
-              );
-            }
-        }
-    }
 
   crearContacto(){
     fetch(`${Config.api}contactos/crear`,
@@ -101,8 +73,19 @@ class IndexSugerencias extends Component {
       console.log('Hubo un problema con la petición Fetch:' + error.message);
   });
 }
-  eliminarContacto(id){
+  eliminarSugerencia(id){
 
+  }
+  verSugerencia(id,nombre,apellido,correo,celular,sugerencia,fecha){
+    this.setState({
+      idVer: id,
+      nombreVer:nombre,
+      apellidoVer: apellido,
+      correoVer: correo,
+      celularVer: celular,
+      sugerenciaVer: sugerencia,
+      fechaVer: fecha
+    },()=>this.cambiarModalVerSugerencias())
   }
   fetchContactos(){
       fetch(`${Config.api}sugerencias/mostrar`,
@@ -129,6 +112,7 @@ class IndexSugerencias extends Component {
       }).catch((error)=> {
         console.log('Hubo un problema con la petición Fetch:' + error.message);
     });  }
+
   componentDidMount(){
       this.fetchContactos();
       console.log(localStorage.getItem('token'));
@@ -142,7 +126,10 @@ class IndexSugerencias extends Component {
                         <table id="tb_membresia" className="table table-striped" style={{width:'100%'}}>
                             <thead>
                                 <tr>
-                                    <th>Nombre</th>
+                                    <th>Nombres</th>
+                                    <th>Apellidos</th>
+                                    <th>Celular</th>
+                                    <th>Fecha</th>
                                 </tr>
                               </thead>
                               <tbody>
@@ -151,9 +138,23 @@ class IndexSugerencias extends Component {
                                     this.state.tb_sugerencias.datos.map(task =>{
                                         return (
                                             <tr key={task.id}>
-                                                <td>{task.nombre}</td>
+                                                <td>{task.nombres}</td>
+                                                <td>{task.apellidos}</td>
+                                                <td>{task.celular}</td>
+                                                <td>{task.fecha}</td>
                                                 <td>
-                                                  <button className="btn btn-sm btn-danger" type="button" onClick={()=>this.eliminarContacto(task.id)}>
+                                                  <button className="btn btn-sm btn-primary" type="button" onClick={()=>this.verSugerencia(
+                                                    task.id,
+                                                    task.nombres,
+                                                    task.apellidos,
+                                                    task.correo,
+                                                    task.celular,
+                                                    task.sugerencia,
+                                                    task.fecha
+                                                  )}>
+                                                    <i className="fa fa-eye" ></i>
+                                                  </button>
+                                                  <button className="btn btn-sm btn-danger" type="button" onClick={()=>this.eliminarSugerencia(task.id)}>
                                                     <i className="fa fa-trash" ></i>
                                                   </button>
                                                 </td>
@@ -168,32 +169,44 @@ class IndexSugerencias extends Component {
                 </Row>
                 <Modal
                     size="lg"
-                    show={this.state.estadoModalCrearContactos}
-                    onHide={() => this.cambiarModalCrearContactos()}
+                    show={this.state.estadoModalVerSugerencias}
+                    onHide={() => this.cambiarModalVerSugerencias()}
                     >
                     <Modal.Header closeButton>
                       <Modal.Title id="example-custom-modal-styling-title">
-                        Crear Contactos
+                        Ver sugerencia
                       </Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                             <div className="card w-100">
                                 <div className="modal-body">
                                     <div className="card-body">
-                                          <div>
-                                            <label>Nombre:</label><br/>
-                                            <input type="text" name="nombreCrear" className="form-control" onChange={this.handleChange}/>
-                                          </div>
-                                          <div>
-                                            <label>Numero:</label><br/>
-                                            <input type="number" name="numeroCrear" className="form-control" onChange={this.handleChange}/>
-                                          </div>
-                                          <div>
-                                            <label>Cargo:</label><br/>
-                                            <input type="text" name="cargoCrear" className="form-control" onChange={this.handleChange}/>
+                                          <div className="p-2">
+                                            <label>Nombres:</label>
+                                            <span>&nbsp;&nbsp;{this.state.nombreVer}</span><br/>
                                           </div>
                                           <div className="p-2">
-                                            <button type="button" className="btn btn-primary" onClick={()=>this.crearContacto()} >Crear contacto</button>
+                                            <label>Apellidos:</label>
+                                            <span>&nbsp;&nbsp;{this.state.apellidoVer}</span><br/>
+                                          </div>
+                                          <div className="p-2">
+                                            <label>Correo:</label>
+                                            <span>&nbsp;&nbsp;{this.state.correoVer}</span><br/>
+                                          </div>
+                                          <div className="p-2">
+                                            <label>Celular:</label>
+                                            <span>&nbsp;&nbsp;{this.state.celularVer}</span><br/>
+                                          </div>
+                                          <div className="p-2">
+                                            <label>Fecha:</label>
+                                            <span>&nbsp;&nbsp;{this.state.fechaVer}</span><br/>
+                                          </div>
+                                          <div className="p-2">
+                                            <label>Sugerencia:</label><br/>
+                                            <span>{this.state.sugerenciaVer}</span><br/>
+                                          </div>
+                                          <div className="p-2">
+                                            <button type="button" className="btn btn-primary" onClick={()=>this.cambiarModalVerSugerencias()}>Aceptar</button>
                                           </div>
                                       </div>
                                   </div>
