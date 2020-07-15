@@ -135,7 +135,7 @@ class IndexCitas extends Component {
                                                 <td>{task.fecha}</td>
                                                 <td>{task.estado}</td>
                                                 <td>
-                                                  <button className="btn btn-sm btn-primary" type="button" onClick={()=>this.editarCitas(task.id,task.estado,task.usuario.id)}>
+                                                  <button className="btn btn-sm btn-primary" type="button" onClick={()=>this.editarCitas(task.id,task.estado,task.usuario_id)}>
                                                     <i className="fa fa-pencil" ></i>
                                                   </button>
                                                 </td>
