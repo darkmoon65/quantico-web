@@ -125,6 +125,20 @@ export default {
                     url: '/notificaciones',
                     icon: 'feather icon-shopping-cart',
                 },
+                {
+                    id: 'intereses',
+                    title: 'Intereses',
+                    type: 'item',
+                    url: '/intereses',
+                    icon: 'feather icon-home',
+                },
+                {
+                    id: 'redes',
+                    title: 'Redes',
+                    type: 'item',
+                    url: '/redes',
+                    icon: 'feather icon-home',
+                },
 
             ]
         },
