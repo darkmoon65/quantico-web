@@ -24,6 +24,7 @@ const BlackList = React.lazy(() => import('./sistema/blacklist/index'));
 const Sugerencias = React.lazy(() => import('./sistema/sugerencias/index'));
 const Intereses = React.lazy(() => import('./sistema/intereses/index'));
 const RedesSociales = React.lazy(() => import('./sistema/redes/index'));
+const TiposPago = React.lazy(() => import('./sistema/tiposPagos/index'));
 
 const Notificaciones = React.lazy(() => import('./sistema/notificaciones/index'));
 
@@ -141,6 +142,12 @@ const routes = [
         exact: true,
         name: 'Redes',
         component: RedesSociales
+    },
+    {
+        path: '/tiposPago',
+        exact: true,
+        name: 'TiposPago',
+        component: TiposPago
     },
 
 ];

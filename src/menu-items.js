@@ -139,6 +139,13 @@ export default {
                     url: '/redes',
                     icon: 'feather icon-home',
                 },
+                {
+                    id: 'tiposPago',
+                    title: 'Tipos de pago',
+                    type: 'item',
+                    url: '/tiposPago',
+                    icon: 'feather icon-home',
+                },
 
             ]
         },

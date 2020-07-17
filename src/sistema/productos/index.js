@@ -49,7 +49,7 @@ class IndexProductos extends Component {
       this.setState({
         estadoModalCrearProductos: false,
         estadoModalEditarProductos: false,
-        tipo : '',
+        tipoCrearId : '',
         prodPropio: '',
         nombre: '',
         descripcion: '',
@@ -63,13 +63,14 @@ class IndexProductos extends Component {
         inicio: '',
         fin: '',
         preCrearId:'',
+        descuentosArray:[]
       },()=>this.fetchProductos())
     }
 
     exeEnviar(){
     let a = this.state.countMembresia
     let r = []
-    for(let i = 0; i <= a.length;i++){
+    for(let i = 1; i <= a.length;i++){
       let z = `this.state.descuento${i}`
       let ok = eval(z)
       if(ok){
@@ -81,9 +82,9 @@ class IndexProductos extends Component {
     }
     let z = this.state.productoCrearId
     if(z == 0){
-      z = true
-    }else{
       z = false
+    }else{
+      z = true
     }
     this.setState({
       descuentosArray: r,
@@ -95,7 +96,7 @@ class IndexProductos extends Component {
       let a = this.state.tb_membresias.datos
       let r = []
       a.map((b,index)=>{
-        r.push(index)
+        r.push(b.id)
       })
       this.setState({
         countMembresia: r
@@ -437,7 +438,7 @@ class IndexProductos extends Component {
                                           <div>
                                             <label>Tipo:</label>
                                             <select className="form-control" name="tipoCrearId" style={{width: '50%'}} onChange={this.handleChange} value={this.state.tipoCrearId}>
-                                                <option key={0} value={''}>--escoge una opcion--</option>
+                                                <option key={0} value={null}>--escoge una opcion--</option>
                                                 {
                                                 this.state.tb_tipoProductos.datos?
                                                 this.state.tb_tipoProductos.datos.map((data,index)=>{
@@ -452,7 +453,7 @@ class IndexProductos extends Component {
                                           <div>
                                             <label>Prerequisito:</label>
                                             <select className="form-control" name="preCrearId" style={{width: '50%'}} onChange={this.handleChange} value={this.state.preCrearId}>
-                                                <option key={0} value={''}>--escoge una opcion--</option>
+                                                <option key={0} value={null}>--escoge una opcion--</option>
                                                 {
                                                 this.state.tb_cursosPre?
                                                 this.state.tb_cursosPre.map((data,index)=>{
@@ -467,9 +468,9 @@ class IndexProductos extends Component {
                                           <div>
                                             <label>Producto propio:</label>
                                             <select className="form-control" name="productoCrearId" style={{width: '50%'}} onChange={this.handleChange} value={this.state.productoCrearId}>
-                                                <option key={0} value={''}>--escoge una opcion--</option>
-                                                <option key={1} value={0}>Si</option>
-                                                <option key={2} value={1}>No</option>
+                                                <option key={0} value={null}>--escoge una opcion--</option>
+                                                <option key={1} value={1}>Si</option>
+                                                <option key={2} value={0}>No</option>
                                             </select>
                                           </div>
                                           <div>
