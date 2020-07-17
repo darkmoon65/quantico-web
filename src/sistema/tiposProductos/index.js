@@ -39,6 +39,7 @@ class IndexTipoProductos extends Component {
       console.log(value)
     })
   }
+
   enviarCrearTipoProducto(){
           fetch(`${Config.api}productos/crearTipo`,
             {

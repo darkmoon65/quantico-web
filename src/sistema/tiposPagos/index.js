@@ -40,12 +40,16 @@ class IndexTiposPago extends Component {
     })
   }
   enviarCrearTiposPago(){
-          fetch(`${Config.api}productos/crearTipo`,
+          fetch(`${Config.api}tiposPago/crear`,
             {
               mode:'cors',
               method: 'POST',
               body: JSON.stringify({
-                  nombre : this.state.nombreTipoProducto,
+                  nombre : this.state.nombreTiposPago,
+                  integracion: this.state.integracionCrear,
+                  esCuentaBancaria: this.state.esCuentaBancariaCrear,
+                  oculto: this.state.ocultoCrear,
+                  imagen: this.state.imagen
                 }
               ),
               headers: {
@@ -170,6 +174,25 @@ class IndexTiposPago extends Component {
       }).catch((error)=> {
         console.log('Hubo un problema con la petición Fetch:' + error.message);
     });  }
+
+    handleChangeFile (e){
+          var file = e.target.files[0];
+          var fileData = new FileReader();
+          if(file){
+            fileData.readAsDataURL(file);
+          }
+          else{
+            cogoToast.warn("Se quito la imagen");
+          }
+          fileData.onload = (event)=> {
+              this.setState({imagen: fileData.result},
+                ()=>{
+                    cogoToast.success("Imagen lista ");
+                    console.log(this.state.imagen)
+                    }
+                );
+        }
+    }
   componentDidMount(){
       this.fetchTiposPago();
       console.log(localStorage.getItem('token'));
@@ -235,21 +258,38 @@ class IndexTiposPago extends Component {
                                       <div className="card-body">
                                             <div>
                                               <label>Nombre :</label>
-                                              <input type="text" className="form-control" name="nombreTipoProducto" onChange={this.handleChange} />
+                                              <input type="text" className="form-control" name="nombreTiposPago" onChange={this.handleChange} />
                                             </div>
                                             <div>
-                                              <label>Nombre :</label>
-                                              <input type="text" className="form-control" name="nombreTipoProducto" onChange={this.handleChange} />
+                                              <label>Imagen: </label>
+                                              <div className="input-group p-1">
+                                                <input type="file" className="form-control-file" name="imagen" onChange={e =>this.handleChangeFile(e)}/>
+                                              </div>
                                             </div>
-                                            <div>
-                                              <label>Nombre :</label>
-                                              <input type="text" className="form-control" name="nombreTipoProducto" onChange={this.handleChange} />
+                                            <div className="p-2">
+                                              <label>Integracion: </label>
+                                              <select className="form-control" name="integracionCrear" style={{width: '50%'}} onChange={this.handleChange} value={this.state.integracionCrear}>
+                                                  <option key={0} value={null}>--escoge una opcion--</option>
+                                                  <option key={1} value={1}>Si</option>
+                                                  <option key={2} value={0}>No</option>
+                                              </select>
                                             </div>
-                                            <div>
-                                              <label>Nombre :</label>
-                                              <input type="text" className="form-control" name="nombreTipoProducto" onChange={this.handleChange} />
+                                            <div className="p-2">
+                                              <label>Es cuenta bancaria: </label>
+                                              <select className="form-control" name="esCuentaBancariaCrear" style={{width: '50%'}} onChange={this.handleChange} value={this.state.esCuentaBancariaCrear}>
+                                                  <option key={0} value={null}>--escoge una opcion--</option>
+                                                  <option key={1} value={1}>Si</option>
+                                                  <option key={2} value={0}>No</option>
+                                              </select>
                                             </div>
-
+                                            <div className="p-2">
+                                              <label>Oculto: </label>
+                                              <select className="form-control" name="ocultoCrear" style={{width: '50%'}} onChange={this.handleChange} value={this.state.ocultoCrear}>
+                                                  <option key={0} value={null}>--escoge una opcion--</option>
+                                                  <option key={1} value={1}>Si</option>
+                                                  <option key={2} value={0}>No</option>
+                                              </select>
+                                            </div>
                                             <div className="mx-auto p-2">
                                               <button type="button" className="btn btn-sm btn-primary ver" onClick={()=>this.enviarCrearTiposPago()}>Crear tipo de producto</button>
                                             </div>
