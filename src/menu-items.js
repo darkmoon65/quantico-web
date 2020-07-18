@@ -146,6 +146,13 @@ export default {
                     url: '/tiposPago',
                     icon: 'feather icon-home',
                 },
+                {
+                    id: 'regalos',
+                    title: 'Regalos',
+                    type: 'item',
+                    url: '/regalos',
+                    icon: 'fa fa-gift',
+                },
 
             ]
         },

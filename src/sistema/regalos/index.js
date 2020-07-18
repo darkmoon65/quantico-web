@@ -6,30 +6,30 @@ import Card from "../../App/components/MainCard";
 import cogoToast from "cogo-toast";
 import Config from "../../config"
 
-class IndexCitas extends Component {
+class IndexRegalos extends Component {
   constructor(){
     super();
     this.state = {
-      tb_citas:[],
+      tb_regalos:[],
       estadoEditar:'',
       //modales
-      estadoModalEditarCitas:false,
+      estadoModalEnviarRegalos:false,
     }
     this.handleChange = this.handleChange.bind(this);
   }
 
-  cambiarModalEditarCitas(){
+  cambiarModalEnviarRegalos(){
         this.setState({
-          estadoModalEditarCitas: !this.state.estadoModalEditarCitas
+          estadoModalEnviarRegalos: !this.state.estadoModalEnviarRegalos
         })
   }
 
   clean(){
     this.setState({
-      estadoModalEditarCitas: false,
+      estadoModalEnviarRegalos: false,
       id:'',
       estadoEditar:''
-    },()=>this.fetchContactos())
+    },()=>this.fetchRegalos())
   }
 
   handleChange(e){
@@ -41,16 +41,14 @@ class IndexCitas extends Component {
     })
   }
 
-  sendEditarCita(){
-    fetch(`${Config.api}citas/editarEstado`,
+  sendRegalo(){
+    fetch(`${Config.api}regalos/enviar`,
       {
         mode:'cors',
         method: 'POST',
         body: JSON.stringify({
               id: this.state.id,
-              usuario: this.state.usuarioId,
-              estado: this.state.estadoEditar,
-              link: this.state.linkEditar
+              regalo: this.state.regaloEnviar,
           }
         ),
         headers: {
@@ -62,27 +60,25 @@ class IndexCitas extends Component {
       .then(res =>res.json())
       .then(data => {
         if(data.respuesta==true){
-          cogoToast.success("Cita editada");
+          cogoToast.success("Regalo enviado");
           this.clean();
         }
         else{
-          cogoToast.error("Error al editar")
+          cogoToast.error("Error al enviar")
           console.log("hubo un error con la peticion")
         }
     }).catch((error)=> {
-      cogoToast.error("Hubo un error al editar")
+      cogoToast.error("Hubo un error al enviar regalo")
       console.log('Hubo un problema con la petición Fetch:' + error.message);
   });
 }
-  editarCitas(id,estado,usuarioId){
+  enviarRegalo(id){
     this.setState({
         id: id,
-        estadoEditar: 1,
-        usuarioId: usuarioId
-    },()=>this.cambiarModalEditarCitas())
+    },()=>this.cambiarModalEnviarRegalos())
   }
-  fetchContactos(){
-      fetch(`${Config.api}citas/mostrar`,
+  fetchRegalos(){
+      fetch(`${Config.api}regalos/buscar`,
         {
           mode:'cors',
           method: 'GET',
@@ -96,8 +92,8 @@ class IndexCitas extends Component {
         .then(data => {
           if(data.respuesta==true){
             this.setState({
-              tb_citas: data
-            },()=>{console.log(this.state.tb_citas)})
+              tb_regalos: data
+            },()=>{console.log(this.state.tb_regalos)})
           }
           else{
             console.log(data)
@@ -107,7 +103,7 @@ class IndexCitas extends Component {
         console.log('Hubo un problema con la petición Fetch:' + error.message);
     });  }
   componentDidMount(){
-      this.fetchContactos();
+      this.fetchRegalos();
       console.log(localStorage.getItem('token'));
     }
     render() {
@@ -115,28 +111,26 @@ class IndexCitas extends Component {
             <Aux>
                 <Row>
                     <Col>
-                        <Card title='Citas' isOption>
-                        <table id="tb_membresia" className="table table-striped" style={{width:'100%'}}>
+                        <Card title='Regalos' isOption>
+                        <table id="tb_regalos" className="table table-striped" style={{width:'100%'}}>
                             <thead>
                                 <tr>
                                     <th>Nombres</th>
                                     <th>Apellidos</th>
-                                    <th>Fecha</th>
-                                    <th>Estado</th>
+                                    <th>Numero de tarjeta</th>
                                 </tr>
                               </thead>
                               <tbody>
                                    {
-                                    this.state.tb_citas.data ?
-                                    this.state.tb_citas.data.map(task =>{
+                                    this.state.tb_regalos.datos ?
+                                    this.state.tb_regalos.datos.data.map(task =>{
                                         return (
                                             <tr key={task.id}>
                                                 <td>{task.nombres}</td>
                                                 <td>{task.apellidos}</td>
-                                                <td>{task.fecha}</td>
-                                                <td>{task.estado}</td>
+                                                <td>{task.nroTarjeta}</td>
                                                 <td>
-                                                  <button className="btn btn-sm btn-primary" type="button" onClick={()=>this.editarCitas(task.id,task.estado,task.usuario_id)}>
+                                                  <button className="btn btn-sm btn-primary" type="button" onClick={()=>this.enviarRegalo(task.id)}>
                                                     <i className="fa fa-pencil" ></i>
                                                   </button>
                                                 </td>
@@ -151,12 +145,12 @@ class IndexCitas extends Component {
                 </Row>
                 <Modal
                     size="lg"
-                    show={this.state.estadoModalEditarCitas}
-                    onHide={() => this.cambiarModalEditarCitas()}
+                    show={this.state.estadoModalEnviarRegalos}
+                    onHide={() => this.cambiarModalEnviarRegalos()}
                     >
                     <Modal.Header closeButton>
                       <Modal.Title id="example-custom-modal-styling-title">
-                        Editar estado de citas
+                        Enviar Regalos
                       </Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
@@ -164,18 +158,12 @@ class IndexCitas extends Component {
                                 <div className="modal-body">
                                     <div className="card-body">
                                           <div>
-                                            <label>Estado:</label><br/>
-                                            <select className="form-control" name="estadoEditar" style={{width: '50%'}} onChange={this.handleChange} value={this.state.estadoEditar}>
-                                                  <option key={1} value={1}>Aceptar</option>
-                                                  <option key={2} value={2}>Rechazar</option>
-                                            </select>
+                                            <label>Regalo:</label><br/>
+                                            <input type="text" className="form-control" name="regaloEnviar" onChange={this.handleChange}  />
                                           </div>
-                                          <div>
-                                            <label>Link zoom:</label><br/>
-                                            <input type="text" className="form-control" name="linkEditar" onChange={this.handleChange}  />
-                                          </div>
+
                                           <div className="p-2">
-                                            <button type="button" className="btn btn-primary" onClick={()=>this.sendEditarCita()} >Guardar</button>
+                                            <button type="button" className="btn btn-primary" onClick={()=>this.sendRegalo()} >Enviar Regalo</button>
                                           </div>
                                       </div>
                                   </div>
@@ -187,4 +175,4 @@ class IndexCitas extends Component {
     }
 }
 
-export default IndexCitas;
+export default IndexRegalos;
