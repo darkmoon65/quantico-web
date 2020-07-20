@@ -26,6 +26,9 @@ const Intereses = React.lazy(() => import('./sistema/intereses/index'));
 const RedesSociales = React.lazy(() => import('./sistema/redes/index'));
 const TiposPago = React.lazy(() => import('./sistema/tiposPagos/index'));
 const Regalos = React.lazy(() => import('./sistema/regalos/index'));
+const Inversiones = React.lazy(() => import('./sistema/inversiones/index'));
+const Herramientas = React.lazy(() => import('./sistema/herramientas/index'));
+
 
 const DatosFinancieros = React.lazy(() => import('./sistema/datosFinancieros/index'));
 const Notificaciones = React.lazy(() => import('./sistema/notificaciones/index'));
@@ -158,11 +161,24 @@ const routes = [
         component: Regalos
     },
     {
+        path: '/inversiones',
+        exact: true,
+        name: 'Inversiones',
+        component: Inversiones
+    },
+    {
+        path: '/herramientas',
+        exact: true,
+        name: 'Herramientas',
+        component: Herramientas
+    },
+
+    {
         path: '/datosFinancieros',
         exact: true,
         name: 'DatosFinancieros',
         component: DatosFinancieros
-    },
+    }
 
 ];
 

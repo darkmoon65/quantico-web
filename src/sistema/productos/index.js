@@ -115,10 +115,12 @@ class IndexProductos extends Component {
               nombre: this.state.nombreCrear,
               descripcion: this.state.descripcionCrear,
               costo: this.state.costoCrear,
-              imagen: this.state.imagen,
+              imagen: this.state.imagenProducto,
+              imagenExpositor: this.state.imagenExpositor,
               linkppt: this.state.linkppt,
               linkSala: this.state.linkSala,
-              descuentos: this.state.descuentosArray
+              descuentos: this.state.descuentosArray,
+              expositor: this.state.expositorCrear
               }
             ),
             headers: {
@@ -154,7 +156,8 @@ class IndexProductos extends Component {
                   nombre: this.state.nombreCrear,
                   descripcion: this.state.descripcionCrear,
                   costo: this.state.costoCrear,
-                  imagen: this.state.imagen,
+                  imagen: this.state.imagenProducto,
+                  imagenExpositor: this.state.imagenExpositor,
                   descuentos: this.state.descuentosArray,
                   expositor: this.state.expositorCrear,
                   duracion: this.state.duracionCrear,
@@ -356,14 +359,24 @@ class IndexProductos extends Component {
           else{
             cogoToast.warn("Se quito la imagen");
           }
-          fileData.onload = (event)=> {
-              this.setState({imagen: fileData.result},
+          if(e.target.name == "imagenProducto"){
+            fileData.onload = (event)=> {
+              this.setState({imagenProducto: fileData.result},
                 ()=>{
-                    cogoToast.success("Imagen lista ");
-                    console.log(this.state.imagen)
-                    }
+                    cogoToast.success("Imagen de producto lista")
+                  }
                 );
               }
+          }
+          else if (e.target.name == "imagenExpositor") {
+            fileData.onload = (event)=> {
+              this.setState({imagenExpositor: fileData.result},
+                ()=>{
+                    cogoToast.success("Imagen de expositor lista")
+                  }
+                );
+              }
+          }
     }
 
     componentDidMount(){
@@ -485,20 +498,23 @@ class IndexProductos extends Component {
                                             <label>Costo:</label>
                                             <input type="number" className="form-control" name="costoCrear" onChange={this.handleChange} />
                                           </div>
-                                          <label>Imagen: </label>
+                                          <label>Imagen de producto: </label>
                                           <div className="input-group p-1">
-                                            <input type="file" className="form-control-file" name="imagen" onChange={e =>this.handleChangeFile(e)}/>
+                                            <input type="file" className="form-control-file" name="imagenProducto" onChange={e =>this.handleChangeFile(e)}/>
                                           </div>
-
+                                          <div>
+                                            <label>Expositor:</label>
+                                            <input type="text" className="form-control" name="expositorCrear" onChange={this.handleChange} />
+                                          </div>
+                                          <div className="p-2">
+                                            <label>Imagen de expositor:</label>
+                                            <input type="file" className="form-control-file" name="imagenExpositor" onChange={e =>this.handleChangeFile(e)}/>
+                                          </div>
                                             {
                                                 (this.state.detallesExtras==1) ?
                                                 this.state.detallesExtras.map((a,index)=>{
                                                 return(
                                                   <div key={index} >
-                                                    <div>
-                                                      <label>Expositor:</label>
-                                                      <input type="text" className="form-control" name="expositorCrear" onChange={this.handleChange} />
-                                                    </div>
                                                     <div>
                                                       <label>Duracion:</label>
                                                       <input type="text" className="form-control" name="duracionCrear" onChange={this.handleChange} />

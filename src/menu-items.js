@@ -21,6 +21,13 @@ export default {
                     icon: 'fa fa-user-circle',
                 },
                 {
+                    id: 'herramientas',
+                    title: 'Herramientas',
+                    type: 'item',
+                    url: '/herramientas',
+                    icon: 'fa fa-wrench',
+                },
+                {
                     id: 'blacklist',
                     title: 'BlackList',
                     type: 'item',
@@ -154,12 +161,21 @@ export default {
                     icon: 'fa fa-gift',
                 },
                 {
+                    id: 'inversiones',
+                    title: 'Inversiones',
+                    type: 'item',
+                    url: '/inversiones',
+                    icon: 'fa fa-home',
+                },
+
+                {
                     id: 'datosFinancieros',
                     title: 'Datos Financieros',
                     type: 'item',
                     url: '/datosFinancieros',
                     icon: 'fa fa-university',
-                },
+                }
+
 
             ]
         },
