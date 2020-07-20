@@ -12,10 +12,12 @@ class IndexRegalos extends Component {
     this.state = {
       tb_regalos:[],
       estadoEditar:'',
+      valor:'',
       //modales
       estadoModalEnviarRegalos:false,
     }
     this.handleChange = this.handleChange.bind(this);
+    this.handleChangeBuscador  = this.handleChangeBuscador.bind(this);
   }
 
   cambiarModalEnviarRegalos(){
@@ -38,6 +40,15 @@ class IndexRegalos extends Component {
       [name]: value
     },()=>{
       console.log(value)
+    })
+  }
+  handleChangeBuscador(e){
+    const value = e.target.value;
+    this.setState({
+      valor: value
+    },()=>{
+      console.log(value);
+      this.fetchRegalos();
     })
   }
 
@@ -78,7 +89,7 @@ class IndexRegalos extends Component {
     },()=>this.cambiarModalEnviarRegalos())
   }
   fetchRegalos(){
-      fetch(`${Config.api}regalos/buscar`,
+      fetch(`${Config.api}regalos/buscar?buscar=${this.state.valor}`,
         {
           mode:'cors',
           method: 'GET',
@@ -114,6 +125,10 @@ class IndexRegalos extends Component {
                         <Card title='Regalos' isOption>
                         <table id="tb_regalos" className="table table-striped" style={{width:'100%'}}>
                             <thead>
+                                <tr>
+                                    <th><h4 className="card-title">Buscar </h4></th>
+                                    <th><input type="text" onChange={this.handleChangeBuscador} /></th>
+                                </tr>
                                 <tr>
                                     <th>Nombres</th>
                                     <th>Apellidos</th>
