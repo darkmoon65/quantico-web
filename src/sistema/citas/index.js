@@ -127,8 +127,8 @@ class IndexCitas extends Component {
                               </thead>
                               <tbody>
                                    {
-                                    this.state.tb_citas.data ?
-                                    this.state.tb_citas.data.map(task =>{
+                                    this.state.tb_citas.datos ?
+                                    this.state.tb_citas.datos.data.map(task =>{
                                         return (
                                             <tr key={task.id}>
                                                 <td>{task.nombres}</td>
