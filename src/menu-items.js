@@ -25,7 +25,7 @@ export default {
                     title: 'BlackList',
                     type: 'item',
                     url: '/blacklist',
-                    icon: 'fa fa-user-circle',
+                    icon: 'fa fa-ban',
                 },
                 {
                     id: 'slider',
@@ -152,6 +152,13 @@ export default {
                     type: 'item',
                     url: '/regalos',
                     icon: 'fa fa-gift',
+                },
+                {
+                    id: 'datosFinancieros',
+                    title: 'Datos Financieros',
+                    type: 'item',
+                    url: '/datosFinancieros',
+                    icon: 'fa fa-university',
                 },
 
             ]

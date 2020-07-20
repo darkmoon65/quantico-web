@@ -27,6 +27,7 @@ const RedesSociales = React.lazy(() => import('./sistema/redes/index'));
 const TiposPago = React.lazy(() => import('./sistema/tiposPagos/index'));
 const Regalos = React.lazy(() => import('./sistema/regalos/index'));
 
+const DatosFinancieros = React.lazy(() => import('./sistema/datosFinancieros/index'));
 const Notificaciones = React.lazy(() => import('./sistema/notificaciones/index'));
 
 const routes = [
@@ -155,6 +156,12 @@ const routes = [
         exact: true,
         name: 'Regalos',
         component: Regalos
+    },
+    {
+        path: '/datosFinancieros',
+        exact: true,
+        name: 'DatosFinancieros',
+        component: DatosFinancieros
     },
 
 ];
