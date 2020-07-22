@@ -5,6 +5,7 @@ import Aux from "../../hoc/_Aux";
 import Card from "../../App/components/MainCard";
 import cogoToast from "cogo-toast";
 import Config from "../../config"
+import Files from "../../files"
 
 class IndexComprobantes extends Component {
   constructor(){
@@ -19,6 +20,9 @@ class IndexComprobantes extends Component {
     this.handleChange = this.handleChange.bind(this);
   }
 
+  descargarExcel(){
+    Files.exportToCSV(this.state.tb_comprobantes,"comprobantes");
+  }
   cambiarModalSubirComprobantes(){
         this.setState({
           estadoModalSubirComprobantes: !this.state.estadoModalSubirComprobantes,
@@ -159,6 +163,7 @@ class IndexComprobantes extends Component {
                                 <tr>
                                     <th><h4 className="card-title">Buscar </h4></th>
                                     <th><input type="text" onChange={this.handleChangeBuscador} /></th>
+                                    <th><button className="btn btn-sm btn-success" type="button" onClick={()=>this.descargarExcel()}>Descargar excel</button></th>
                                 </tr>
                                 <tr>
                                     <th>Nombres</th>

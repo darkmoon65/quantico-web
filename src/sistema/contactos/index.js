@@ -5,6 +5,7 @@ import Aux from "../../hoc/_Aux";
 import Card from "../../App/components/MainCard";
 import cogoToast from "cogo-toast";
 import Config from "../../config"
+import Files from "../../files"
 
 class IndexContactos extends Component {
   constructor(){
@@ -17,6 +18,9 @@ class IndexContactos extends Component {
     this.handleChange = this.handleChange.bind(this);
   }
 
+  descargarExcel(){
+    Files.exportToCSV(this.state.tb_contactos.datos,"contactos");
+  }
   cambiarModalCrearContactos(){
         this.setState({
           estadoModalCrearContactos: !this.state.estadoModalCrearContactos
@@ -172,6 +176,7 @@ class IndexContactos extends Component {
                                     <th><h4 className="card-title">Buscar </h4></th>
                                     <th><input type="text" onChange={this.handleChangeBuscador} /></th>
                                     <th><button type="button" className="btn btn-primary" onClick={()=>this.cambiarModalCrearContactos()}>Crear contactos</button></th>
+                                    <th><button className="btn btn-sm btn-success" type="button" onClick={()=>this.descargarExcel()}>Descargar excel</button></th>
                                 </tr>
                                 <tr>
                                     <th>Nombres</th>

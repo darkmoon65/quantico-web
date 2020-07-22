@@ -5,6 +5,7 @@ import Aux from "../../hoc/_Aux";
 import Card from "../../App/components/MainCard";
 import cogoToast from "cogo-toast";
 import Config from "../../config"
+import Files from "../../files"
 
 class IndexCuentas extends Component {
   constructor(){
@@ -19,6 +20,9 @@ class IndexCuentas extends Component {
     this.handleChange = this.handleChange.bind(this);
   }
 
+  descargarExcel(){
+    Files.exportToCSV(this.state.tb_cuentasBancarias.datos,"cuentas-Bancarias");
+  }
   cambiarModalCrearCuentaBancaria(){
         this.setState({
           estadoModalCrearCuentaBancaria: !this.state.estadoModalCrearCuentaBancaria
@@ -173,6 +177,7 @@ class IndexCuentas extends Component {
                             <thead>
                                 <tr>
                                     <th><button type="button" className="btn btn-primary" onClick={()=>this.cambiarModalCrearCuentaBancaria()}>Crear cuenta bancaria</button></th>
+                                    <th><button className="btn btn-sm btn-success" type="button" onClick={()=>this.descargarExcel()}>Descargar excel</button></th>
                                 </tr>
                                 <tr>
                                     <th>Nombre</th>

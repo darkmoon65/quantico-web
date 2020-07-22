@@ -5,6 +5,7 @@ import Aux from "../../hoc/_Aux";
 import Card from "../../App/components/MainCard";
 import cogoToast from "cogo-toast";
 import Config from "../../config"
+import Files from "../../files"
 
 class IndexAsistencias extends Component {
   constructor(){
@@ -43,6 +44,9 @@ class IndexAsistencias extends Component {
 
   eliminarAsistencias(id){
 
+  }
+  descargarExcel(){
+    Files.exportToCSV(this.state.tb_asistencias.datos,"asistencias");
   }
   verAsistencia(id,nombre,apellido,correo,celular,sugerencia,fecha){
     this.setState({
@@ -91,6 +95,7 @@ class IndexAsistencias extends Component {
                 <Row>
                     <Col>
                         <Card title='Asistencias' isOption>
+                        <th><button className="btn btn-sm btn-success" type="button" onClick={()=>this.descargarExcel()}>Descargar excel</button></th>
                         <table id="tb_membresia" className="table table-striped" style={{width:'100%'}}>
                             <thead>
                                 <tr>

@@ -5,6 +5,7 @@ import Aux from "../../hoc/_Aux";
 import Card from "../../App/components/MainCard";
 import cogoToast from "cogo-toast";
 import Config from "../../config"
+import Files from "../../files"
 
 class IndexTiposPago extends Component {
   constructor(){
@@ -17,7 +18,9 @@ class IndexTiposPago extends Component {
     }
     this.handleChange = this.handleChange.bind(this);
   }
-
+  descargarExcel(){
+    Files.exportToCSV(this.state.tb_tiposPago,"tipos-pagos");
+  }
   cambiarModalCrearTiposPago(){
         this.setState({
           estadoModalCrearTiposPago: !this.state.estadoModalCrearTiposPago
@@ -207,6 +210,7 @@ class IndexTiposPago extends Component {
                             <thead>
                                 <tr>
                                     <th><button type="button" className="btn btn-primary" onClick={()=>this.cambiarModalCrearTiposPago()}>Crear Tipos de pago </button> </th>
+                                    <th><button className="btn btn-sm btn-success" type="button" onClick={()=>this.descargarExcel()}>Descargar excel</button></th>
                                 </tr>
                                 <tr>
                                     <th>Nombre</th>

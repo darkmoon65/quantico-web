@@ -5,6 +5,7 @@ import Aux from "../../hoc/_Aux";
 import Card from "../../App/components/MainCard";
 import cogoToast from "cogo-toast";
 import Config from "../../config"
+import Files from "../../files"
 
 class IndexSugerencias extends Component {
   constructor(){
@@ -16,7 +17,9 @@ class IndexSugerencias extends Component {
     }
     this.handleChange = this.handleChange.bind(this);
   }
-
+  descargarExcel(){
+    Files.exportToCSV(this.state.tb_sugerencias.datos,"sugerencias");
+  }
   cambiarModalVerSugerencias(){
         this.setState({
           estadoModalVerSugerencias: !this.state.estadoModalVerSugerencias
@@ -125,6 +128,9 @@ class IndexSugerencias extends Component {
                         <Card title='Sugerencias' isOption>
                         <table id="tb_membresia" className="table table-striped" style={{width:'100%'}}>
                             <thead>
+                                <tr>
+                                    <th><button className="btn btn-sm btn-success" type="button" onClick={()=>this.descargarExcel()}>Descargar excel</button></th>
+                                </tr>
                                 <tr>
                                     <th>Nombres</th>
                                     <th>Apellidos</th>

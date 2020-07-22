@@ -67,7 +67,7 @@ class IndexBlackList extends Component {
         console.log('Hubo un problema con la petición Fetch:' + error.message);
     });  }
   componentDidMount(){
-      this.fetchCompletos();
+      //this.fetchCompletos();
       console.log(localStorage.getItem('token'));
     }
     render() {
@@ -78,6 +78,9 @@ class IndexBlackList extends Component {
                         <Card title='BlackList' isOption>
                         <table id="tb_membresia" className="table table-striped" style={{width:'100%'}}>
                             <thead>
+                                <tr>
+                                    <th><button className="btn btn-sm btn-success" type="button" onClick={()=>this.descargarExcel()}>Descargar excel</button></th>
+                                </tr>
                                 <tr>
                                     <th>id</th>
                                     <th>Nombres</th>

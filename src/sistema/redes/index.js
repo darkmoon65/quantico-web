@@ -5,6 +5,7 @@ import Aux from "../../hoc/_Aux";
 import Card from "../../App/components/MainCard";
 import cogoToast from "cogo-toast";
 import Config from "../../config"
+import Files from "../../files"
 
 class IndexRedes extends Component {
   constructor(){
@@ -17,7 +18,9 @@ class IndexRedes extends Component {
     }
     this.handleChange = this.handleChange.bind(this);
   }
-
+  descargarExcel(){
+    Files.exportToCSV(this.state.tb_redes.datos,"redes");
+  }
   cambiarModalCrearRed(){
         this.setState({
           estadoModalCrearRed: !this.state.estadoModalCrearRed
@@ -169,6 +172,7 @@ class IndexRedes extends Component {
                                     <th><h4 className="card-title">Buscar </h4></th>
                                     <th><input type="text" onChange={this.handleChangeBuscador} /></th>
                                     <th><button type="button" className="btn btn-primary" onClick={()=>this.cambiarModalCrearRed()}>Crear Red Social</button></th>
+                                    <th><button className="btn btn-sm btn-success" type="button" onClick={()=>this.descargarExcel()}>Descargar excel</button></th>
                                 </tr>
                                 <tr>
                                     <th>Nombre</th>

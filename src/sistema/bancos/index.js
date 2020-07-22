@@ -5,6 +5,7 @@ import Aux from "../../hoc/_Aux";
 import Card from "../../App/components/MainCard";
 import cogoToast from "cogo-toast";
 import Config from "../../config"
+import Files from "../../files"
 
 class IndexBancos extends Component {
   constructor(){
@@ -15,6 +16,10 @@ class IndexBancos extends Component {
       estadoModalCrearBancos:false,
     }
     this.handleChange = this.handleChange.bind(this);
+  }
+
+  descargarExcel(){
+    Files.exportToCSV(this.state.tb_bancos.datos,"bancos");
   }
 
   cambiarModalCrearBancos(){
@@ -39,7 +44,7 @@ class IndexBancos extends Component {
       console.log(value)
     })
   }
-  
+
   crearBancos(){
     fetch(`${Config.api}banco/crear`,
       {
@@ -139,13 +144,13 @@ class IndexBancos extends Component {
       fileData.onload = (event)=> {
           this.setState({imagen: fileData.result},
             ()=>{
-                cogoToast.success("Imagen de tarjeta lista")
+                cogoToast.success("Imagen lista")
               }
             );
           }
-      
+
   }
-  
+
   componentDidMount(){
       this.fetchBancos();
       console.log(localStorage.getItem('token'));
@@ -160,6 +165,7 @@ class IndexBancos extends Component {
                             <thead>
                                 <tr>
                                     <th><button type="button" className="btn btn-primary" onClick={()=>this.cambiarModalCrearBancos()}>Crear banco</button></th>
+                                    <th><button className="btn btn-sm btn-success" type="button" onClick={()=>this.descargarExcel()}>Descargar excel</button></th>
                                 </tr>
                                 <tr>
                                     <th>Nombre</th>

@@ -5,6 +5,7 @@ import Aux from "../../hoc/_Aux";
 import Card from "../../App/components/MainCard";
 import cogoToast from "cogo-toast";
 import Config from "../../config"
+import Files from "../../files"
 
 class IndexTipoProductos extends Component {
   constructor(){
@@ -17,7 +18,9 @@ class IndexTipoProductos extends Component {
     }
     this.handleChange = this.handleChange.bind(this);
   }
-
+  descargarExcel(){
+    Files.exportToCSV(this.state.tb_tipoProductos.datos,"tipos-productos");
+  }
   cambiarModalCrearTipoProductos(){
         this.setState({
           estadoModalCrearTipoProductos: !this.state.estadoModalCrearTipoProductos
@@ -141,13 +144,14 @@ class IndexTipoProductos extends Component {
                 <Row>
                     <Col>
                         <Card title='Tipos de productos' isOption>
+                            <h4 className="card-title">Buscar </h4>
+                            <input type="text" onChange={this.handleChangeBuscador} />
+                            <span className="p-5">
+                              <button type="button" className="btn btn-primary" onClick={()=>this.cambiarModalCrearTipoProductos()}>Crear Tipos de productos </button>
+                              <button className="btn btn-sm btn-success" type="button" onClick={()=>this.descargarExcel()}>Descargar excel</button>
+                            </span>
                         <table id="tb_membresia" className="table table-striped" style={{width:'100%'}}>
                             <thead>
-                                <tr>
-                                    <th><h4 className="card-title">Buscar </h4></th>
-                                    <th><input type="text" onChange={this.handleChangeBuscador} /></th>
-                                    <th><button type="button" className="btn btn-primary" onClick={()=>this.cambiarModalCrearTipoProductos()}>Crear Tipos de productos </button> </th>
-                                </tr>
                                 <tr>
                                     <th>Nombres</th>
                                     <th>Opciones</th>
