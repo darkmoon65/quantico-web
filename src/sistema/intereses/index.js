@@ -5,6 +5,7 @@ import Aux from "../../hoc/_Aux";
 import Card from "../../App/components/MainCard";
 import cogoToast from "cogo-toast";
 import Config from "../../config"
+import Files from "../../files"
 
 class IndexIntereses extends Component {
   constructor(){
@@ -16,7 +17,9 @@ class IndexIntereses extends Component {
     }
     this.handleChange = this.handleChange.bind(this);
   }
-
+  descargarExcel(){
+    Files.exportToCSV(this.state.tb_intereses.datos,"intereses");
+  }
   cambiarModalCrearIntereses(){
         this.setState({
           estadoModalCrearIntereses: !this.state.estadoModalCrearIntereses
@@ -155,6 +158,7 @@ class IndexIntereses extends Component {
                             <thead>
                                 <tr>
                                     <th><button type="button" className="btn btn-primary" onClick={()=>this.cambiarModalCrearIntereses()}>Crear intereses</button></th>
+                                    <th><button className="btn btn-sm btn-success" type="button" onClick={()=>this.descargarExcel()}>Descargar excel</button></th>
                                 </tr>
                                 <tr>
                                     <th>Nombres</th>

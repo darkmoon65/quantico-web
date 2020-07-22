@@ -5,6 +5,7 @@ import Aux from "../../hoc/_Aux";
 import Card from "../../App/components/MainCard";
 import cogoToast from "cogo-toast";
 import Config from "../../config"
+import Files from "../../files"
 
 class IndexSlider extends Component {
 
@@ -72,6 +73,9 @@ class IndexSlider extends Component {
     },()=>{
       this.cambiarModalEditarSliders();
     })
+  }
+  descargarExcel(){
+    Files.exportToCSV(this.state.tb_sliders,"slider");
   }
 
   cambiarModalCrearSliders(){
@@ -240,6 +244,7 @@ class IndexSlider extends Component {
                                       <th><h4 className="card-title">Buscar </h4></th>
                                       <th><input type="text" onChange={this.handleChangeBuscador} /></th>
                                       <th><button className="btn btn-sm btn-primary ver" type="button" onClick={()=>this.cambiarModalCrearSliders()}>Crear Slider</button></th>
+                                      <th><button className="btn btn-sm btn-success" type="button" onClick={()=>this.descargarExcel()}>Descargar excel</button></th>
                                   </tr>
                                   <tr>
                                       <th>Titulo</th>

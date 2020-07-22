@@ -3,6 +3,7 @@ import {Row, Col, Card, Table, Modal, Form, InputGroup, FormControl, Button} fro
 import Aux from "../../hoc/_Aux";
 import cogoToast from "cogo-toast";
 import Config from "../../config"
+import Files from "../../files"
 
 class IndexComprobantes extends Component {
 
@@ -15,7 +16,9 @@ class IndexComprobantes extends Component {
         }
         this.handleChange = this.handleChange.bind(this);
     }
-
+    descargarExcel(){
+      Files.exportToCSV(this.state.tb_notificaciones,"notificaciones");
+    }
     fetchNotificaciones(){
         fetch(`${Config.api}notificaciones/mostrar`,
           {
@@ -44,7 +47,7 @@ class IndexComprobantes extends Component {
         }).catch((error)=> {
             console.log(error);
           console.log('Hubo un problema con la petición Fetch:' + error.message);
-        });  
+        });
     }
 
     componentDidMount(){
@@ -73,7 +76,7 @@ class IndexComprobantes extends Component {
           .then(data => {
             if(data.respuesta === true){
                 cogoToast.success("Notificacion enviada");
-                this.abrirModal();  
+                this.abrirModal();
                 this.fetchNotificaciones();
             }
             else{
@@ -110,10 +113,11 @@ class IndexComprobantes extends Component {
                                 {/* <span className="d-block m-t-5">use props <code>hover</code> with <code>Table</code> component</span> */}
                             </Card.Header>
                             <Card.Body>
-                                <button 
-                                    className="btn btn-sm btn-primary ver" 
-                                    type="button" 
+                                <button
+                                    className="btn btn-sm btn-primary ver"
+                                    type="button"
                                     onClick={()=>this.abrirModal()}>Crear Notificación</button>
+                                <button className="btn btn-sm btn-success" type="button" onClick={()=>this.descargarExcel()}>Descargar excel</button>
                                 <Table responsive hover>
                                     <thead>
                                         <tr>
@@ -128,7 +132,7 @@ class IndexComprobantes extends Component {
                                     </thead>
                                     <tbody>
                                     {
-                                        this.state.tb_notificaciones 
+                                        this.state.tb_notificaciones
                                         ?this.state.tb_notificaciones.map((task, posicion) => {
                                             return (
                                                 <tr key={posicion}>

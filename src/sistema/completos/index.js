@@ -5,6 +5,7 @@ import Aux from "../../hoc/_Aux";
 import Card from "../../App/components/MainCard";
 import cogoToast from "cogo-toast";
 import Config from "../../config"
+import Files from "../../files"
 
 class IndexCompletos extends Component {
   constructor(){
@@ -15,6 +16,10 @@ class IndexCompletos extends Component {
       estadoModalVerVerCompletos:false,
     }
     this.handleChange = this.handleChange.bind(this);
+  }
+
+  descargarExcel(){
+    Files.exportToCSV(this.state.tb_completos,"completos");
   }
 
   cambiarModalVerCompletos(){
@@ -36,34 +41,6 @@ class IndexCompletos extends Component {
       console.log(value)
     })
   }
-  handleChangeFile (e){
-        var file = e.target.files[0];
-        var fileData = new FileReader();
-        if(file){
-          fileData.readAsDataURL(file);
-        }
-        else{
-          cogoToast.warn("Se quito la imagen");
-        }
-        if(e.target.name == "imgTarjeta"){
-          fileData.onload = (event)=> {
-            this.setState({imagenTarjeta: fileData.result},
-              ()=>{
-                  cogoToast.success("Imagen de tarjeta lista")
-                }
-              );
-            }
-        }
-        else if (e.target.name == "imgCurso") {
-          fileData.onload = (event)=> {
-            this.setState({imagenCurso: fileData.result},
-              ()=>{
-                  cogoToast.success("Imagen de curso lista")
-                }
-              );
-            }
-        }
-    }
 
   fetchCompletos(){
       fetch(`${Config.api}verificaciones/mostrar`,
@@ -106,6 +83,7 @@ class IndexCompletos extends Component {
                                 <tr>
                                     <th><h4 className="card-title">Buscar </h4></th>
                                     <th><input type="text" onChange={this.handleChangeBuscador} /></th>
+                                    <th><button className="btn btn-sm btn-success" type="button" onClick={()=>this.descargarExcel()}>Descargar excel</button></th>
                                 </tr>
                                 <tr>
                                     <th>Nombres</th>

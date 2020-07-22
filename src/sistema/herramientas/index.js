@@ -5,6 +5,7 @@ import Aux from "../../hoc/_Aux";
 import Card from "../../App/components/MainCard";
 import cogoToast from "cogo-toast";
 import Config from "../../config"
+import Files from "../../files"
 
 class IndexHerramientas extends Component {
   constructor(){
@@ -18,6 +19,9 @@ class IndexHerramientas extends Component {
     this.handleChange = this.handleChange.bind(this);
   }
 
+  descargarExcel(){
+    Files.exportToCSV(this.state.tb_herramientas.datos,"herramientas");
+  }
   cambiarModalCrearHerramientas(){
         this.setState({
           estadoModalCrearHerramientas: !this.state.estadoModalCrearHerramientas
@@ -213,6 +217,7 @@ class IndexHerramientas extends Component {
                             <thead>
                                 <tr>
                                     <th><button type="button" className="btn btn-primary" onClick={()=>this.cambiarModalCrearHerramientas()}>Crear herramienta</button></th>
+                                    <th><button className="btn btn-sm btn-success" type="button" onClick={()=>this.descargarExcel()}>Descargar excel</button></th>
                                 </tr>
                                 <tr>
                                     <th>Titulo</th>
