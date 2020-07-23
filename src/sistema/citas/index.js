@@ -13,6 +13,7 @@ class IndexCitas extends Component {
     this.state = {
       tb_citas:[],
       estadoFechaEditar:'',
+      linkEditar:'',
       //modales
       estadoModalEditarCitas:false,
     }
@@ -48,7 +49,7 @@ class IndexCitas extends Component {
 
   sendEditarCita(){
 
-    if(this.state.estadoFecha==3 && this.state.link==''){
+    if(this.state.estadoFecha && this.state.linkEditar==''){
       cogoToast.error("debe llenar el campo link");
     }
     else{
@@ -192,12 +193,12 @@ class IndexCitas extends Component {
                                             {
                                             this.state.opeEstadoEditarFecha?
 
-                                                <select className="form-control" name="estadoFechaEditar" style={{width: '50%'}} onChange={this.handleChange} value={this.state.estadoFechaEditar}>
+                                                <select className="form-control" name="estadoFechaEditar" style={{width: '50%'}} onChange={this.handleChange} defaultValue={this.state.estadoFechaEditar}>
                                                       <option key={1} value={1}>Aceptar</option>
                                                       <option key={2} value={2}>Rechazar</option>
                                                 </select>
                                             :
-                                                <select className="form-control" name="estadoCitaEditar" style={{width: '50%'}} onChange={this.handleChange} value={this.state.estadoCitaEditar}>
+                                                <select className="form-control" name="estadoCitaEditar" style={{width: '50%'}} onChange={this.handleChange} defaultValue={this.state.estadoCitaEditar}>
                                                       <option key={1} value={1}>Aceptar</option>
                                                       <option key={2} value={2}>Rechazar</option>
                                                 </select>
