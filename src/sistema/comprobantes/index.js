@@ -58,6 +58,7 @@ class IndexComprobantes extends Component {
               'estado' : '2',
               'Accept' : 'application/json',
               'Content-type' : 'application/json',
+              'api_token': localStorage.getItem('token')
           }
         }
       )

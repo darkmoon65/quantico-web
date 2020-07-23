@@ -7,6 +7,7 @@ global.jQuery = $;
 
 const Login = React.lazy(() => import('./sistema/login/index'));
 
+const Inicio   = React.lazy(() => import('./sistema/inicio/index'));
 const Usuarios   = React.lazy(() => import('./sistema/usuarios/index'));
 const Slider     = React.lazy(() => import('./sistema/slider/index'));
 const Membresias = React.lazy(() => import('./sistema/membresias/index'));
@@ -39,6 +40,12 @@ const routes = [
         exact: true,
         name: 'Login',
         component: Login
+    },
+    {
+        path: '/quantico',
+        exact: true,
+        name: 'inicio',
+        component: Inicio
     },
     {
         path: '/usuarios',

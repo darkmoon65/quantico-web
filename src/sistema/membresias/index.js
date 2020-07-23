@@ -158,7 +158,8 @@ class IndexMembresias extends Component {
           ),
           headers: {
               'Accept' : 'application/json',
-              'Content-type' : 'application/json'
+              'Content-type' : 'application/json',
+              'api_token': localStorage.getItem('token')
           }
         }
       )
@@ -197,7 +198,8 @@ class IndexMembresias extends Component {
           ),
           headers: {
               'Accept' : 'application/json',
-              'Content-type' : 'application/json'
+              'Content-type' : 'application/json',
+              'api_token': localStorage.getItem('token')
           }
         }
       )
@@ -306,7 +308,8 @@ class IndexMembresias extends Component {
             method: 'GET',
             headers: {
                 'Accept' : 'application/json',
-                'Content-type' : 'application/json'
+                'Content-type' : 'application/json',
+                'api_token': localStorage.getItem('token')
             }
           }
         )

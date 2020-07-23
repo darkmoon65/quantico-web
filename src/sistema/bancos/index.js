@@ -57,7 +57,8 @@ class IndexBancos extends Component {
         ),
         headers: {
             'Accept' : 'application/json',
-            'Content-type' : 'application/json'
+            'Content-type' : 'application/json',
+            'api_token': localStorage.getItem('token')
         }
       }
     )
@@ -87,7 +88,8 @@ class IndexBancos extends Component {
         ),
         headers: {
             'Accept' : 'application/json',
-            'Content-type' : 'application/json'
+            'Content-type' : 'application/json',
+            'api_token': localStorage.getItem('token')
         }
       }
     )
@@ -114,6 +116,7 @@ class IndexBancos extends Component {
           headers: {
               'Accept' : 'application/json',
               'Content-type' : 'application/json',
+              'api_token': localStorage.getItem('token')
           }
         }
       )

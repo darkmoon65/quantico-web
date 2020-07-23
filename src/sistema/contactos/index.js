@@ -86,7 +86,8 @@ class IndexContactos extends Component {
         ),
         headers: {
             'Accept' : 'application/json',
-            'Content-type' : 'application/json'
+            'Content-type' : 'application/json',
+            'api_token': localStorage.getItem('token')
         }
       }
     )
@@ -116,7 +117,8 @@ class IndexContactos extends Component {
         ),
         headers: {
             'Accept' : 'application/json',
-            'Content-type' : 'application/json'
+            'Content-type' : 'application/json',
+            'api_token': localStorage.getItem('token')
         }
       }
     )
@@ -143,6 +145,7 @@ class IndexContactos extends Component {
           headers: {
               'Accept' : 'application/json',
               'Content-type' : 'application/json',
+              'api_token': localStorage.getItem('token')
           }
         }
       )

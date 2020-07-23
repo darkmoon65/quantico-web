@@ -12,10 +12,11 @@ class IndexCitas extends Component {
     super();
     this.state = {
       tb_citas:[],
-      estadoFechaEditar:'',
+      estadoFechaEditar:1,
       linkEditar:'',
       //modales
       estadoModalEditarCitas:false,
+      linkB:true
     }
     this.handleChange = this.handleChange.bind(this);
   }
@@ -34,12 +35,36 @@ class IndexCitas extends Component {
     this.setState({
       estadoModalEditarCitas: false,
       id:'',
-      estadoFechaEditar:''
+      estadoFechaEditar:1,
+      estadoCitaEditar:null
     },()=>this.fetchContactos())
   }
 
   handleChange(e){
     const {name, value} = e.target;
+
+    if (name == "estadoCitaEditar" && value==2){
+      this.setState({
+        linkB: false
+      })
+    }
+    if (name == "estadoCitaEditar" && value==1){
+      this.setState({
+        linkB: true
+      })
+    }
+    if (name == "estadoFechaEditar" && value==2){
+      this.setState({
+        linkB: false
+      })
+    }
+    if (name == "estadoFechaEditar" && value==1){
+      this.setState({
+        linkB: true
+      })
+    }
+
+
     this.setState({
       [name]: value
     },()=>{
@@ -49,7 +74,7 @@ class IndexCitas extends Component {
 
   sendEditarCita(){
 
-    if(this.state.estadoFecha && this.state.linkEditar==''){
+    if(this.state.opeEstadoEditarFecha && this.state.estadoFecha==1 && this.state.linkEditar==''){
       cogoToast.error("debe llenar el campo link");
     }
     else{
@@ -67,7 +92,8 @@ class IndexCitas extends Component {
             ),
             headers: {
                 'Accept' : 'application/json',
-                'Content-type' : 'application/json'
+                'Content-type' : 'application/json',
+                'api_token': localStorage.getItem('token')
             }
           }
         )
@@ -89,21 +115,29 @@ class IndexCitas extends Component {
 
 }
 
-  editarCitas(id,estadoFecha,estadoCita,usuarioId){
+  editarCitas(id,estado,usuarioId){
     let fecha
-    if (estadoFecha==3){
+    if (estado==3){
        fecha = true
-    }else{
+       this.setState({
+           id: id,
+           opeEstadoEditarFecha: fecha,
+           usuarioId: usuarioId
+       },()=>this.cambiarModalEditarCitas())
+    }
+    else if (estado==5){
       fecha = false
+      this.setState({
+          id: id,
+          opeEstadoEditarFecha: fecha,
+          estadoCitaEditar:1,
+          usuarioId: usuarioId
+      },()=>this.cambiarModalEditarCitas())
+    }
+    else{
+      cogoToast.warn("cita ya aceptada")
     }
 
-    this.setState({
-        id: id,
-        estadoFechaEditar: estadoFecha,
-        estadoCitaEditar: estadoCita,
-        opeEstadoEditarFecha: fecha,
-        usuarioId: usuarioId
-    },()=>this.cambiarModalEditarCitas())
   }
   fetchContactos(){
       fetch(`${Config.api}citas/mostrar`,
@@ -113,6 +147,7 @@ class IndexCitas extends Component {
           headers: {
               'Accept' : 'application/json',
               'Content-type' : 'application/json',
+              'api_token': localStorage.getItem('token')
           }
         }
       )
@@ -161,7 +196,7 @@ class IndexCitas extends Component {
                                                 <td>{task.fecha}</td>
                                                 <td>{task.estado}</td>
                                                 <td>
-                                                  <button className="btn btn-sm btn-primary" type="button" onClick={()=>this.editarCitas(task.id,task.estadoFecha,task.estadoCita,task.usuario_id)}>
+                                                  <button className="btn btn-sm btn-primary" type="button" onClick={()=>this.editarCitas(task.id,task.estado_id,task.usuario_id)}>
                                                     <i className="fa fa-pencil" ></i>
                                                   </button>
                                                 </td>
@@ -206,10 +241,14 @@ class IndexCitas extends Component {
                                           }
 
                                           </div>
-                                          <div>
-                                            <label>Link zoom:</label><br/>
-                                            <input type="text" className="form-control" name="linkEditar" onChange={this.handleChange}  />
-                                          </div>
+                                          {
+                                            this.state.linkB?
+                                                <div>
+                                                    <label>Link zoom:</label><br/>
+                                                    <input type="text" className="form-control" name="linkEditar" onChange={this.handleChange}  />
+                                                </div>
+                                                :null
+                                          }
                                           <div className="p-2">
                                             <button type="button" className="btn btn-primary" onClick={()=>this.sendEditarCita()} >Guardar</button>
                                           </div>

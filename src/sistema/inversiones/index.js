@@ -111,7 +111,8 @@ class IndexInversiones extends Component {
         ),
         headers: {
             'Accept' : 'application/json',
-            'Content-type' : 'application/json'
+            'Content-type' : 'application/json',
+            'api_token': localStorage.getItem('token')
         }
       }
     )
@@ -147,7 +148,8 @@ class IndexInversiones extends Component {
         ),
         headers: {
             'Accept' : 'application/json',
-            'Content-type' : 'application/json'
+            'Content-type' : 'application/json',
+            'api_token': localStorage.getItem('token')
         }
       }
     )
@@ -178,7 +180,8 @@ class IndexInversiones extends Component {
         ),
         headers: {
             'Accept' : 'application/json',
-            'Content-type' : 'application/json'
+            'Content-type' : 'application/json',
+            'api_token': localStorage.getItem('token')
         }
       }
     )
@@ -205,6 +208,7 @@ class IndexInversiones extends Component {
           headers: {
               'Accept' : 'application/json',
               'Content-type' : 'application/json',
+              'api_token': localStorage.getItem('token')
           }
         }
       )
@@ -288,7 +292,7 @@ class IndexInversiones extends Component {
                             <div className="card w-100">
                                 <div className="modal-body">
                                     <div className="card-body">
-                                          
+
                                           <div>
                                             <label>Tipo de inversiones:</label><br/>
                                             <select className="form-control" name="tipoInversionesId" onChange={this.handleChange} value={this.state.tipoInversionesId}>
@@ -306,7 +310,7 @@ class IndexInversiones extends Component {
                                               <label>Descripcion:</label><br/>
                                               <input type="text" name="descripcionCrear" className="form-control" onChange={this.handleChange}/>
                                             </div> : null
-                                          }                                      
+                                          }
                                           <div>
                                             <label>Imagen:</label><br/>
                                             <input type="file" className="form-control-file" name="imagenCrear" onChange={e =>this.handleChangeFile(e)}/>
@@ -372,7 +376,7 @@ class IndexInversiones extends Component {
                                               <label>Link de detalles:</label><br/>
                                               <input type="text" name="linkDetallesEditar" className="form-control" onChange={this.handleChange} value={this.state.linkDetallesEditar}/>
                                             </div>
-                                            
+
                                             <div className="p-2">
                                               <button type="button" className="btn btn-primary" onClick={()=>this.enviarEditarInversiones()} >Guardar</button>
                                             </div>

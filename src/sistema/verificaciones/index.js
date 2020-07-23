@@ -74,7 +74,8 @@ class IndexVerificaciones extends Component {
             ),
             headers: {
                 'Accept' : 'application/json',
-                'Content-type' : 'application/json'
+                'Content-type' : 'application/json',
+                'api_token': localStorage.getItem('token')
             }
           }
         )
@@ -112,7 +113,8 @@ class IndexVerificaciones extends Component {
         ),
         headers: {
             'Accept' : 'application/json',
-            'Content-type' : 'application/json'
+            'Content-type' : 'application/json',
+            'api_token': localStorage.getItem('token')
         }
       }
     )
@@ -179,6 +181,7 @@ class IndexVerificaciones extends Component {
               'estado' : '1',
               'Accept' : 'application/json',
               'Content-type' : 'application/json',
+              'api_token': localStorage.getItem('token')
           }
         }
       )

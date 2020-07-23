@@ -58,7 +58,8 @@ class IndexDatosFinancieros extends Component {
         ),
         headers: {
             'Accept' : 'application/json',
-            'Content-type' : 'application/json'
+            'Content-type' : 'application/json',
+            'api_token': localStorage.getItem('token')
         }
       }
     )
@@ -88,7 +89,8 @@ class IndexDatosFinancieros extends Component {
         ),
         headers: {
             'Accept' : 'application/json',
-            'Content-type' : 'application/json'
+            'Content-type' : 'application/json',
+            'api_token': localStorage.getItem('token')
         }
       }
     )
@@ -115,6 +117,7 @@ class IndexDatosFinancieros extends Component {
           headers: {
               'Accept' : 'application/json',
               'Content-type' : 'application/json',
+              'api_token': localStorage.getItem('token')
           }
         }
       )
@@ -141,6 +144,7 @@ class IndexDatosFinancieros extends Component {
           headers: {
               'Accept' : 'application/json',
               'Content-type' : 'application/json',
+              'api_token': localStorage.getItem('token')
           }
         }
       )
@@ -158,7 +162,7 @@ class IndexDatosFinancieros extends Component {
       }).catch((error)=> {
         console.log('Hubo un problema con la petición Fetch:' + error.message);
     });  }
-  
+
     componentDidMount(){
       this.fetchCuentasBancarias();
       this.fetchBancos();
@@ -175,9 +179,9 @@ class IndexDatosFinancieros extends Component {
                             <thead>
                                 {/* <tr>
                                     <th>
-                                        <button 
-                                            type="button" 
-                                            className="btn btn-primary" 
+                                        <button
+                                            type="button"
+                                            className="btn btn-primary"
                                             onClick={()=>this.cambiarModalCrearCuentaBancaria()}>
                                                 Crear Dato Financiero
                                         </button>

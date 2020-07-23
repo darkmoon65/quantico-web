@@ -47,7 +47,8 @@ class IndexUsuarios extends Component {
         method: 'GET',
         headers: {
             'Accept' : 'application/json',
-            'Content-type' : 'application/json'
+            'Content-type' : 'application/json',
+            'api_token': localStorage.getItem('token')
         }
       }
     )
@@ -107,7 +108,17 @@ class IndexUsuarios extends Component {
     })
   }
   fetchRol(){
-    fetch(`${Config.api}usuarios/mostrarRoles`)
+    fetch(`${Config.api}usuarios/mostrarRoles`,
+      {
+        mode:'cors',
+        method: 'GET',
+        headers: {
+            'Accept' : 'application/json',
+            'Content-type' : 'application/json',
+            'api_token': localStorage.getItem('token')
+        }
+      }
+    )
       .then(res =>res.json())
       .then(data => {
         if(data){
@@ -124,7 +135,17 @@ class IndexUsuarios extends Component {
 }
 
   fetchMembresia(){
-    fetch(`${Config.api}usuarios/mostrarMembresias`)
+    fetch(`${Config.api}usuarios/mostrarMembresias`,
+      {
+        mode:'cors',
+        method: 'GET',
+        headers: {
+            'Accept' : 'application/json',
+            'Content-type' : 'application/json',
+            'api_token': localStorage.getItem('token')
+        }
+      }
+    )
       .then(res =>res.json())
       .then(data => {
         if(data){
@@ -219,7 +240,8 @@ class IndexUsuarios extends Component {
          }),
         headers: {
             'Accept' : 'application/json',
-            'Content-type' : 'application/json'
+            'Content-type' : 'application/json',
+            'api_token': localStorage.getItem('token')
         }
       }
     )
@@ -250,7 +272,8 @@ class IndexUsuarios extends Component {
         }),
        headers: {
            'Accept' : 'application/json',
-           'Content-type' : 'application/json'
+           'Content-type' : 'application/json',
+           'api_token': localStorage.getItem('token')
        }
      }
    )
@@ -282,7 +305,8 @@ class IndexUsuarios extends Component {
          }),
         headers: {
             'Accept' : 'application/json',
-            'Content-type' : 'application/json'
+            'Content-type' : 'application/json',
+            'api_token': localStorage.getItem('token')
         }
       }
     )
@@ -314,7 +338,8 @@ class IndexUsuarios extends Component {
          }),
         headers: {
             'Accept' : 'application/json',
-            'Content-type' : 'application/json'
+            'Content-type' : 'application/json',
+            'api_token': localStorage.getItem('token')
         }
       }
     )

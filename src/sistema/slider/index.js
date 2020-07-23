@@ -44,7 +44,8 @@ class IndexSlider extends Component {
         method: 'GET',
         headers: {
             'Accept' : 'application/json',
-            'Content-type' : 'application/json'
+            'Content-type' : 'application/json',
+            'api_token': localStorage.getItem('token')
         }
       }
     )
@@ -104,7 +105,8 @@ class IndexSlider extends Component {
           ),
           headers: {
               'Accept' : 'application/json',
-              'Content-type' : 'application/json'
+              'Content-type' : 'application/json',
+              'api_token': localStorage.getItem('token')
           }
         }
       )
@@ -135,7 +137,8 @@ class IndexSlider extends Component {
       ),
       headers: {
           'Accept' : 'application/json',
-          'Content-type' : 'application/json'
+          'Content-type' : 'application/json',
+          'api_token': localStorage.getItem('token')
       }
     }
   )
@@ -169,7 +172,8 @@ class IndexSlider extends Component {
         ),
         headers: {
             'Accept' : 'application/json',
-            'Content-type' : 'application/json'
+            'Content-type' : 'application/json',
+            'api_token': localStorage.getItem('token')
         }
       }
     )

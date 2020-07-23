@@ -128,7 +128,8 @@ class IndexProductos extends Component {
             ),
             headers: {
                 'Accept' : 'application/json',
-                'Content-type' : 'application/json'
+                'Content-type' : 'application/json',
+                'api_token': localStorage.getItem('token')
             }
           }
         )
@@ -175,7 +176,8 @@ class IndexProductos extends Component {
               ),
               headers: {
                   'Accept' : 'application/json',
-                  'Content-type' : 'application/json'
+                  'Content-type' : 'application/json',
+                  'api_token': localStorage.getItem('token')
               }
             }
           )
@@ -213,7 +215,8 @@ class IndexProductos extends Component {
             ),
             headers: {
                 'Accept' : 'application/json',
-                'Content-type' : 'application/json'
+                'Content-type' : 'application/json',
+                'api_token': localStorage.getItem('token')
             }
           }
         )
@@ -256,7 +259,8 @@ class IndexProductos extends Component {
           method: 'GET',
           headers: {
               'Accept' : 'application/json',
-              'Content-type' : 'application/json'
+              'Content-type' : 'application/json',
+              'api_token': localStorage.getItem('token')
           }
         }
       )
@@ -285,7 +289,8 @@ class IndexProductos extends Component {
             method: 'GET',
             headers: {
                 'Accept' : 'application/json',
-                'Content-type' : 'application/json'
+                'Content-type' : 'application/json',
+                'api_token': localStorage.getItem('token')
             }
           }
         )
@@ -315,7 +320,8 @@ class IndexProductos extends Component {
               headers: {
                   'Accept' : 'application/json',
                   'Content-type' : 'application/json',
-                  'estado': '3'
+                  'estado': '3',
+                  'api_token': localStorage.getItem('token')
               }
             }
           )
