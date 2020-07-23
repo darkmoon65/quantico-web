@@ -187,7 +187,7 @@ class IndexVerificaciones extends Component {
           if(data){
             console.log(data)
             this.setState({
-              tb_verificaciones: data["data"]
+              tb_verificaciones: data
             },()=>{console.log(this.state.tb_verificaciones)})
           }
           else{
@@ -223,8 +223,8 @@ class IndexVerificaciones extends Component {
                               </thead>
                               <tbody>
                                    {
-                                    this.state.tb_verificaciones ?
-                                    this.state.tb_verificaciones.map((task,index) =>{
+                                    this.state.tb_verificaciones.datos ?
+                                    this.state.tb_verificaciones.datos.data.map((task,index) =>{
                                         return (
                                             <tr key={index}>
                                                 <td>{task.usuario.nombres}</td>

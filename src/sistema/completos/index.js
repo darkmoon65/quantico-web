@@ -58,7 +58,7 @@ class IndexCompletos extends Component {
         .then(data => {
           if(data){
             this.setState({
-              tb_completos: data['data']
+              tb_completos: data
             },()=>{console.log(this.state.tb_completos)})
           }
           else{
@@ -96,8 +96,8 @@ class IndexCompletos extends Component {
                               </thead>
                               <tbody>
                                    {
-                                    this.state.tb_completos ?
-                                    this.state.tb_completos.map(task =>{
+                                    this.state.tb_completos.datos ?
+                                    this.state.tb_completos.datos.data.map(task =>{
                                         return (
                                             <tr key={task.id}>
                                                 <td>{task.usuario.nombres}</td>
