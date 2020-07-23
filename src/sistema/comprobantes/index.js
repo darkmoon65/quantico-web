@@ -65,7 +65,7 @@ class IndexComprobantes extends Component {
         .then(data => {
           if(data){
             this.setState({
-              tb_comprobantes: data['data']
+              tb_comprobantes: data
             },()=>{console.log(this.state.tb_comprobantes)})
           }
           else{
@@ -176,8 +176,8 @@ class IndexComprobantes extends Component {
                               </thead>
                               <tbody>
                                    {
-                                    this.state.tb_comprobantes ?
-                                    this.state.tb_comprobantes.map(task =>{
+                                    this.state.tb_comprobantes.datos ?
+                                    this.state.tb_comprobantes.datos.data.map(task =>{
                                         return (
                                             <tr key={task.id}>
                                                 <td>{task.usuario.nombres}</td>

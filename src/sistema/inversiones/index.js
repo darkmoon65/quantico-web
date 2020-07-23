@@ -12,6 +12,8 @@ class IndexInversiones extends Component {
     super();
     this.state = {
       tb_inversiones:[],
+      tipoInversionesId: 1,
+      descrip:true,
       //modales
       estadoModalEditarInversiones:false,
       estadoModalCrearInversiones:false
@@ -37,7 +39,6 @@ class IndexInversiones extends Component {
     this.setState({
       estadoModalEditarInversiones: false,
       estadoModalCrearInversiones:false,
-      nombreCrear:'',
       numeroCrear:'',
       cargoCrear:''
     },()=>this.fetchInversiones())
@@ -45,6 +46,18 @@ class IndexInversiones extends Component {
 
   handleChange(e){
     const {name, value} = e.target;
+    if (name == "tipoInversionesId" && value == 2){
+      this.setState({
+        descrip: false,
+        descripcionCrear: null
+      })
+    }
+    if (name == "tipoInversionesId" && value == 1){
+      this.setState({
+        descrip: true,
+      })
+    }
+
     this.setState({
       [name]: value
     },()=>{
@@ -69,12 +82,10 @@ class IndexInversiones extends Component {
           }
     }
 
-  editarInversiones(id,nombre,texto,tipoInversion_id,titulo,imagen,linkVideo,linkDetalles,descripcion){
+  editarInversiones(id,tipoInversion_id,titulo,imagen,linkVideo,linkDetalles,descripcion){
 
     this.setState({
       id:id,
-      nombreEditar: nombre,
-      textoEditar: texto,
       tipoInversionesIdEditar:tipoInversion_id,
       tituloEditar:titulo,
       linkImagenEditar: imagen,
@@ -90,8 +101,6 @@ class IndexInversiones extends Component {
         mode:'cors',
         method: 'POST',
         body: JSON.stringify({
-              nombre: this.state.nombreCrear,
-              texto: this.state.textoCrear,
               tipoInversion: this.state.tipoInversionesId,
               titulo: this.state.TituloCrear,
               imagen: this.state.imagenCrear,
@@ -128,8 +137,6 @@ class IndexInversiones extends Component {
         method: 'POST',
         body: JSON.stringify({
               id: this.state.id,
-              nombre: this.state.nombreEditar,
-              texto: this.state.textoEditar,
               tipoInversion: this.state.tipoInversionesIdEditar,
               titulo: this.state.tituloEditar,
               imagen: this.state.imagenCrear,
@@ -232,7 +239,6 @@ class IndexInversiones extends Component {
                                     <th><button className="btn btn-sm btn-success" type="button" onClick={()=>this.descargarExcel()}>Descargar excel</button></th>
                                 </tr>
                                 <tr>
-                                    <th>Nombre</th>
                                     <th>Titulo</th>
                                 </tr>
                               </thead>
@@ -242,13 +248,10 @@ class IndexInversiones extends Component {
                                     this.state.tb_inversiones.datos.map(task =>{
                                         return (
                                             <tr key={task.id}>
-                                                <td>{task.nombre}</td>
                                                 <td>{task.titulo}</td>
                                                 <td>
                                                   <button className="btn btn-sm btn-primary" type="button" onClick={()=>this.editarInversiones(
                                                     task.id,
-                                                    task.nombre,
-                                                    task.texto,
                                                     task.tipoInversion_id,
                                                     task.titulo,
                                                     task.imagen,
@@ -285,14 +288,7 @@ class IndexInversiones extends Component {
                             <div className="card w-100">
                                 <div className="modal-body">
                                     <div className="card-body">
-                                          <div>
-                                            <label>Nombre:</label><br/>
-                                            <input type="text" name="nombreCrear" className="form-control" onChange={this.handleChange}/>
-                                          </div>
-                                          <div>
-                                            <label>Titulo:</label><br/>
-                                            <input type="text" name="TituloCrear" className="form-control" onChange={this.handleChange}/>
-                                          </div>
+                                          
                                           <div>
                                             <label>Tipo de inversiones:</label><br/>
                                             <select className="form-control" name="tipoInversionesId" onChange={this.handleChange} value={this.state.tipoInversionesId}>
@@ -301,9 +297,16 @@ class IndexInversiones extends Component {
                                             </select>
                                           </div>
                                           <div>
-                                            <label>Texto:</label><br/>
-                                            <input type="text" name="textoCrear" className="form-control" onChange={this.handleChange}/>
+                                            <label>Titulo:</label><br/>
+                                            <input type="text" name="TituloCrear" className="form-control" onChange={this.handleChange}/>
                                           </div>
+                                          {
+                                          this.state.descrip ?
+                                            <div>
+                                              <label>Descripcion:</label><br/>
+                                              <input type="text" name="descripcionCrear" className="form-control" onChange={this.handleChange}/>
+                                            </div> : null
+                                          }                                      
                                           <div>
                                             <label>Imagen:</label><br/>
                                             <input type="file" className="form-control-file" name="imagenCrear" onChange={e =>this.handleChangeFile(e)}/>
@@ -315,10 +318,6 @@ class IndexInversiones extends Component {
                                           <div>
                                             <label>Link de detalles:</label><br/>
                                             <input type="text" name="linkDetallesCrear" className="form-control" onChange={this.handleChange}/>
-                                          </div>
-                                          <div>
-                                            <label>Descripcion:</label><br/>
-                                            <input type="text" name="descripcionCrear" className="form-control" onChange={this.handleChange}/>
                                           </div>
                                           <div className="p-2">
                                             <button type="button" className="btn btn-primary" onClick={()=>this.crearInversiones()} >Crear inversion</button>
@@ -343,14 +342,6 @@ class IndexInversiones extends Component {
                                   <div className="modal-body">
                                       <div className="card-body">
                                             <div>
-                                              <label>Nombre:</label><br/>
-                                              <input type="text" name="nombreEditar" className="form-control" onChange={this.handleChange} value={this.state.nombreEditar}/>
-                                            </div>
-                                            <div>
-                                              <label>Titulo:</label><br/>
-                                              <input type="text" name="tituloEditar" className="form-control" onChange={this.handleChange} value={this.state.tituloEditar}/>
-                                            </div>
-                                            <div>
                                               <label>Tipo de inversiones:</label><br/>
                                               <select className="form-control" name="tipoInversionesIdEditar" onChange={this.handleChange} value={this.state.tipoInversionesIdEditar}>
                                                   <option key={1} value={1}>Publico</option>
@@ -358,8 +349,12 @@ class IndexInversiones extends Component {
                                               </select>
                                             </div>
                                             <div>
-                                              <label>Texto:</label><br/>
-                                              <input type="text" name="textoEditar" className="form-control" onChange={this.handleChange} value={this.state.textoEditar}/>
+                                              <label>Titulo:</label><br/>
+                                              <input type="text" name="tituloEditar" className="form-control" onChange={this.handleChange} value={this.state.tituloEditar}/>
+                                            </div>
+                                            <div>
+                                              <label>Descripcion:</label><br/>
+                                              <input type="text" name="descripcionEditar" className="form-control" onChange={this.handleChange} defaultValue={this.state.descripcionEditar}/>
                                             </div>
                                             <div>
                                               <label>Imagen actual:</label><br/>
@@ -377,10 +372,7 @@ class IndexInversiones extends Component {
                                               <label>Link de detalles:</label><br/>
                                               <input type="text" name="linkDetallesEditar" className="form-control" onChange={this.handleChange} value={this.state.linkDetallesEditar}/>
                                             </div>
-                                            <div>
-                                              <label>Descripcion:</label><br/>
-                                              <input type="text" name="descripcionEditar" className="form-control" onChange={this.handleChange} defaultValue={this.state.descripcionEditar}/>
-                                            </div>
+                                            
                                             <div className="p-2">
                                               <button type="button" className="btn btn-primary" onClick={()=>this.enviarEditarInversiones()} >Guardar</button>
                                             </div>
