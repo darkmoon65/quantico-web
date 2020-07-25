@@ -186,7 +186,12 @@ const routes = [
         name: 'Herramientas',
         component: Herramientas
     },
-
+    {
+        path: '/asistencias',
+        exact: true,
+        name: 'Asistencias',
+        component: Asistencias
+    },
     {
         path: '/datosFinancieros',
         exact: true,
