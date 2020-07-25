@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
-import {Row, Col,Modal} from 'react-bootstrap';
+import {Row, Col,Modal, Table, Pagination} from 'react-bootstrap';
 
 import Aux from "../../hoc/_Aux";
 import Card from "../../App/components/MainCard";
 import cogoToast from "cogo-toast";
 import Config from "../../config"
 import Files from "../../files"
+import { Redirect } from 'react-router-dom'
 
 class IndexTiposPago extends Component {
   constructor(){
@@ -14,7 +15,8 @@ class IndexTiposPago extends Component {
       tb_tiposPago:[],
       nombreTipoProducto:'',
       //modales
-      estadoModalCrearTiposPago:false,
+      estadoModalCrearTiposPago  :false,
+      redireccionarCrearTipoPago : false
     }
     this.handleChange = this.handleChange.bind(this);
   }
@@ -43,41 +45,41 @@ class IndexTiposPago extends Component {
     })
   }
   enviarCrearTiposPago(){
-          fetch(`${Config.api}tiposPago/crear`,
-            {
-              mode:'cors',
-              method: 'POST',
-              body: JSON.stringify({
-                  nombre : this.state.nombreTiposPago,
-                  integracion: this.state.integracionCrear,
-                  esCuentaBancaria: this.state.esCuentaBancariaCrear,
-                  oculto: this.state.ocultoCrear,
-                  imagen: this.state.imagen
-                }
-              ),
-              headers: {
-                  'Accept' : 'application/json',
-                  'Content-type' : 'application/json',
-                  'api_token': localStorage.getItem('token')
-              }
-            }
-          )
-            .then(res =>res.json())
-            .then(data => {
-              if(data.respuesta==true){
-                cogoToast.success("Tipo de producto creado");
-                this.clean();
-              }
-              else{
-                console.log(data)
-                cogoToast.error("No se creo,verifique los datos")
-                console.log("hubo un error con la peticion")
-              }
-          }).catch((error)=> {
-            cogoToast.error("No se creo el tipo de producto")
-            console.log('Hubo un problema con la petición Fetch:' + error.message);
-        });
-    }
+    fetch(`${Config.api}tiposPago/crear`,
+      {
+        mode:'cors',
+        method: 'POST',
+        body: JSON.stringify({
+            nombre : this.state.nombreTiposPago,
+            integracion: this.state.integracionCrear,
+            esCuentaBancaria: this.state.esCuentaBancariaCrear,
+            oculto: this.state.ocultoCrear,
+            imagen: this.state.imagen
+          }
+        ),
+        headers: {
+            'Accept' : 'application/json',
+            'Content-type' : 'application/json',
+            'api_token': localStorage.getItem('token')
+        }
+      }
+    )
+      .then(res =>res.json())
+      .then(data => {
+        if(data.respuesta==true){
+          cogoToast.success("Tipo de producto creado");
+          this.clean();
+        }
+        else{
+          console.log(data)
+          cogoToast.error("No se creo,verifique los datos")
+          console.log("hubo un error con la peticion")
+        }
+    }).catch((error)=> {
+      cogoToast.error("No se creo el tipo de producto")
+      console.log('Hubo un problema con la petición Fetch:' + error.message);
+    });
+  }
     editarTiposPago(){
 
     }
@@ -117,9 +119,10 @@ class IndexTiposPago extends Component {
   limpiarBoleanos(){
     let array = this.state.tb_tiposPagoS
     let newArray = []
-    array.datos.map((data)=>{
+    array.data.data.map((data)=>{
       let integracion
       let esCuentaBancaria
+      let esDatoFinanciero
       let oculto
       if (data.integracion == 1){
           integracion = "si"
@@ -131,6 +134,13 @@ class IndexTiposPago extends Component {
       }else{
          esCuentaBancaria= "no"
       }
+
+      if(data.esDatoFinanciero == 1){
+        esDatoFinanciero = "si";
+      }else{
+        esDatoFinanciero = "no";
+      }
+
       if (data.oculto == 1){
          oculto="si"
       }else{
@@ -141,13 +151,17 @@ class IndexTiposPago extends Component {
         nombre:data.nombre,
         integracion: integracion,
         esCuentaBancaria: esCuentaBancaria,
+        esDatoFinanciero : esDatoFinanciero,
         oculto: oculto,
-        imagen: data.imagen
+        imagen: data.imagen,
+        membresia: data.membresia,
+        tiposProducto : data.tiposProducto
       })
     })
+    this.state.tb_tiposPago.data = newArray;
     this.setState({
-      tb_tiposPago: newArray
-    },()=>console.log(this.state.tb_tiposPago))
+      tb_tiposPago: this.state.tb_tiposPago
+    })
   }
 
   fetchTiposPago(){
@@ -169,17 +183,17 @@ class IndexTiposPago extends Component {
             this.setState({
               tb_tiposPagoS: data
             },()=>{
-              console.log(this.state.tb_tiposPagoS);
               this.limpiarBoleanos()
             })
           }
-          else{
-            console.log(data)
-            console.log("hubo un error con la peticion")
+          else
+          {
+            
           }
       }).catch((error)=> {
         console.log('Hubo un problema con la petición Fetch:' + error.message);
-    });  }
+       });  
+  }
 
     handleChangeFile (e){
           var file = e.target.files[0];
@@ -203,49 +217,120 @@ class IndexTiposPago extends Component {
       this.fetchTiposPago();
       console.log(localStorage.getItem('token'));
     }
+
+    renderRedireccionarCrearTipoPago = () => {
+      if (this.state.redireccionarCrearTipoPago) {
+          return <Redirect to='/tiposPago/crear' />
+      }
+    }
+
     render() {
         return (
             <Aux>
+                {this.renderRedireccionarCrearTipoPago()}
                 <Row>
                     <Col>
                         <Card title='Tipos de pago' isOption>
-                        <table id="tb_membresia" className="table table-striped" style={{width:'100%'}}>
-                            <thead>
-                                <tr>
-                                    <th><button type="button" className="btn btn-primary" onClick={()=>this.cambiarModalCrearTiposPago()}>Crear Tipos de pago </button> </th>
-                                    <th><button className="btn btn-sm btn-success" type="button" onClick={()=>this.descargarExcel()}>Descargar excel</button></th>
-                                </tr>
-                                <tr>
-                                    <th>Nombre</th>
-                                    <th>Integracion</th>
-                                    <th>Es cuenta bancaria</th>
-                                    <th>Oculto</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                   {
-                                    this.state.tb_tiposPago ?
-                                    this.state.tb_tiposPago.map(task =>{
-                                        return (
-                                            <tr key={task.id}>
-                                                <td>{task.nombre}</td>
-                                                <td>{task.integracion}</td>
-                                                <td>{task.esCuentaBancaria}</td>
-                                                <td>{task.oculto}</td>
-                                                <td>
-                                                  <button className="btn btn-sm btn-primary"  type="button" onClick={()=>this.editarTiposPago(task.id,)}>
-                                                    <i className="fa fa-pencil" ></i>
-                                                  </button>
-                                                  <button className="btn btn-sm btn-danger"  type="button" onClick={()=>this.enviarEliminarTiposPago(task.id)}>
-                                                    <i className="fa fa-trash" ></i>
-                                                  </button>
-                                                </td>
-                                            </tr>
-                                        );
-                                    } )   : null
-                                }
-                            </tbody>
-                        </table>
+                          <Table id="tb_membresia" striped responsive>
+                              <thead>
+                                  <tr>
+                                      <th>
+                                        <button 
+                                          type="button" 
+                                          className="btn btn-primary" 
+                                          onClick={()=>this.setState({
+                                            redireccionarCrearTipoPago : true
+                                          })}>
+                                            Crear Tipos de pago 
+                                        </button> 
+                                      </th>
+                                      <th><button className="btn btn-sm btn-success" type="button" onClick={()=>this.descargarExcel()}>Descargar excel</button></th>
+                                  </tr>
+                                  <tr>
+                                      <th>Nombre</th>
+                                      <th>Integracion</th>
+                                      <th>Cuenta bancaria</th>
+                                      <th>Dato Financiero</th>
+                                      <th>Oculto</th>
+                                      <th>Membresias</th>
+                                      <th>Tipos de Producto</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                    {
+                                      this.state.tb_tiposPago.data ?
+                                      this.state.tb_tiposPago.data.map(task =>{
+                                          return (
+                                              <tr key={task.id}>
+                                                  <td>{task.nombre}</td>
+                                                  <td>{task.integracion}</td>
+                                                  <td>{task.esCuentaBancaria}</td>
+                                                  <td>{task.esDatoFinanciero}</td>
+                                                  <td>{task.oculto}</td>
+                                                  <td>
+                                                    {
+                                                      task.membresia
+                                                      ?task.membresia.map(tasks =>{
+                                                        return (
+                                                          <div>
+                                                            {tasks.nombre}<br/>
+                                                          </div>
+                                                        );
+                                                      })
+                                                      :<p>Sin membresias asignadas</p>
+                                                    }
+                                                  </td>
+                                                  <td>
+                                                    {
+                                                      task.tiposProducto
+                                                      ?task.tiposProducto.map(taskTipoProducto =>{
+                                                        return (
+                                                          <div>
+                                                            {taskTipoProducto.nombre}<br/>
+                                                          </div>
+                                                        );
+                                                      })
+                                                      :<p>Sin tipos de producto asignadas</p>
+                                                    }
+                                                  </td>
+                                                  <td>
+                                                    <button className="btn btn-sm btn-primary"  type="button" onClick={()=>this.editarTiposPago(task.id,)}>
+                                                      <i className="fa fa-pencil" ></i>
+                                                    </button>
+                                                    <button className="btn btn-sm btn-danger"  type="button" onClick={()=>this.enviarEliminarTiposPago(task.id)}>
+                                                      <i className="fa fa-trash" ></i>
+                                                    </button>
+                                                  </td>
+                                              </tr>
+                                          );
+                                      } )   : null
+                                  }
+                              </tbody>
+                          </Table>
+                          <Pagination>
+                              <Pagination.Prev 
+                                onClick={() => this.fetchTiposPago(
+                                  true,
+                                  this.state.txt_texto_numeroPagina-1,
+                                )}
+                              />
+                              {
+                                // this.state.tb_tiposPago.data 
+                                // ?comp_paginarTabla( 
+                                //     this.state.tb_tiposPago['total'],
+                                //     this.state.tb_tiposPago['per_page'],
+                                //     this.state.tb_tiposPago['current_page'],
+                                //     this.fetchTbCompras
+                                // )
+                                // :null
+                              }
+                              <Pagination.Next
+                                onClick={() => this.fetchTiposPago(
+                                  true,
+                                  this.state.txt_texto_numeroPagina+1,
+                                )}
+                              />
+                          </Pagination>
                         </Card>
                     </Col>
                 </Row>
@@ -260,7 +345,7 @@ class IndexTiposPago extends Component {
                         </Modal.Title>
                       </Modal.Header>
                       <Modal.Body>
-                              <div className="card w-75">
+                              <div className="card w-100">
                                   <div className="modal-body">
                                       <div className="card-body">
                                             <div>
@@ -273,16 +358,24 @@ class IndexTiposPago extends Component {
                                                 <input type="file" className="form-control-file" name="imagen" onChange={e =>this.handleChangeFile(e)}/>
                                               </div>
                                             </div>
-                                            <div className="p-2">
+                                            {/* <div className="p-2">
                                               <label>Integracion: </label>
                                               <select className="form-control" name="integracionCrear" style={{width: '50%'}} onChange={this.handleChange} value={this.state.integracionCrear}>
                                                   <option key={0} value={null}>--escoge una opcion--</option>
                                                   <option key={1} value={1}>Si</option>
                                                   <option key={2} value={0}>No</option>
                                               </select>
+                                            </div> */}
+                                            <div className="p-2">
+                                              <label>¿Es una cuenta bancaria?: </label>
+                                              <select className="form-control" name="esCuentaBancariaCrear" style={{width: '50%'}} onChange={this.handleChange} value={this.state.esCuentaBancariaCrear}>
+                                                  <option key={0} value={null}>--escoge una opcion--</option>
+                                                  <option key={1} value={1}>Si</option>
+                                                  <option key={2} value={0}>No</option>
+                                              </select>
                                             </div>
                                             <div className="p-2">
-                                              <label>Es cuenta bancaria: </label>
+                                              <label>¿Es un dato financiero?: </label>
                                               <select className="form-control" name="esCuentaBancariaCrear" style={{width: '50%'}} onChange={this.handleChange} value={this.state.esCuentaBancariaCrear}>
                                                   <option key={0} value={null}>--escoge una opcion--</option>
                                                   <option key={1} value={1}>Si</option>
