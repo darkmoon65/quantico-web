@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
-import {Row, Col,Modal} from 'react-bootstrap';
+import {Row, Col,Modal,Pagination} from 'react-bootstrap';
 
 import Aux from "../../hoc/_Aux";
 import Card from "../../App/components/MainCard";
 import cogoToast from "cogo-toast";
 import Config from "../../config"
 import Files from "../../files"
+import Paginar from "../../paginate"
 
 class IndexUsuarios extends Component {
   constructor(){
@@ -15,6 +16,7 @@ class IndexUsuarios extends Component {
       tb_users:[],
       membresia_tb:[],
       rol_tb:[],
+      var_texto_numeroPagina:1,
 
       id:'',
       nombre:'',
@@ -35,13 +37,14 @@ class IndexUsuarios extends Component {
       opeBlackList:''
     }
     this.handleChange = this.handleChange.bind(this);
+
   }
 
   descargarExcel(){
     Files.exportToCSV(this.state.tb_users.data,"usuarios");
   }
-  fetchTable(){
-    fetch(`${Config.api}usuarios/mostrar`,
+  fetchTable(bolean,numero){
+    fetch(`${Config.api}usuarios/mostrar?page=${numero}`,
       {
         mode:'cors',
         method: 'GET',
@@ -54,9 +57,10 @@ class IndexUsuarios extends Component {
     )
       .then(res =>res.json())
       .then(data => {
-        if(data.data){
+        if(data){
           this.setState({
-            tb_users: data
+            tb_users: data,
+            var_texto_numeroPagina: numero
           },()=>{console.log(this.state.tb_users)})
         }
         else{
@@ -429,7 +433,30 @@ class IndexUsuarios extends Component {
                                       }
                                   </tbody>
                                 </table>
+                                <div className="float-right">
+                                <Pagination  >
+                                  <Pagination.Prev 
+                                      onClick={() => {
+                                        this.fetchTable(  
+                                          true,                                    
+                                          this.state.var_texto_numeroPagina-1,     
+                                      )
+                                    }}
+                                  />
+                                      {
+                                          <Paginar data={this.state.tb_users} fetch={(bolean,numero)=>this.fetchTable(bolean,numero)} ></Paginar>
+                                      }
+                                  <Pagination.Next
+                                      onClick={() => {
+                                        this.fetchTable(    
+                                          true,                                      
+                                          this.state.var_texto_numeroPagina+1,        
 
+                                        )
+                                      }}
+                                  />
+                              </Pagination>
+                              </div>
                         </Card>
                     </Col>
                 </Row>

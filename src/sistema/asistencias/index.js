@@ -96,7 +96,7 @@ class IndexAsistencias extends Component {
                 <Row>
                     <Col>
                         <Card title='Asistencias' isOption>
-                        <th><button className="btn btn-sm btn-success" type="button" onClick={()=>this.descargarExcel()}>Descargar excel</button></th>
+                        <button className="btn btn-sm btn-success" type="button" onClick={()=>this.descargarExcel()}>Descargar excel</button>
                         <table id="tb_membresia" className="table table-striped" style={{width:'100%'}}>
                             <thead>
                                 <tr>
@@ -138,6 +138,7 @@ class IndexAsistencias extends Component {
                                 }
                             </tbody>
                         </table>
+                        
                         </Card>
                     </Col>
                 </Row>

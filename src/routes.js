@@ -29,6 +29,7 @@ const TiposPago = React.lazy(() => import('./sistema/tiposPagos/index'));
 const Regalos = React.lazy(() => import('./sistema/regalos/index'));
 const Inversiones = React.lazy(() => import('./sistema/inversiones/index'));
 const Herramientas = React.lazy(() => import('./sistema/herramientas/index'));
+const Asistencias = React.lazy(() => import('./sistema/asistencias/index'));
 
 
 const DatosFinancieros = React.lazy(() => import('./sistema/datosFinancieros/index'));
@@ -179,7 +180,12 @@ const routes = [
         name: 'Herramientas',
         component: Herramientas
     },
-
+    {
+        path: '/asistencias',
+        exact: true,
+        name: 'Asistencias',
+        component: Asistencias
+    },
     {
         path: '/datosFinancieros',
         exact: true,

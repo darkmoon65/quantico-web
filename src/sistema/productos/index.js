@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
-import {Row, Col,Modal} from 'react-bootstrap';
+import {Row, Col,Modal,Pagination} from 'react-bootstrap';
 
 import Aux from "../../hoc/_Aux";
 import Card from "../../App/components/MainCard";
 import cogoToast from "cogo-toast";
-import Config from "../../config"
-import Files from "../../files"
+import Config from "../../config";
+import Files from "../../files";
+import Paginar from "../../paginate"
 
 class IndexProductos extends Component {
 
@@ -252,8 +253,8 @@ class IndexProductos extends Component {
         tb_cursosPre: array
       })
     }
-    fetchProductos(){
-      fetch(`${Config.api}productos/mostrar`,
+    fetchProductos(bolean,numero){
+      fetch(`${Config.api}productos/mostrar?page=${numero}`,
         {
           mode:'cors',
           method: 'GET',
@@ -268,7 +269,8 @@ class IndexProductos extends Component {
         .then(data => {
           if(data){
             this.setState({
-              tb_productos: data
+              tb_productos: data,
+              var_texto_numeroPagina: numero
             },()=>{
               console.log(this.state.tb_productos);
               this.tablaPulirPre();
@@ -389,7 +391,7 @@ class IndexProductos extends Component {
     }
 
     componentDidMount(){
-      this.fetchProductos();
+      this.fetchProductos(true,1);
       this.fetchTipoProductos();
       this.fetchMembresias();
       console.log(localStorage.getItem('token'));
@@ -441,6 +443,33 @@ class IndexProductos extends Component {
                                   }
                               </tbody>
                           </table>
+                          <div className="float-right">
+                                <Pagination  >
+                                  <Pagination.Prev 
+                                      onClick={() => {
+                                        this.fetchProductos(  
+                                          true,                                    
+                                          this.state.var_texto_numeroPagina-1,     
+                                      )
+                                        
+                                    }}
+                                  />
+                                      {
+                                         <Paginar data={this.state.tb_productos} fetch={(bolean,numero)=>this.fetchProductos(bolean,numero)} ></Paginar>
+                                      }
+                                  <Pagination.Next
+                                      onClick={() => {
+                                        this.fetchProductos(    
+                                          true,                                      
+                                          this.state.var_texto_numeroPagina+1,        
+
+                                        )
+                                        
+                                      }}
+                                  />
+                              </Pagination>
+                              </div>
+
                         </Card>
                     </Col>
                 </Row>
