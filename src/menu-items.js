@@ -167,7 +167,13 @@ export default {
                     url: '/inversiones',
                     icon: 'fa fa-home',
                 },
-
+                {
+                    id: 'asistencias',
+                    title: 'Asistencias',
+                    type: 'item',
+                    url: '/asistencias',
+                    icon: 'fa fa-home',
+                },
                 {
                     id: 'datosFinancieros',
                     title: 'Datos Financieros',

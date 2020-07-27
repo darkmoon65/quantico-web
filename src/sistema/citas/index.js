@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
-import {Row, Col,Modal} from 'react-bootstrap';
+import {Row, Col,Modal,Pagination} from 'react-bootstrap';
 
 import Aux from "../../hoc/_Aux";
 import Card from "../../App/components/MainCard";
 import cogoToast from "cogo-toast";
 import Config from "../../config";
-import Files from "../../files"
+import Files from "../../files";
+import Paginar from "../../paginate"
 
 class IndexCitas extends Component {
   constructor(){
@@ -139,8 +140,8 @@ class IndexCitas extends Component {
     }
 
   }
-  fetchContactos(){
-      fetch(`${Config.api}citas/mostrar`,
+  fetchCitas(bolean,numero){
+      fetch(`${Config.api}citas/mostrar?page=${numero}`,
         {
           mode:'cors',
           method: 'GET',
@@ -155,7 +156,8 @@ class IndexCitas extends Component {
         .then(data => {
           if(data.respuesta==true){
             this.setState({
-              tb_citas: data
+              tb_citas: data.datos,
+              var_texto_numeroPagina: numero
             },()=>{console.log(this.state.tb_citas)})
           }
           else{
@@ -165,8 +167,9 @@ class IndexCitas extends Component {
       }).catch((error)=> {
         console.log('Hubo un problema con la petición Fetch:' + error.message);
     });  }
+
   componentDidMount(){
-      this.fetchContactos();
+      this.fetchCitas(true,1);
       console.log(localStorage.getItem('token'));
     }
     render() {
@@ -187,8 +190,8 @@ class IndexCitas extends Component {
                               </thead>
                               <tbody>
                                    {
-                                    this.state.tb_citas.datos ?
-                                    this.state.tb_citas.datos.data.map(task =>{
+                                    this.state.tb_citas.data?
+                                    this.state.tb_citas.data.map(task =>{
                                         return (
                                             <tr key={task.id}>
                                                 <td>{task.nombres}</td>
@@ -206,6 +209,33 @@ class IndexCitas extends Component {
                                 }
                             </tbody>
                         </table>
+                        <div className="float-right">
+                                <Pagination  >
+                                  <Pagination.Prev 
+                                      onClick={() => {
+                                        this.fetchCitas(  
+                                          true,                                    
+                                          this.state.var_texto_numeroPagina-1,     
+                                      )
+                                        
+                                    }}
+                                  />
+                                      {
+                                         <Paginar data={this.state.tb_citas} fetch={(bolean,numero)=>this.fetchCitas(bolean,numero)} ></Paginar>
+                                      }
+                                  <Pagination.Next
+                                      onClick={() => {
+                                        this.fetchCitas(    
+                                          true,                                      
+                                          this.state.var_texto_numeroPagina+1,        
+
+                                        )
+                                        
+                                      }}
+                                  />
+                              </Pagination>
+                              </div>
+
                         </Card>
                     </Col>
                 </Row>
