@@ -14,6 +14,7 @@ class IndexBancos extends Component {
       tb_bancos:[],
       //modales
       estadoModalCrearBancos:false,
+      estadoModalVerBancos:false
     }
     this.handleChange = this.handleChange.bind(this);
   }
@@ -26,6 +27,16 @@ class IndexBancos extends Component {
         this.setState({
           estadoModalCrearBancos: !this.state.estadoModalCrearBancos
         })
+  }
+  cambiarModalVerBancos(){
+        this.setState({
+          estadoModalVerBancos: !this.state.estadoModalVerBancos
+        })
+  }
+  verBancos(imagen){
+    this.setState({
+      imagenVer:imagen
+    },()=>this.cambiarModalVerBancos())
   }
 
   clean(){
@@ -182,6 +193,9 @@ class IndexBancos extends Component {
                                             <tr key={task.id}>
                                                 <td>{task.nombre}</td>
                                                 <td>
+                                                  <button className="btn btn-sm btn-info" type="button" onClick={()=>this.verBancos(task.imagen)}>
+                                                    <i className="fa fa-eye" ></i>
+                                                  </button>
                                                   <button className="btn btn-sm btn-danger" type="button" onClick={()=>this.eliminarBanco(task.id)}>
                                                     <i className="fa fa-trash" ></i>
                                                   </button>
@@ -227,6 +241,29 @@ class IndexBancos extends Component {
                               </div>
                     </Modal.Body>
                   </Modal>
+                  <Modal
+                      size="lg"
+                      show={this.state.estadoModalVerBancos}
+                      onHide={() => this.cambiarModalVerBancos()}
+                      >
+                      <Modal.Header closeButton>
+                        <Modal.Title id="example-custom-modal-styling-title">
+                          Ver Socio
+                        </Modal.Title>
+                      </Modal.Header>
+                      <Modal.Body>
+                              <div className="card w-100">
+                                  <div className="modal-body">
+                                      <div className="card-body">
+                                          <label>Imagen:</label><br/>
+                                          <div className=" p-1">
+                                            <img src={this.state.imagenVer} width="500" height="400"/>
+                                          </div>
+                                        </div>
+                                    </div>
+                                </div>
+                      </Modal.Body>
+                    </Modal>
             </Aux>
         );
     }

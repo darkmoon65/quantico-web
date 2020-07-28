@@ -173,11 +173,11 @@ class IndexHerramientas extends Component {
           this.clean();
         }
         else{
-          cogoToast.error("Error al crear la herramienta")
+          cogoToast.error("Error al eliminar la herramienta")
           console.log("hubo un error con la peticion")
         }
     }).catch((error)=> {
-      cogoToast.error("Hubo un error al crear la herramienta")
+      cogoToast.error("Hubo un error al eliminar la herramienta")
       console.log('Hubo un problema con la petición Fetch:' + error.message);
   });
 }

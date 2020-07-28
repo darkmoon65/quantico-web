@@ -17,6 +17,7 @@ class IndexUsuarios extends Component {
       membresia_tb:[],
       rol_tb:[],
       var_texto_numeroPagina:1,
+      valor:'',
 
       id:'',
       nombre:'',
@@ -37,14 +38,23 @@ class IndexUsuarios extends Component {
       opeBlackList:''
     }
     this.handleChange = this.handleChange.bind(this);
-
+    this.handleChangeBuscador = this.handleChangeBuscador.bind(this);
   }
 
   descargarExcel(){
     Files.exportToCSV(this.state.tb_users.data,"usuarios");
   }
+  handleChangeBuscador(e){
+    const value = e.target.value;
+    this.setState({
+      valor: value
+    },()=>{
+      console.log(value);
+      this.fetchTable();
+    })
+  }
   fetchTable(bolean,numero){
-    fetch(`${Config.api}usuarios/mostrar?page=${numero}`,
+    fetch(`${Config.api}usuarios/mostrar?page=${numero}&buscar=${this.state.valor}`,
       {
         mode:'cors',
         method: 'GET',
@@ -435,11 +445,11 @@ class IndexUsuarios extends Component {
                                 </table>
                                 <div className="float-right">
                                 <Pagination  >
-                                  <Pagination.Prev 
+                                  <Pagination.Prev
                                       onClick={() => {
-                                        this.fetchTable(  
-                                          true,                                    
-                                          this.state.var_texto_numeroPagina-1,     
+                                        this.fetchTable(
+                                          true,
+                                          this.state.var_texto_numeroPagina-1,
                                       )
                                     }}
                                   />
@@ -448,9 +458,9 @@ class IndexUsuarios extends Component {
                                       }
                                   <Pagination.Next
                                       onClick={() => {
-                                        this.fetchTable(    
-                                          true,                                      
-                                          this.state.var_texto_numeroPagina+1,        
+                                        this.fetchTable(
+                                          true,
+                                          this.state.var_texto_numeroPagina+1,
 
                                         )
                                       }}

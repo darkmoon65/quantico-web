@@ -47,22 +47,11 @@ class IndexVerificaciones extends Component {
         this.fetchVerificaciones()
       })
   }
-  exeEnviar(id,estado,concepto,index){
-
-  let z = `this.state.comentario${id}`
-  let ok = eval(z)
-  if (ok==''){
-    cogoToast.error("Debe introducir algun mensaje primero")
-  }else{
-    this.setState({
-      comentarioEnviar: ok,
-    },()=>{
-      this.sendDenegar(id,estado,concepto,index)
-    })
-  }
-}
 
   sendDenegar(id,estado,concepto,index,msg){
+    if(msg==null || msg==''){
+      cogoToast.warn("Debe introducir algún mensaje primero");
+    }else{
         fetch(`${Config.api}verificaciones/verificarCompra`,
           {
             mode:'cors',
@@ -100,7 +89,7 @@ class IndexVerificaciones extends Component {
             }
         }).catch((error)=> {
           console.log('Hubo un problema con la petición Fetch:' + error.message);
-      });
+      });}
   }
   sendAceptar(id,estado,concepto,index){
     fetch(`${Config.api}verificaciones/verificarCompra`,

@@ -428,11 +428,6 @@ class IndexProductos extends Component {
                                                   <td>{task.nombre}</td>
                                                   <td>{task.costo}</td>
                                                   <td>
-                                                    <button className="btn btn-sm btn-primary ver" type="button" onClick={()=>this.editarProducto(
-                                                        task.id,
-                                                        task.nombre,
-                                                        task.costo,
-                                                    )}><i className="fa fa-pencil"/></button>
                                                     <button className="btn btn-sm btn-danger "  type="button" onClick={()=>this.eliminarProducto(task.id)}>
                                                       <i className="fa fa-trash" ></i>
                                                     </button>
@@ -445,13 +440,13 @@ class IndexProductos extends Component {
                           </table>
                           <div className="float-right">
                                 <Pagination  >
-                                  <Pagination.Prev 
+                                  <Pagination.Prev
                                       onClick={() => {
-                                        this.fetchProductos(  
-                                          true,                                    
-                                          this.state.var_texto_numeroPagina-1,     
+                                        this.fetchProductos(
+                                          true,
+                                          this.state.var_texto_numeroPagina-1,
                                       )
-                                        
+
                                     }}
                                   />
                                       {
@@ -459,12 +454,12 @@ class IndexProductos extends Component {
                                       }
                                   <Pagination.Next
                                       onClick={() => {
-                                        this.fetchProductos(    
-                                          true,                                      
-                                          this.state.var_texto_numeroPagina+1,        
+                                        this.fetchProductos(
+                                          true,
+                                          this.state.var_texto_numeroPagina+1,
 
                                         )
-                                        
+
                                       }}
                                   />
                               </Pagination>
@@ -535,7 +530,7 @@ class IndexProductos extends Component {
                                           </div>
                                           <div>
                                             <label>Costo:</label>
-                                            <input type="number" className="form-control" name="costoCrear" onChange={this.handleChange} />
+                                            <input type="number" min="0" className="form-control" name="costoCrear" onChange={this.handleChange} />
                                           </div>
                                           <label>Imagen de producto: </label>
                                           <div className="input-group p-1">
@@ -602,7 +597,7 @@ class IndexProductos extends Component {
                                                        return (
                                                            <tr key={task.id}>
                                                                <td>{task.nombre}</td>
-                                                               <td><input type="number" style={{width:'50px'}} name={'descuento'+task.id} onChange={this.handleChange}></input></td>
+                                                               <td><input type="number" style={{width:'50px'}} min="0" max="100" name={'descuento'+task.id} onChange={this.handleChange}></input></td>
                                                            </tr>
                                                        );
                                                    } )   : null
