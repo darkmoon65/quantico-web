@@ -7,30 +7,31 @@ global.jQuery = $;
 
 const Login = React.lazy(() => import('./sistema/login/index'));
 
-const Inicio   = React.lazy(() => import('./sistema/inicio/index'));
-const Usuarios   = React.lazy(() => import('./sistema/usuarios/index'));
-const Slider     = React.lazy(() => import('./sistema/slider/index'));
-const Membresias = React.lazy(() => import('./sistema/membresias/index'));
-const Productos  = React.lazy(() => import('./sistema/productos/index'));
-const Verificaciones = React.lazy(() => import('./sistema/verificaciones/index'));
-const Comprobantes = React.lazy(() => import('./sistema/comprobantes/index'));
-const Completos = React.lazy(() => import('./sistema/completos/index'));
-const Socios = React.lazy(() => import('./sistema/socios/index'));
-const Contactos = React.lazy(() => import('./sistema/contactos/index'));
-const TipoProductos = React.lazy(() => import('./sistema/tiposProductos/index'));
-const Citas = React.lazy(() => import('./sistema/citas/index'));
-const Bancos = React.lazy(() => import('./sistema/bancos/index'));
-const CuentasBancarias = React.lazy(() => import('./sistema/cuentasBancarias/index'));
-const BlackList = React.lazy(() => import('./sistema/blacklist/index'));
-const Sugerencias = React.lazy(() => import('./sistema/sugerencias/index'));
-const Intereses = React.lazy(() => import('./sistema/intereses/index'));
-const RedesSociales = React.lazy(() => import('./sistema/redes/index'));
-const TiposPago = React.lazy(() => import('./sistema/tiposPagos/index'));
-const Regalos = React.lazy(() => import('./sistema/regalos/index'));
-const Inversiones = React.lazy(() => import('./sistema/inversiones/index'));
-const Herramientas = React.lazy(() => import('./sistema/herramientas/index'));
-const Asistencias = React.lazy(() => import('./sistema/asistencias/index'));
-const Intranet = React.lazy(() => import('./sistema/intranet/index'));
+const Inicio            = React.lazy(() => import('./sistema/inicio/index'));
+const Usuarios          = React.lazy(() => import('./sistema/usuarios/index'));
+const Slider            = React.lazy(() => import('./sistema/slider/index'));
+const Membresias        = React.lazy(() => import('./sistema/membresias/index'));
+const Productos         = React.lazy(() => import('./sistema/productos/index'));
+const Verificaciones    = React.lazy(() => import('./sistema/verificaciones/index'));
+const Comprobantes      = React.lazy(() => import('./sistema/comprobantes/index'));
+const Completos         = React.lazy(() => import('./sistema/completos/index'));
+const Socios            = React.lazy(() => import('./sistema/socios/index'));
+const Contactos         = React.lazy(() => import('./sistema/contactos/index'));
+const TipoProductos     = React.lazy(() => import('./sistema/tiposProductos/index'));
+const Citas             = React.lazy(() => import('./sistema/citas/index'));
+const Bancos            = React.lazy(() => import('./sistema/bancos/index'));
+const CuentasBancarias  = React.lazy(() => import('./sistema/cuentasBancarias/index'));
+const BlackList         = React.lazy(() => import('./sistema/blacklist/index'));
+const Sugerencias       = React.lazy(() => import('./sistema/sugerencias/index'));
+const Intereses         = React.lazy(() => import('./sistema/intereses/index'));
+const RedesSociales     = React.lazy(() => import('./sistema/redes/index'));
+const TiposPago         = React.lazy(() => import('./sistema/tiposPagos/index'));
+const CrearTiposPago    = React.lazy(() => import('./sistema/tiposPagos/componentes/crearTipoPago'));
+const Regalos           = React.lazy(() => import('./sistema/regalos/index'));
+const Inversiones       = React.lazy(() => import('./sistema/inversiones/index'));
+const Herramientas      = React.lazy(() => import('./sistema/herramientas/index'));
+const Asistencias       = React.lazy(() => import('./sistema/asistencias/index'));
+const Intranet          = React.lazy(() => import('./sistema/intranet/index'));
 
 const DatosFinancieros = React.lazy(() => import('./sistema/datosFinancieros/index'));
 const Notificaciones = React.lazy(() => import('./sistema/notificaciones/index'));
@@ -161,6 +162,12 @@ const routes = [
         exact: true,
         name: 'TiposPago',
         component: TiposPago
+    },
+    {
+        path: '/tiposPago/crear',
+        exact: true,
+        name: 'CrearTiposPago',
+        component: CrearTiposPago
     },
     {
         path: '/regalos',

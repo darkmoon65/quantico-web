@@ -1,11 +1,13 @@
 import React, {Component} from 'react';
-import {Row, Col,Modal} from 'react-bootstrap';
+import {Row, Col, Form, Table, Pagination} from 'react-bootstrap';
 
 import Aux from "../../hoc/_Aux";
 import Card from "../../App/components/MainCard";
 import cogoToast from "cogo-toast";
 import Config from "../../config"
 import Files from "../../files"
+import { Redirect } from 'react-router-dom'
+import Paginar from "../../paginate"
 
 class IndexTiposPago extends Component {
   constructor(){
@@ -14,18 +16,23 @@ class IndexTiposPago extends Component {
       tb_tiposPago:[],
       nombreTipoProducto:'',
       //modales
-      estadoModalCrearTiposPago:false,
+      estadoModalCrearTiposPago  :false,
+      redireccionarCrearTipoPago : false,
+      txt_texto_numeroPagina :1,
     }
     this.handleChange = this.handleChange.bind(this);
   }
+
   descargarExcel(){
     Files.exportToCSV(this.state.tb_tiposPago,"tipos-pagos");
   }
+
   cambiarModalCrearTiposPago(){
-        this.setState({
-          estadoModalCrearTiposPago: !this.state.estadoModalCrearTiposPago
-        })
+    this.setState({
+      estadoModalCrearTiposPago: !this.state.estadoModalCrearTiposPago
+    })
   }
+
   clean(){
     this.setState({
       estadoModalCrearTiposPago: false,
@@ -42,84 +49,51 @@ class IndexTiposPago extends Component {
       console.log(value)
     })
   }
-  enviarCrearTiposPago(){
-          fetch(`${Config.api}tiposPago/crear`,
-            {
-              mode:'cors',
-              method: 'POST',
-              body: JSON.stringify({
-                  nombre : this.state.nombreTiposPago,
-                  integracion: this.state.integracionCrear,
-                  esCuentaBancaria: this.state.esCuentaBancariaCrear,
-                  oculto: this.state.ocultoCrear,
-                  imagen: this.state.imagen
-                }
-              ),
-              headers: {
-                  'Accept' : 'application/json',
-                  'Content-type' : 'application/json',
-                  'api_token': localStorage.getItem('token')
-              }
-            }
-          )
-            .then(res =>res.json())
-            .then(data => {
-              if(data.respuesta==true){
-                cogoToast.success("Tipo de producto creado");
-                this.clean();
-              }
-              else{
-                console.log(data)
-                cogoToast.error("No se creo,verifique los datos")
-                console.log("hubo un error con la peticion")
-              }
-          }).catch((error)=> {
-            cogoToast.error("No se creo el tipo de producto")
-            console.log('Hubo un problema con la petición Fetch:' + error.message);
-        });
-    }
-    editarTiposPago(){
 
-    }
-    enviarEliminarTiposPago(id){
-          fetch(`${Config.api}tiposPago/eliminar`,
-              {
-                mode:'cors',
-                method: 'POST',
-                body: JSON.stringify({
-                    id : id,
-                  }
-                ),
-                headers: {
-                    'Accept' : 'application/json',
-                    'Content-type' : 'application/json',
-                    'api_token': localStorage.getItem('token')
-                }
-              }
-            )
-              .then(res =>res.json())
-              .then(data => {
-                if(data.respuesta==true){
-                  cogoToast.success("Tipo de producto eliminado");
-                  this.clean();
-                }
-                else{
-                  console.log(data)
-                  cogoToast.error("No se elimino verifique los datos")
-                  console.log("hubo un error con la peticion")
-                }
-            }).catch((error)=> {
-              cogoToast.error("No se elimino el tipo de producto")
-              console.log('Hubo un problema con la petición Fetch:' + error.message);
-          });
+  enviarCrearTiposPago(){
+    fetch(`${Config.api}tiposPago/crear`,
+      {
+        mode:'cors',
+        method: 'POST',
+        body: JSON.stringify({
+            nombre : this.state.nombreTiposPago,
+            integracion: this.state.integracionCrear,
+            esCuentaBancaria: this.state.esCuentaBancariaCrear,
+            oculto: this.state.ocultoCrear,
+            imagen: this.state.imagen
+          }
+        ),
+        headers: {
+            'Accept' : 'application/json',
+            'Content-type' : 'application/json',
+            'api_token': localStorage.getItem('token')
+        }
       }
+    )
+      .then(res =>res.json())
+      .then(data => {
+        if(data.respuesta==true){
+          cogoToast.success("Tipo de producto creado");
+          this.clean();
+        }
+        else{
+          console.log(data)
+          cogoToast.error("No se creo,verifique los datos")
+          console.log("hubo un error con la peticion")
+        }
+    }).catch((error)=> {
+      cogoToast.error("No se creo el tipo de producto")
+      console.log('Hubo un problema con la petición Fetch:' + error.message);
+    });
+  }
 
   limpiarBoleanos(){
-    let array = this.state.tb_tiposPagoS
+    let array = this.state.tb_tiposPago
     let newArray = []
-    array.datos.map((data)=>{
+    array.data.data.map((data)=>{
       let integracion
       let esCuentaBancaria
+      let esDatoFinanciero
       let oculto
       if (data.integracion == 1){
           integracion = "si"
@@ -131,185 +105,458 @@ class IndexTiposPago extends Component {
       }else{
          esCuentaBancaria= "no"
       }
+
+      if(data.esDatoFinanciero == 1){
+        esDatoFinanciero = "si";
+      }else{
+        esDatoFinanciero = "no";
+      }
+
       if (data.oculto == 1){
          oculto="si"
       }else{
         oculto="no"
       }
       newArray.push({
-        id:data.id,
-        nombre:data.nombre,
-        integracion: integracion,
-        esCuentaBancaria: esCuentaBancaria,
-        oculto: oculto,
-        imagen: data.imagen
+        id                  : data.id,
+        nombre              : data.nombre,
+        integracion         : integracion,
+        esCuentaBancaria    : esCuentaBancaria,
+        esDatoFinanciero    : esDatoFinanciero,
+        oculto              : oculto,
+        imagen              : data.imagen,
+        cuentasBancarias    : data.cuentasBancarias,
+        membresia           : data.membresia,
+        tiposProducto       : data.tiposProducto,
+        tieneMembresias     : data.tieneMembresias,
+        tieneTiposProductos : data.tieneTiposProductos
       })
     })
+    this.state.tb_tiposPago.data.data = newArray;
     this.setState({
-      tb_tiposPago: newArray
-    },()=>console.log(this.state.tb_tiposPago))
+      tb_tiposPago: this.state.tb_tiposPago
+    })
   }
 
-  fetchTiposPago(){
-        fetch(`${Config.api}tiposPago/mostrar`,
-        {
-          mode:'cors',
-          method: 'GET',
-          headers: {
-              'Accept' : 'application/json',
-              'Content-type' : 'application/json',
-              'api_token': localStorage.getItem('token')
-          }
+  fetchTiposPago(bolean, numero)
+  {
+    fetch(`${Config.api}tiposPago/mostrar?page=`+numero,
+    {
+        mode:'cors',
+        method: 'GET',
+        headers: {
+            'Accept' : 'application/json',
+            'Content-type' : 'application/json',
+            'api_token': localStorage.getItem('token')
         }
-      )
-        .then(res =>res.json())
-        .then(data => {
-          if(data.respuesta==true){
-            console.log(data)
-            this.setState({
-              tb_tiposPagoS: data
-            },()=>{
-              console.log(this.state.tb_tiposPagoS);
-              this.limpiarBoleanos()
-            })
-          }
-          else{
-            console.log(data)
-            console.log("hubo un error con la peticion")
-          }
-      }).catch((error)=> {
-        console.log('Hubo un problema con la petición Fetch:' + error.message);
-    });  }
+      }
+    )
+    .then(res =>res.json())
+    .then(data => {
+      if(data.respuesta==true){
+        this.setState({
+          tb_tiposPago: data,
+          txt_texto_numeroPagina : data.data.current_page
+        },()=>{
+          this.limpiarBoleanos()
+        })
+      }
+      else
+      {
+        
+      }
+    }).catch((error)=> {
+      console.log('Hubo un problema con la petición Fetch:' + error.message);
+    });  
+  }
 
-    handleChangeFile (e){
-          var file = e.target.files[0];
-          var fileData = new FileReader();
-          if(file){
-            fileData.readAsDataURL(file);
-          }
-          else{
-            cogoToast.warn("Se quito la imagen");
-          }
-          fileData.onload = (event)=> {
-              this.setState({imagen: fileData.result},
-                ()=>{
-                    cogoToast.success("Imagen lista ");
-                    console.log(this.state.imagen)
-                    }
-                );
-        }
-    }
   componentDidMount(){
-      this.fetchTiposPago();
-      console.log(localStorage.getItem('token'));
+    this.fetchTiposPago();
+  }
+
+  renderRedireccionarCrearTipoPago = () => {
+    if (this.state.redireccionarCrearTipoPago) {
+        return <Redirect to='/tiposPago/crear' />
     }
-    render() {
-        return (
-            <Aux>
-                <Row>
-                    <Col>
-                        <Card title='Tipos de pago' isOption>
-                        <table id="tb_membresia" className="table table-striped" style={{width:'100%'}}>
+  }
+
+  render() {
+      return (
+          <Aux>
+              {this.renderRedireccionarCrearTipoPago()}
+              <Row>
+                  <Col>
+                      <Card title='Tipos de pago' isOption>
+                        <Table id="tb_membresia" striped responsive>
                             <thead>
                                 <tr>
-                                    <th><button type="button" className="btn btn-primary" onClick={()=>this.cambiarModalCrearTiposPago()}>Crear Tipos de pago </button> </th>
+                                    <th>
+                                      <button 
+                                        type="button" 
+                                        className="btn btn-primary" 
+                                        onClick={()=>this.setState({
+                                          redireccionarCrearTipoPago : true
+                                        })}>
+                                          Crear Tipos de pago 
+                                      </button> 
+                                    </th>
                                     <th><button className="btn btn-sm btn-success" type="button" onClick={()=>this.descargarExcel()}>Descargar excel</button></th>
                                 </tr>
                                 <tr>
                                     <th>Nombre</th>
                                     <th>Integracion</th>
-                                    <th>Es cuenta bancaria</th>
+                                    <th>Cuenta bancaria</th>
+                                    <th>Dato Financiero</th>
                                     <th>Oculto</th>
+                                    <th>Campos</th>
+                                    <th>Membresias</th>
+                                    <th>Tipos de Producto</th>
                                 </tr>
                               </thead>
                               <tbody>
-                                   {
-                                    this.state.tb_tiposPago ?
-                                    this.state.tb_tiposPago.map(task =>{
+                                  {
+                                    this.state.tb_tiposPago.data ?
+                                    this.state.tb_tiposPago.data.data.map((task, posicion) =>{
                                         return (
                                             <tr key={task.id}>
-                                                <td>{task.nombre}</td>
-                                                <td>{task.integracion}</td>
-                                                <td>{task.esCuentaBancaria}</td>
-                                                <td>{task.oculto}</td>
                                                 <td>
-                                                  <button className="btn btn-sm btn-primary"  type="button" onClick={()=>this.editarTiposPago(task.id,)}>
-                                                    <i className="fa fa-pencil" ></i>
-                                                  </button>
-                                                  <button className="btn btn-sm btn-danger"  type="button" onClick={()=>this.enviarEliminarTiposPago(task.id)}>
-                                                    <i className="fa fa-trash" ></i>
-                                                  </button>
+                                                  {
+                                                    task.editar == true
+                                                    ?<Form>
+                                                        <Form.Group controlId="formNombre">
+                                                            <Form.Control
+                                                                type="nombreTipoPago" 
+                                                                placeholder="" 
+                                                                name="nombreTiposPago"
+                                                                value = {task.nombre}
+                                                                onChange={this.handleChange}
+                                                            />
+                                                        </Form.Group>
+                                                    </Form>
+                                                    :task.nombre
+                                                  }
+                                                </td>
+                                                <td>
+                                                  {
+                                                    task.editar == true
+                                                    ?<Form>
+                                                      <Form.Group controlId="formAvanzadoCheckOculto">
+                                                          <Form.Check 
+                                                              type     = "checkbox" 
+                                                              label    = "¿Integración?"
+                                                              name     = "integracion"
+                                                              onChange = {this.handleChange}
+                                                              checked  = {
+                                                                task.integracion == 'no'
+                                                                ?false
+                                                                :true
+                                                              }
+                                                          />
+                                                      </Form.Group>
+                                                    </Form>
+                                                    :task.integracion
+                                                  }
+                                                </td>
+                                                <td>
+                                                  {
+                                                    task.editar == true
+                                                    ?<Form>
+                                                      <Form.Group controlId="formAvanzadoCheckOculto">
+                                                          <Form.Check 
+                                                              type     = "checkbox" 
+                                                              label    = "¿Cuenta Bancaria?"
+                                                              name     = "cuentaBancaria"
+                                                              onChange = {this.handleChange}
+                                                              checked  = {
+                                                                task.esCuentaBancaria == 'no'
+                                                                ?false
+                                                                :true
+                                                              }
+                                                          />
+                                                      </Form.Group>
+                                                    </Form>
+                                                    :task.esCuentaBancaria
+                                                  }
+                                                </td>
+                                                <td>
+                                                  {
+                                                    task.editar == true
+                                                    ?<Form>
+                                                      <Form.Group controlId="formAvanzadoCheckOculto">
+                                                          <Form.Check 
+                                                              type     = "checkbox" 
+                                                              label    = "¿Dato Financiero?"
+                                                              name     = "datoFinanciero"
+                                                              onChange = {this.handleChange}
+                                                              checked  = {
+                                                                task.esDatoFinanciero == 'no'
+                                                                ?false
+                                                                :true
+                                                              }
+                                                          />
+                                                      </Form.Group>
+                                                    </Form>
+                                                    :task.esDatoFinanciero
+                                                  }
+                                                </td>
+                                                <td>
+                                                  {
+                                                    task.editar == true
+                                                    ?<Form>
+                                                      <Form.Group controlId="formAvanzadoCheckOculto">
+                                                          <Form.Check 
+                                                              type     = "checkbox" 
+                                                              label    = "¿Oculto?"
+                                                              name     = "ocultoCrear"
+                                                              onChange = {this.handleChange}
+                                                              checked  = {
+                                                                task.oculto == 'no'
+                                                                ?false
+                                                                :true
+                                                              }
+                                                          />
+                                                      </Form.Group>
+                                                    </Form>
+                                                    :task.oculto
+                                                  }
+                                                </td>
+                                                <td>
+                                                  {
+                                                    task.cuentasBancarias != null
+                                                    ?<div>
+                                                      {
+                                                        task.cuentasBancarias.titular != null
+                                                        ?<p>TITULAR<br/></p> 
+                                                        :null
+                                                      }
+                                                      {
+                                                        task.cuentasBancarias.banco_id != null
+                                                        ?<p>BANCOS<br/></p> 
+                                                        :null
+                                                      }
+                                                      {
+                                                        task.cuentasBancarias.cci != null
+                                                        ?<p>CCI<br/></p> 
+                                                        :null
+                                                      }
+                                                      {
+                                                        task.cuentasBancarias.imagenQr != null
+                                                        ?<p>QR<br/></p> 
+                                                        :null
+                                                      }
+                                                      {
+                                                        task.cuentasBancarias.nroCuenta != null
+                                                        ?<p>N°CUENTA<br/></p> 
+                                                        :null
+                                                      }
+                                                      {
+                                                        task.cuentasBancarias.nroDocumentoIdentidad != null
+                                                        ?<p>N°DOCUMENTO IDENTIDAD<br/></p> 
+                                                        :null
+                                                      }
+                                                      {
+                                                        task.cuentasBancarias.numero != null
+                                                        ?<p>NÚMERO<br/></p> 
+                                                        :null
+                                                      }
+                                                      {
+                                                        task.cuentasBancarias.telefono != null
+                                                        ?<p>TELÉFONO<br/></p> 
+                                                        :null
+                                                      }
+                                                      {
+                                                        task.cuentasBancarias.tiposCuentasBancarias_id != null
+                                                        ?<p>TIPOS DE CUENTAS<br/>BANCARIAS<br/></p> 
+                                                        :null
+                                                      }
+                                                      {
+                                                        task.cuentasBancarias.tiposNumeros_id != null
+                                                        ?<p>TIPOS DE NÚMERO<br/></p> 
+                                                        :null
+                                                      }
+                                                      {
+                                                        task.cuentasBancarias.tiposOperadores_id != null
+                                                        ?<p>TIPOS DE OPERADOR<br/></p> 
+                                                        :null
+                                                      }
+                                                      {
+                                                        task.cuentasBancarias.tiposPago_id != null
+                                                        ?<p>TIPOS DE PAGO<br/></p> 
+                                                        :null
+                                                      }
+                                                      {
+                                                        task.cuentasBancarias.tiposTarjetas_id != null
+                                                        ?<p>TIPOS DE TARJETA<br/></p> 
+                                                        :null
+                                                      }
+                                                    </div>
+                                                    :<p>No tiene<br/>campos asignados</p>
+                                                  }
+                                                </td>
+                                                <td>
+                                                  {
+                                                    task.editar == true
+                                                    ?<Form>
+                                                        <Form.Group controlId="formTiposProducto">
+                                                            {
+                                                                task.membresia
+                                                                ?task.membresia.map((tasks,posicion) => {
+                                                                    return (
+                                                                        <Form.Check
+                                                                            key      = {posicion}
+                                                                            name     = {posicion} 
+                                                                            onChange = {this.obtenerCambioInputTiposProducto}
+                                                                            type     = "checkbox" 
+                                                                            checked  = {tasks.seleccionado}
+                                                                            label    = {tasks.nombre}
+                                                                        />
+                                                                    );
+                                                                })
+                                                                :null
+                                                            }
+                                                        </Form.Group>
+                                                    </Form>
+                                                    :task.tieneMembresias == true
+                                                      ?task.membresia
+                                                        ?task.membresia.map(tasks =>{
+                                                          return (
+                                                            tasks.seleccionado == true
+                                                            ?<div>
+                                                              {
+                                                                tasks.nombre
+                                                              }<br/>
+                                                            </div>
+                                                            :null
+                                                            
+                                                          );
+                                                        })
+                                                        :<p>Sin membresias<br/>asignadas</p>
+                                                      :<p>Sin membresias<br/>asignadas</p>
+                                                  }
+                                                </td>
+                                                <td>
+                                                  {
+                                                    task.editar == true
+                                                    ?<Form>
+                                                        <Form.Group controlId="formTiposProducto">
+                                                            {
+                                                                task.tiposProducto
+                                                                ?task.tiposProducto.map((tasks,posicion) => {
+                                                                    return (
+                                                                        <Form.Check
+                                                                            key      = {posicion}
+                                                                            name     = {posicion} 
+                                                                            onChange = {this.obtenerCambioInputTiposProducto}
+                                                                            type     = "checkbox" 
+                                                                            checked  = {tasks.seleccionado}
+                                                                            label    = {tasks.nombre}
+                                                                        />
+                                                                    );
+                                                                })
+                                                                :null
+                                                            }
+                                                        </Form.Group>
+                                                    </Form>
+                                                    :task.tieneTiposProductos == true
+                                                      ?task.tiposProducto
+                                                        ?task.tiposProducto.map(taskTipoProducto =>{
+                                                          return (
+                                                            taskTipoProducto.seleccionado == true
+                                                            ?<div>
+                                                              {
+                                                                taskTipoProducto.nombre
+                                                              }<br/>
+                                                            </div>
+                                                            :null
+                                                          );
+                                                        })
+                                                        :<p>Sin tipos<br/>de producto<br/>asignadas</p>
+                                                      :<p>Sin tipos<br/>de producto<br/>asignadas</p>
+                                                  }
+                                                </td>
+                                                <td>
+                                                  {
+                                                    task.editar == true
+                                                    ?<button 
+                                                      className="btn btn-sm btn-warning"  
+                                                      type="button" 
+                                                      onClick={() => {
+                                                        this.state.tb_tiposPago.data.data[posicion]['editar'] = false;
+                                                        this.setState({
+                                                          tb_tiposPago : this.state.tb_tiposPago
+                                                        })
+                                                      }}
+                                                    >
+                                                      <i className="fa fa-save" ></i>
+                                                    </button>
+                                                    :<button 
+                                                      className="btn btn-sm btn-primary"  
+                                                      type="button" 
+                                                      onClick={() => {
+                                                        this.state.tb_tiposPago.data.data[posicion]['editar'] = true;
+                                                        this.setState({
+                                                          tb_tiposPago : this.state.tb_tiposPago
+                                                        })
+                                                      }}
+                                                    >
+                                                      <i className="fa fa-pencil" ></i>
+                                                    </button>
+                                                  }
+                                                  {
+                                                    task.editar == true
+                                                    ?<button 
+                                                      className="btn btn-sm btn-danger"  
+                                                      type="button" 
+                                                      onClick={()=>{
+                                                        this.state.tb_tiposPago.data.data[posicion]['editar'] = false;
+                                                        this.setState({
+                                                          tb_tiposPago : this.state.tb_tiposPago
+                                                        })
+                                                      }}
+                                                    >
+                                                      <i className="fa fa-ban" ></i>
+                                                    </button>
+                                                    :<button 
+                                                      className="btn btn-sm btn-danger"  
+                                                      type="button" onClick={()=>this.enviarEliminarTiposPago(task.id)}>
+                                                      <i className="fa fa-trash" ></i>
+                                                    </button>
+                                                  }
                                                 </td>
                                             </tr>
                                         );
                                     } )   : null
                                 }
                             </tbody>
-                        </table>
-                        </Card>
-                    </Col>
-                </Row>
-                  <Modal
-                      size="lg"
-                      show={this.state.estadoModalCrearTiposPago}
-                      onHide={() => this.cambiarModalCrearTiposPago()}
-                      >
-                      <Modal.Header closeButton>
-                        <Modal.Title id="example-custom-modal-styling-title">
-                          Crear tipos de pago
-                        </Modal.Title>
-                      </Modal.Header>
-                      <Modal.Body>
-                              <div className="card w-75">
-                                  <div className="modal-body">
-                                      <div className="card-body">
-                                            <div>
-                                              <label>Nombre :</label>
-                                              <input type="text" className="form-control" name="nombreTiposPago" onChange={this.handleChange} />
-                                            </div>
-                                            <div>
-                                              <label>Imagen: </label>
-                                              <div className="input-group p-1">
-                                                <input type="file" className="form-control-file" name="imagen" onChange={e =>this.handleChangeFile(e)}/>
-                                              </div>
-                                            </div>
-                                            <div className="p-2">
-                                              <label>Integracion: </label>
-                                              <select className="form-control" name="integracionCrear" style={{width: '50%'}} onChange={this.handleChange} value={this.state.integracionCrear}>
-                                                  <option key={0} value={null}>--escoge una opcion--</option>
-                                                  <option key={1} value={1}>Si</option>
-                                                  <option key={2} value={0}>No</option>
-                                              </select>
-                                            </div>
-                                            <div className="p-2">
-                                              <label>Es cuenta bancaria: </label>
-                                              <select className="form-control" name="esCuentaBancariaCrear" style={{width: '50%'}} onChange={this.handleChange} value={this.state.esCuentaBancariaCrear}>
-                                                  <option key={0} value={null}>--escoge una opcion--</option>
-                                                  <option key={1} value={1}>Si</option>
-                                                  <option key={2} value={0}>No</option>
-                                              </select>
-                                            </div>
-                                            <div className="p-2">
-                                              <label>Oculto: </label>
-                                              <select className="form-control" name="ocultoCrear" style={{width: '50%'}} onChange={this.handleChange} value={this.state.ocultoCrear}>
-                                                  <option key={0} value={null}>--escoge una opcion--</option>
-                                                  <option key={1} value={1}>Si</option>
-                                                  <option key={2} value={0}>No</option>
-                                              </select>
-                                            </div>
-                                            <div className="mx-auto p-2">
-                                              <button type="button" className="btn btn-sm btn-primary ver" onClick={()=>this.enviarCrearTiposPago()}>Crear tipo de producto</button>
-                                            </div>
-                                          </div>
-                                    </div>
-                                  </div>
-
-                      </Modal.Body>
-                    </Modal>
-
-            </Aux>
-        );
-    }
+                        </Table>
+                        <Pagination>
+                            <Pagination.Prev 
+                              onClick={() => this.fetchTiposPago(
+                                true,
+                                parseInt(this.state.txt_texto_numeroPagina)-1,
+                              )}
+                            />
+                            {
+                              this.state.tb_tiposPago.data
+                              ?<Paginar 
+                                data  = { this.state.tb_tiposPago.data} 
+                                fetch = { (bolean,numero)=>this.fetchTiposPago(bolean,numero)} >
+                              </Paginar>
+                              :null
+                            }
+                            <Pagination.Next
+                              onClick={() => this.fetchTiposPago(
+                                true,
+                                parseInt(this.state.txt_texto_numeroPagina)+1,
+                              )}
+                            />
+                        </Pagination>
+                      </Card>
+                  </Col>
+              </Row>
+          </Aux>
+      );
+  }
 }
 
 export default IndexTiposPago;
