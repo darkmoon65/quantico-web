@@ -70,13 +70,12 @@ class IndexHerramientas extends Component {
         }
     }
 
-  editarHerramienta(id,titulo,url,descripcion,imagen){
+  editarHerramienta(id,titulo,url,imagen){
 
     this.setState({
       id:id,
       tituloEditar:titulo,
       linkEditar:url,
-      descripcionEditar:descripcion,
       linkImagenEditar:imagen
     },()=>this.cambiarModalEditarHerramientas())
   }
