@@ -151,9 +151,9 @@ const routes = [
         component: Intereses
     },
     {
-        path: '/redes',
+        path: '/enlaces',
         exact: true,
-        name: 'Redes',
+        name: 'Enlaces',
         component: RedesSociales
     },
     {

@@ -140,10 +140,10 @@ export default {
                     icon: 'feather icon-home',
                 },
                 {
-                    id: 'redes',
-                    title: 'Redes',
+                    id: 'enlaces',
+                    title: 'Enlaces',
                     type: 'item',
-                    url: '/redes',
+                    url: '/enlaces',
                     icon: 'feather icon-home',
                 },
                 {

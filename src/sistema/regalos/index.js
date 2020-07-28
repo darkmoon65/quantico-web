@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
-import {Row, Col,Modal} from 'react-bootstrap';
+import {Row, Col,Modal,Pagination} from 'react-bootstrap';
 
 import Aux from "../../hoc/_Aux";
 import Card from "../../App/components/MainCard";
 import cogoToast from "cogo-toast";
 import Config from "../../config"
-import Files from "../../files"
+import Files from "../../files";
+import Paginar from "../../paginate"
 
 class IndexRegalos extends Component {
   constructor(){
@@ -13,6 +14,7 @@ class IndexRegalos extends Component {
     this.state = {
       tb_regalos:[],
       estadoEditar:'',
+      var_texto_numeroPagina:1,
       valor:'',
       //modales
       estadoModalEnviarRegalos:false,
@@ -92,8 +94,8 @@ class IndexRegalos extends Component {
         id: id,
     },()=>this.cambiarModalEnviarRegalos())
   }
-  fetchRegalos(){
-      fetch(`${Config.api}regalos/buscar?buscar=${this.state.valor}`,
+  fetchRegalos(boleano,numero){
+      fetch(`${Config.api}regalos/buscar?page=${numero}&buscar=${this.state.valor}`,
         {
           mode:'cors',
           method: 'GET',
@@ -108,7 +110,8 @@ class IndexRegalos extends Component {
         .then(data => {
           if(data.respuesta==true){
             this.setState({
-              tb_regalos: data
+              tb_regalos: data['datos'],
+              var_texto_numeroPagina:numero
             },()=>{console.log(this.state.tb_regalos)})
           }
           else{
@@ -119,7 +122,7 @@ class IndexRegalos extends Component {
         console.log('Hubo un problema con la petición Fetch:' + error.message);
     });  }
   componentDidMount(){
-      this.fetchRegalos();
+      this.fetchRegalos(true,1);
       console.log(localStorage.getItem('token'));
     }
     render() {
@@ -143,8 +146,8 @@ class IndexRegalos extends Component {
                               </thead>
                               <tbody>
                                    {
-                                    this.state.tb_regalos.datos ?
-                                    this.state.tb_regalos.datos.data.map(task =>{
+                                    this.state.tb_regalos.data ?
+                                    this.state.tb_regalos.data.map(task =>{
                                         return (
                                             <tr key={task.id}>
                                                 <td>{task.nombres}</td>
@@ -161,6 +164,30 @@ class IndexRegalos extends Component {
                                 }
                             </tbody>
                         </table>
+                            <div className="float-right">
+                            <Pagination  >
+                              <Pagination.Prev
+                                  onClick={() => {
+                                    this.fetchRegalos(
+                                      true,
+                                      this.state.var_texto_numeroPagina-1,
+                                  )
+                                }}
+                              />
+                                  {
+                                      <Paginar data={this.state.tb_regalos} fetch={(bolean,numero)=>this.fetchRegalos(bolean,numero)} ></Paginar>
+                                  }
+                              <Pagination.Next
+                                  onClick={() => {
+                                    this.fetchRegalos(
+                                      true,
+                                      this.state.var_texto_numeroPagina+1,
+
+                                    )
+                                  }}
+                              />
+                          </Pagination>
+                          </div>
                         </Card>
                     </Col>
                 </Row>

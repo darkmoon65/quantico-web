@@ -14,7 +14,7 @@ class IndexRedes extends Component {
       tb_redes:[],
       //modales
       estadoModalCrearRed:false,
-      estadoModalEditarRed:false
+      estadoModalVerRed:false
     }
     this.handleChange = this.handleChange.bind(this);
   }
@@ -26,12 +26,16 @@ class IndexRedes extends Component {
           estadoModalCrearRed: !this.state.estadoModalCrearRed
         })
   }
-  cambiarModalEditarRed(){
+  cambiarModalVerRed(){
         this.setState({
-          estadoModalEditarRed: !this.state.estadoModalEditarRed
+          estadoModalVerRed: !this.state.estadoModalVerRed
         })
   }
-
+  verRed(imagen){
+    this.setState({
+      imagenVer: imagen
+    },()=>this.cambiarModalVerRed())
+  }
   clean(){
     this.setState({
       estadoModalCrearRed: false,
@@ -168,13 +172,13 @@ class IndexRedes extends Component {
             <Aux>
                 <Row>
                     <Col>
-                        <Card title='Redes Sociales' isOption>
+                        <Card title='Enlaces' isOption>
                         <table id="tb_membresia" className="table table-striped" style={{width:'100%'}}>
                             <thead>
                                 <tr>
                                     <th><h4 className="card-title">Buscar </h4></th>
                                     <th><input type="text" onChange={this.handleChangeBuscador} /></th>
-                                    <th><button type="button" className="btn btn-primary" onClick={()=>this.cambiarModalCrearRed()}>Crear Red Social</button></th>
+                                    <th><button type="button" className="btn btn-primary" onClick={()=>this.cambiarModalCrearRed()}>Crear Enlaces</button></th>
                                     <th><button className="btn btn-sm btn-success" type="button" onClick={()=>this.descargarExcel()}>Descargar excel</button></th>
                                 </tr>
                                 <tr>
@@ -191,6 +195,9 @@ class IndexRedes extends Component {
                                                 <td>{task.nombre}</td>
                                                 <td>{task.url}</td>
                                                 <td>
+                                                  <button className="btn btn-sm btn-info" type="button" onClick={()=>this.verRed(task.imagen)}>
+                                                    <i className="fa fa-eye" ></i>
+                                                  </button>
                                                   <button className="btn btn-sm btn-danger" type="button" onClick={()=>this.eliminarRed(task.id)}>
                                                     <i className="fa fa-trash" ></i>
                                                   </button>
@@ -211,7 +218,7 @@ class IndexRedes extends Component {
                     >
                     <Modal.Header closeButton>
                       <Modal.Title id="example-custom-modal-styling-title">
-                        Crear Red Social
+                        Crear Enlace
                       </Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
@@ -227,11 +234,11 @@ class IndexRedes extends Component {
                                             <input type="text" name="urlCrear" className="form-control" onChange={this.handleChange}/>
                                           </div>
                                           <div className="input-group p-1">
-                                            <label>Redes:</label><br/>
+                                            <label>Imagen:</label><br/>
                                             <input type="file" className="form-control-file" name="imagenCrear" onChange={e =>this.handleChangeFile(e)}/>
                                           </div>
                                           <div className="p-2">
-                                            <button type="button" className="btn btn-primary" onClick={()=>this.crearRed()} >Crear Red Social</button>
+                                            <button type="button" className="btn btn-primary" onClick={()=>this.crearRed()} >Crear Enlace</button>
                                           </div>
                                       </div>
                                   </div>
@@ -240,33 +247,22 @@ class IndexRedes extends Component {
                   </Modal>
                   <Modal
                       size="lg"
-                      show={this.state.estadoModalEditarRed}
-                      onHide={() => this.cambiarModalEditarRed()}
+                      show={this.state.estadoModalVerRed}
+                      onHide={() => this.cambiarModalVerRed()}
                       >
                       <Modal.Header closeButton>
                         <Modal.Title id="example-custom-modal-styling-title">
-                          Editar Red Social
+                          Ver Enlace
                         </Modal.Title>
                       </Modal.Header>
                       <Modal.Body>
                               <div className="card w-100">
                                   <div className="modal-body">
                                       <div className="card-body">
-                                            <div>
-                                              <label>Nombre:</label><br/>
-                                              <input type="text" name="nombreCrear" className="form-control" onChange={this.handleChange}/>
-                                            </div>
-                                            <div>
-                                              <label>Numero:</label><br/>
-                                              <input type="number" name="numeroCrear" className="form-control" onChange={this.handleChange}/>
-                                            </div>
-                                            <div>
-                                              <label>Cargo:</label><br/>
-                                              <input type="text" name="cargoCrear" className="form-control" onChange={this.handleChange}/>
-                                            </div>
-                                            <div className="p-2">
-                                              <button type="button" className="btn btn-primary" onClick={()=>this.crearRed()} >Crear Red Social</button>
-                                            </div>
+                                          <label>Imagen:</label><br/>
+                                          <div className=" p-1">
+                                            <img src={this.state.imagenVer} width="400" height="400"/>
+                                          </div>
                                         </div>
                                     </div>
                                 </div>

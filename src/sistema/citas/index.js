@@ -197,7 +197,21 @@ class IndexCitas extends Component {
                                                 <td>{task.nombres}</td>
                                                 <td>{task.apellidos}</td>
                                                 <td>{task.fecha}</td>
-                                                <td>{task.estado}</td>
+                                                {
+                                                  task.estado_id == 1?
+                                                    <td>Aceptado</td>
+                                                  :null
+                                                }
+                                                {
+                                                  task.estado_id == 3?
+                                                    <td>Proceso</td>
+                                                  :null
+                                                }
+                                                {
+                                                  task.estado_id == 5?
+                                                    <td>Fecha aprobada</td>
+                                                  :null
+                                                }
                                                 <td>
                                                   <button className="btn btn-sm btn-primary" type="button" onClick={()=>this.editarCitas(task.id,task.estado_id,task.usuario_id)}>
                                                     <i className="fa fa-pencil" ></i>
@@ -211,13 +225,13 @@ class IndexCitas extends Component {
                         </table>
                         <div className="float-right">
                                 <Pagination  >
-                                  <Pagination.Prev 
+                                  <Pagination.Prev
                                       onClick={() => {
-                                        this.fetchCitas(  
-                                          true,                                    
-                                          this.state.var_texto_numeroPagina-1,     
+                                        this.fetchCitas(
+                                          true,
+                                          this.state.var_texto_numeroPagina-1,
                                       )
-                                        
+
                                     }}
                                   />
                                       {
@@ -225,12 +239,12 @@ class IndexCitas extends Component {
                                       }
                                   <Pagination.Next
                                       onClick={() => {
-                                        this.fetchCitas(    
-                                          true,                                      
-                                          this.state.var_texto_numeroPagina+1,        
+                                        this.fetchCitas(
+                                          true,
+                                          this.state.var_texto_numeroPagina+1,
 
                                         )
-                                        
+
                                       }}
                                   />
                               </Pagination>

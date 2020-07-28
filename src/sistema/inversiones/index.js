@@ -13,7 +13,7 @@ class IndexInversiones extends Component {
     this.state = {
       tb_inversiones:[],
       tipoInversionesId: 1,
-      descrip:true,
+      descrip:false,
       //modales
       estadoModalEditarInversiones:false,
       estadoModalCrearInversiones:false
@@ -39,20 +39,20 @@ class IndexInversiones extends Component {
     this.setState({
       estadoModalEditarInversiones: false,
       estadoModalCrearInversiones:false,
-      numeroCrear:'',
+      tipoInversionesId:1,
       cargoCrear:''
     },()=>this.fetchInversiones())
   }
 
   handleChange(e){
     const {name, value} = e.target;
-    if (name == "tipoInversionesId" && value == 2){
+    if (name == "tipoInversionesId" && value == 1){
       this.setState({
         descrip: false,
         descripcionCrear: null
       })
     }
-    if (name == "tipoInversionesId" && value == 1){
+    if (name == "tipoInversionesId" && value == 2){
       this.setState({
         descrip: true,
       })
@@ -83,10 +83,18 @@ class IndexInversiones extends Component {
     }
 
   editarInversiones(id,tipoInversion_id,titulo,imagen,linkVideo,linkDetalles,descripcion){
+    let estado
+    if (tipoInversion_id == 1){
+      estado = false
+    }
+    else{
+      estado = true
+    }
 
     this.setState({
       id:id,
-      tipoInversionesIdEditar:tipoInversion_id,
+      descrip: estado,
+      tipoInversionesId:tipoInversion_id,
       tituloEditar:titulo,
       linkImagenEditar: imagen,
       linkVideoEditar: linkVideo,
@@ -138,7 +146,7 @@ class IndexInversiones extends Component {
         method: 'POST',
         body: JSON.stringify({
               id: this.state.id,
-              tipoInversion: this.state.tipoInversionesIdEditar,
+              tipoInversion: this.state.tipoInversionesId,
               titulo: this.state.tituloEditar,
               imagen: this.state.imagenCrear,
               linkVideo: this.state.linkVideoEditar,
@@ -216,8 +224,11 @@ class IndexInversiones extends Component {
         .then(data => {
           if(data.respuesta==true){
             this.setState({
-              tb_inversiones: data
-            },()=>{console.log(this.state.tb_inversiones)})
+              tb_inversionesH: data
+            },()=>{
+              console.log(this.state.tb_inversionesH)
+              this.limpiarInversiones()
+            })
           }
           else{
             console.log(data)
@@ -226,6 +237,36 @@ class IndexInversiones extends Component {
       }).catch((error)=> {
         console.log('Hubo un problema con la petición Fetch:' + error.message);
     });  }
+
+    limpiarInversiones(){
+      let array = this.state.tb_inversionesH
+      let newArray = []
+      array.datos.map((data)=>{
+        let integracion
+        if (data.tipoInversion_id == 1){
+            integracion = "Público"
+        }else{
+            integracion= "Inversiones Quantico"
+        }
+        newArray.push({
+          id:data.id,
+          texto:data.texto,
+          tipoInversion_id:data.tipoInversion_id,
+          tipoInversionNombre: integracion,
+          nombre: data.nombre,
+          titulo: data.titulo,
+          imagen: data.imagen,
+          linkVideo:data.linkVideo,
+          linkDetalles: data.linkDetalles,
+          descripcion: data.descripcion
+
+        })
+      })
+      this.setState({
+        tb_inversiones: newArray
+      },()=>console.log(this.state.tb_inversiones))
+    }
+
   componentDidMount(){
       this.fetchInversiones();
       console.log(localStorage.getItem('token'));
@@ -244,15 +285,17 @@ class IndexInversiones extends Component {
                                 </tr>
                                 <tr>
                                     <th>Titulo</th>
+                                    <th>Tipo de inversion</th>
                                 </tr>
                               </thead>
                               <tbody>
                                    {
-                                    this.state.tb_inversiones.datos ?
-                                    this.state.tb_inversiones.datos.map(task =>{
+                                    this.state.tb_inversiones ?
+                                    this.state.tb_inversiones.map(task =>{
                                         return (
                                             <tr key={task.id}>
                                                 <td>{task.titulo}</td>
+                                                <td>{task.tipoInversionNombre}</td>
                                                 <td>
                                                   <button className="btn btn-sm btn-primary" type="button" onClick={()=>this.editarInversiones(
                                                     task.id,
@@ -347,7 +390,7 @@ class IndexInversiones extends Component {
                                       <div className="card-body">
                                             <div>
                                               <label>Tipo de inversiones:</label><br/>
-                                              <select className="form-control" name="tipoInversionesIdEditar" onChange={this.handleChange} value={this.state.tipoInversionesIdEditar}>
+                                              <select className="form-control" name="tipoInversionesId" onChange={this.handleChange} value={this.state.tipoInversionesId}>
                                                   <option key={1} value={1}>Publico</option>
                                                   <option key={2} value={2}>Quantico Inversiones</option>
                                               </select>
@@ -356,10 +399,14 @@ class IndexInversiones extends Component {
                                               <label>Titulo:</label><br/>
                                               <input type="text" name="tituloEditar" className="form-control" onChange={this.handleChange} value={this.state.tituloEditar}/>
                                             </div>
-                                            <div>
-                                              <label>Descripcion:</label><br/>
-                                              <input type="text" name="descripcionEditar" className="form-control" onChange={this.handleChange} defaultValue={this.state.descripcionEditar}/>
-                                            </div>
+                                            {
+                                            this.state.descrip ?
+                                              <div>
+                                                <label>Descripcion:</label><br/>
+                                                <input type="text" name="descripcionEditar" className="form-control" onChange={this.handleChange} defaultValue={this.state.descripcionEditar}/>
+                                              </div>
+                                            :null
+                                          }
                                             <div>
                                               <label>Imagen actual:</label><br/>
                                               <img src={this.state.linkImagenEditar} width="400" height="400"/>
