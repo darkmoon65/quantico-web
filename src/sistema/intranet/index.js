@@ -5,66 +5,87 @@ import Aux from "../../hoc/_Aux";
 import Card from "../../App/components/MainCard";
 import cogoToast from "cogo-toast";
 import Config from "../../config"
+import Files from "../../files"
 
-class IndexBlackList extends Component {
+class IndexIntranet extends Component {
   constructor(){
     super();
     this.state = {
-      tb_blackList:[],
+      tb_intranet:[],
       //modales
-      estadoModalBloquear:false,
+      estadoModalCrearIntranet:false,
     }
     this.handleChange = this.handleChange.bind(this);
   }
 
-  cambiarModalBloquear(){
+  descargarExcel(){
+    Files.exportToCSV(this.state.tb_intranet.datos,"contactos");
+  }
+  cambiarModalCrearIntranet(){
         this.setState({
-          estadoModalBloquear: !this.state.estadoModalBloquear
+          estadoModalCrearIntranet: !this.state.estadoModalCrearIntranet
         })
   }
-
-  verResultado(){
-    this.cambiarModalBloquear();
+  crearIntranet(id){
+    this.setState({
+       id: id
+    },()=>this.cambiarModalCrearIntranet())
   }
   clean(){
-      this.setState({
-        estadoModalBloquear: false,
-      },()=>this.fetchBlacklist())
+    this.setState({
+      estadoModalCrearIntranet: false,
+      nombreCrear:'',
+      numeroCrear:'',
+      cargoCrear:''
+    },()=>this.fetchContactos())
   }
 
-  desbloquear(id){
-    fetch(`${Config.api}usuarios/desbloquear`,
-      {
-        mode:'cors',
-        method: 'GET',
-        headers: {
-            'Accept' : 'application/json',
-            'Content-type' : 'application/json',
-            'api_token': localStorage.getItem('token')
-        }
-      }
-    )
-      .then(res =>res.json())
-      .then(data => {
-        if(data.respuesta==true){
-          cogoToast.success("desbloqueado");
-          this.clean()
+  handleChange(e){
+    const {name, value} = e.target;
+    this.setState({
+      [name]: value
+    },()=>{
+      console.log(value)
+    })
+  }
+  handleChangeFile (e){
+        var file = e.target.files[0];
+        var fileData = new FileReader();
+        if(file){
+          fileData.readAsDataURL(file);
         }
         else{
-          console.log(data)
-          console.log("hubo un error con la peticion")
+          cogoToast.warn("Se quito la imagen");
         }
-    }).catch((error)=> {
-      console.log('Hubo un problema con la petición Fetch:' + error.message);
-  });
-}
-  bloquear(id){
-    fetch(`${Config.api}usuarios/desbloquear`,
+        if(e.target.name == "imgTarjeta"){
+          fileData.onload = (event)=> {
+            this.setState({imagenTarjeta: fileData.result},
+              ()=>{
+                  cogoToast.success("Imagen de tarjeta lista")
+                }
+              );
+            }
+        }
+        else if (e.target.name == "imgCurso") {
+          fileData.onload = (event)=> {
+            this.setState({imagenCurso: fileData.result},
+              ()=>{
+                  cogoToast.success("Imagen de curso lista")
+                }
+              );
+            }
+        }
+    }
+
+  crearCuenta(){
+    fetch(`${Config.api}inversiones/crearCuenta`,
       {
         mode:'cors',
-        method: 'GET',
+        method: 'POST',
         body: JSON.stringify({
-            correo : this.state.correoBloquear,
+              id: this.state.id,
+              correo: this.state.correoCrear,
+              usuario: this.state.usuarioCrear
           }
         ),
         headers: {
@@ -77,30 +98,51 @@ class IndexBlackList extends Component {
       .then(res =>res.json())
       .then(data => {
         if(data.respuesta==true){
-          cogoToast.success("bloqueado");
-          this.clean()
+          cogoToast.success("Contacto creado");
+          this.clean();
         }
         else{
-          console.log(data)
+          cogoToast.error("Error al crear el contacto")
           console.log("hubo un error con la peticion")
         }
     }).catch((error)=> {
+      cogoToast.error("Hubo un error al crear el contacto")
       console.log('Hubo un problema con la petición Fetch:' + error.message);
   });
 }
-
-  handleChange(e){
-    const {name, value} = e.target;
-    this.setState({
-      [name]: value
-    },()=>{
-      console.log(value)
-    })
-  }
-
-
-  fetchBlacklist(){
-      fetch(`${Config.api}usuarios/bloqueados`,
+  eliminarContacto(id){
+    fetch(`${Config.api}contactos/eliminar`,
+      {
+        mode:'cors',
+        method: 'POST',
+        body: JSON.stringify({
+              id:id
+          }
+        ),
+        headers: {
+            'Accept' : 'application/json',
+            'Content-type' : 'application/json',
+            'api_token': localStorage.getItem('token')
+        }
+      }
+    )
+      .then(res =>res.json())
+      .then(data => {
+        if(data.respuesta==true){
+          cogoToast.success("Contacto eliminado");
+          this.clean();
+        }
+        else{
+          cogoToast.error("Error al crear el contacto")
+          console.log("hubo un error con la peticion")
+        }
+    }).catch((error)=> {
+      cogoToast.error("Hubo un error al crear el contacto")
+      console.log('Hubo un problema con la petición Fetch:' + error.message);
+  });
+}
+  fetchIntranet(){
+      fetch(`${Config.api}inversiones/mostrarCuentas`,
         {
           mode:'cors',
           method: 'GET',
@@ -113,10 +155,10 @@ class IndexBlackList extends Component {
       )
         .then(res =>res.json())
         .then(data => {
-          if(data){
+          if(data.respuesta==true){
             this.setState({
-              tb_blackList: data
-            },()=>{console.log(this.state.tb_blacklist)})
+              tb_intranet: data
+            },()=>{console.log(this.state.tb_intranet)})
           }
           else{
             console.log(data)
@@ -126,7 +168,7 @@ class IndexBlackList extends Component {
         console.log('Hubo un problema con la petición Fetch:' + error.message);
     });  }
   componentDidMount(){
-      this.fetchBlacklist();
+      this.fetchIntranet();
       console.log(localStorage.getItem('token'));
     }
     render() {
@@ -134,35 +176,36 @@ class IndexBlackList extends Component {
             <Aux>
                 <Row>
                     <Col>
-                        <Card title='BlackList' isOption>
+                        <Card title='Intranet' isOption>
                         <table id="tb_membresia" className="table table-striped" style={{width:'100%'}}>
                             <thead>
                                 <tr>
-                                    <th><button className="btn btn-sm btn-info" type="button" onClick={()=>this.cambiarModalBloquear()}>Bloquear</button></th>
+                                    <th><h4 className="card-title">Buscar </h4></th>
+                                    <th><input type="text" onChange={this.handleChangeBuscador} /></th>
                                     <th><button className="btn btn-sm btn-success" type="button" onClick={()=>this.descargarExcel()}>Descargar excel</button></th>
                                 </tr>
                                 <tr>
-                                    <th>id</th>
                                     <th>Nombres</th>
                                     <th>Apellidos</th>
+                                    <th>Correos</th>
                                 </tr>
                               </thead>
                               <tbody>
                                    {
-                                    this.state.tb_blackList.data ?
-                                    this.state.tb_blackList.data.map(task =>{
+                                    this.state.tb_intranet.datos ?
+                                    this.state.tb_intranet.datos.data.map(task =>{
                                         return (
                                             <tr key={task.id}>
                                                 <td>{task.nombres}</td>
                                                 <td>{task.apellidos}</td>
-                                                <td>{task.correos}</td>
+                                                <td>{task.correo}</td>
                                                 <td>
-                                                  <button className="btn btn-sm btn-success"  type="button" onClick={()=>this.desbloquear(task.id)}>
-                                                    Desbloquear
+                                                  <button className="btn btn-sm btn-success"  type="button" onClick={()=>this.crearIntranet(task.id)}>
+                                                    Crear cuenta
                                                   </button>
-
                                                 </td>
                                             </tr>
+
                                         );
                                     } )   : null
                                 }
@@ -173,26 +216,29 @@ class IndexBlackList extends Component {
                 </Row>
                 <Modal
                     size="lg"
-                    show={this.state.estadoModalBloquear}
-                    onHide={() => this.cambiarModalBloquear()}
+                    show={this.state.estadoModalCrearIntranet}
+                    onHide={() => this.cambiarModalCrearIntranet()}
                     >
                     <Modal.Header closeButton>
                       <Modal.Title id="example-custom-modal-styling-title">
-                        Bloquear por correo
+                        Crear Cuenta
                       </Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                             <div className="card w-100">
                                 <div className="modal-body">
-                                    <div className="card-body text-center">
+                                    <div className="card-body">
                                           <div>
-                                            <div>
-                                              <label>Correo:</label><br/>
-                                              <input type="text" name="correoBloquear" className="form-control" onChange={this.handleChange}/>
-                                            </div>
-                                            <div className="p-2">
-                                              <button type="button" className="btn btn-primary" onClick={()=>this.bloquear()} >Bloquear</button>
-                                            </div>
+                                            <label>Correo:</label><br/>
+                                            <input type="text" name="correoCrear" className="form-control" onChange={this.handleChange}/>
+                                          </div>
+                                          <div>
+                                            <label>Usuario:</label><br/>
+                                            <input type="text" name="usuarioCrear" className="form-control" onChange={this.handleChange}/>
+                                          </div>
+
+                                          <div className="p-2">
+                                            <button type="button" className="btn btn-primary" onClick={()=>this.crearCuenta()} >Crear cuenta</button>
                                           </div>
                                       </div>
                                   </div>
@@ -204,4 +250,4 @@ class IndexBlackList extends Component {
     }
 }
 
-export default IndexBlackList;
+export default IndexIntranet;

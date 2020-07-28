@@ -180,6 +180,13 @@ export default {
                     type: 'item',
                     url: '/datosFinancieros',
                     icon: 'fa fa-university',
+                },
+                {
+                    id: 'intranet',
+                    title: 'Intranet',
+                    type: 'item',
+                    url: '/intranet',
+                    icon: 'fa fa-home',
                 }
 
 

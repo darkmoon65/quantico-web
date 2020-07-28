@@ -22,8 +22,8 @@ class IndexMembresias extends Component {
 
         imagenTarjeta:'',
         imagenCurso:'',
-        imagenTarjetaBase:'',
-        imagenCursoBase:'',
+        imagenTarjetaBase:null,
+        imagenCursoBase:null,
 
         idEditar:'',
         nombreEditar:'',
@@ -545,7 +545,7 @@ class IndexMembresias extends Component {
                                                   }
                                               </div>
                                               <div className="mx-auto p-4">
-                                                <button type="button" className="btn btn-sm btn-primary ver" onClick={()=>this.exeEnviarEditar()}>Editar Membresia</button>
+                                                <button type="button" className="btn btn-sm btn-primary ver" onClick={()=>this.exeEnviarEditar()}>Guardar cambios</button>
                                               </div>
                                             </div>
                                       </div>
