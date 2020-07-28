@@ -30,7 +30,7 @@ const CrearTiposPago    = React.lazy(() => import('./sistema/tiposPagos/componen
 const Regalos           = React.lazy(() => import('./sistema/regalos/index'));
 const Inversiones       = React.lazy(() => import('./sistema/inversiones/index'));
 const Herramientas      = React.lazy(() => import('./sistema/herramientas/index'));
-
+const Asistencias       = React.lazy(() => import('./sistema/asistencias/index'));
 
 const DatosFinancieros = React.lazy(() => import('./sistema/datosFinancieros/index'));
 const Notificaciones = React.lazy(() => import('./sistema/notificaciones/index'));
