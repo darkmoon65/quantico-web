@@ -90,7 +90,6 @@ class IndexHerramientas extends Component {
               id:this.state.id,
               titulo: this.state.tituloEditar,
               url: this.state.linkEditar,
-              descripcion: this.state.descripcionEditar,
               imagen: this.state.imagen
           }
         ),
@@ -124,7 +123,6 @@ class IndexHerramientas extends Component {
         body: JSON.stringify({
               titulo: this.state.tituloCrear,
               url: this.state.linkCrear,
-              descripcion: this.state.descripcionCrear,
               imagen: this.state.imagen
           }
         ),
@@ -241,7 +239,6 @@ class IndexHerramientas extends Component {
                                                     task.id,
                                                     task.titulo,
                                                     task.url,
-                                                    task.descripcion,
                                                     task.imagen
                                                   )}>
                                                     <i className="fa fa-pencil" ></i>
@@ -282,10 +279,6 @@ class IndexHerramientas extends Component {
                                             <input type="text" name="linkCrear" className="form-control" onChange={this.handleChange}/>
                                           </div>
                                           <div>
-                                            <label>Descripcion:</label><br/>
-                                            <input type="text" name="descripcionCrear" className="form-control" onChange={this.handleChange}/>
-                                          </div>
-                                          <div>
                                             <label>Imagen:</label><br/>
                                             <input type="file" className="form-control-file" name="imagenCrear" onChange={e =>this.handleChangeFile(e)}/>
                                           </div>
@@ -318,10 +311,6 @@ class IndexHerramientas extends Component {
                                             <div>
                                               <label>Link:</label><br/>
                                               <input type="text" name="linkEditar" className="form-control" onChange={this.handleChange} defaultValue={this.state.linkEditar}/>
-                                            </div>
-                                            <div>
-                                              <label>Descripcion:</label><br/>
-                                              <input type="text" name="descripcionEditar" className="form-control" onChange={this.handleChange} defaultValue={this.state.descripcionEditar}/>
                                             </div>
                                             <div>
                                               <label>Imagen actual:</label><br/>
