@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
-import {Row, Col,Modal} from 'react-bootstrap';
+import {Row, Col,Modal,Pagination} from 'react-bootstrap';
 
 import Aux from "../../hoc/_Aux";
 import Card from "../../App/components/MainCard";
 import cogoToast from "cogo-toast";
 import Config from "../../config"
-import Files from "../../files"
+import Files from "../../files";
+import Paginar from "../../paginate"
 
 class IndexVerificaciones extends Component {
   constructor(){
@@ -13,6 +14,7 @@ class IndexVerificaciones extends Component {
     this.state = {
       tb_verificaciones:[],
       arrayImagenes:[],
+      var_texto_numeroPagina:1,
       //modales
       estadoModalVerVerificaciones:false,
 
@@ -172,8 +174,8 @@ class IndexVerificaciones extends Component {
         }
     }
 
-  fetchVerificaciones(){
-      fetch(`${Config.api}verificaciones/mostrar`,
+  fetchVerificaciones(boleano,numero){
+      fetch(`${Config.api}verificaciones/mostrar?page=${numero}`,
         {
           mode:'cors',
           method: 'GET',
@@ -190,7 +192,8 @@ class IndexVerificaciones extends Component {
           if(data){
             console.log(data)
             this.setState({
-              tb_verificaciones: data
+              tb_verificaciones: data['datos'],
+              var_texto_numeroPagina: numero
             },()=>{console.log(this.state.tb_verificaciones)})
           }
           else{
@@ -201,7 +204,7 @@ class IndexVerificaciones extends Component {
         console.log('Hubo un problema con la petición Fetch:' + error.message);
     });  }
   componentDidMount(){
-      this.fetchVerificaciones();
+      this.fetchVerificaciones(true,1);
       console.log(localStorage.getItem('token'));
     }
     render() {
@@ -226,8 +229,8 @@ class IndexVerificaciones extends Component {
                               </thead>
                               <tbody>
                                    {
-                                    this.state.tb_verificaciones.datos ?
-                                    this.state.tb_verificaciones.datos.data.map((task,index) =>{
+                                    this.state.tb_verificaciones.data ?
+                                    this.state.tb_verificaciones.data.map((task,index) =>{
                                         return (
                                             <tr key={index}>
                                                 <td>{task.usuario.nombres}</td>
@@ -245,6 +248,30 @@ class IndexVerificaciones extends Component {
                                 }
                             </tbody>
                         </table>
+                            <div className="float-right">
+                            <Pagination  >
+                              <Pagination.Prev
+                                  onClick={() => {
+                                    this.fetchVerificaciones(
+                                      true,
+                                      this.state.var_texto_numeroPagina-1,
+                                  )
+                                }}
+                              />
+                                  {
+                                      <Paginar data={this.state.tb_verificaciones} fetch={(bolean,numero)=>this.fetchVerificaciones(bolean,numero)} ></Paginar>
+                                  }
+                              <Pagination.Next
+                                  onClick={() => {
+                                    this.fetchVerificaciones(
+                                      true,
+                                      this.state.var_texto_numeroPagina+1,
+
+                                    )
+                                  }}
+                              />
+                          </Pagination>
+                          </div>
                         </Card>
                     </Col>
                 </Row>
