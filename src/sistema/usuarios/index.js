@@ -397,13 +397,12 @@ class IndexUsuarios extends Component {
                 <Row>
                     <Col>
                         <Card title='Registro de usuarios' isOption>
+                            <h4 className="card-title">Buscar</h4>
+                            <input type="text" onChange={this.handleChangeBuscador} />
+
+                            <span className="p-5"><button className="btn btn-sm btn-success" type="button" onClick={()=>this.descargarExcel()}>Descargar excel</button></span>
                               <table id="tb_users" className="table table-striped" style={{width:'100%'}}>
                                   <thead>
-                                      <tr>
-                                          <th><h4 className="card-title">Buscar</h4></th>
-                                          <th><input type="text" onChange={this.handleChangeBuscador} /></th>
-                                          <th><button className="btn btn-sm btn-success" type="button" onClick={()=>this.descargarExcel()}>Descargar excel</button></th>
-                                      </tr>
                                       <tr>
                                           <th>Nombres</th>
                                           <th>Apellidos</th>

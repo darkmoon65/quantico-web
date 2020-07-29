@@ -577,10 +577,6 @@ class IndexProductos extends Component {
                                               <label>Link de power point:</label>
                                               <input type="text" className="form-control" name="linkppt" onChange={this.handleChange} />
                                             </div>
-                                            <div>
-                                              <label>Link de sala:</label>
-                                              <input type="text" className="form-control" name="linkSala" onChange={this.handleChange} />
-                                            </div>
                                             <div className="p-2">
                                               <label>Descuentos: </label><br/>
                                                 <table id="tb_membresia" className="table table-striped" style={{width:'100%'}}>

@@ -23,7 +23,7 @@ class IndexRegalos extends Component {
     this.handleChangeBuscador  = this.handleChangeBuscador.bind(this);
   }
   descargarExcel(){
-    Files.exportToCSV(this.state.tb_regalos.datos.data,"regalos");
+    Files.exportToCSV(this.state.tb_regalos.data,"regalos");
   }
   cambiarModalEnviarRegalos(){
         this.setState({

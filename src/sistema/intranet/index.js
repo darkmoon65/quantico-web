@@ -37,7 +37,7 @@ class IndexIntranet extends Component {
       nombreCrear:'',
       numeroCrear:'',
       cargoCrear:''
-    },()=>this.fetchContactos())
+    },()=>this.fetchIntranet())
   }
 
   handleChange(e){
