@@ -38,7 +38,7 @@ class IndexCitas extends Component {
       id:'',
       estadoFechaEditar:1,
       estadoCitaEditar:null
-    },()=>this.fetchContactos())
+    },()=>this.fetchCitas(true,1))
   }
 
   handleChange(e){

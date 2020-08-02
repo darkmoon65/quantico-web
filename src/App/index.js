@@ -26,11 +26,11 @@ class App extends Component {
         logged: localStorage.getItem('token')
       }
     }
-    agregarNumeros(verificaciones,comprobantes,completos){
+    agregarNumeros(verificaciones,comprobantes,completos,usuarios){
         localStorage.setItem('verificaciones',verificaciones);
         localStorage.setItem('comprobantes',comprobantes);
         localStorage.setItem('completos',completos);
-
+        localStorage.setItem('usuarios',usuarios);
     }
     fetchNumeros(){
          fetch(`${Config.api}verificaciones/totales`,
@@ -47,7 +47,7 @@ class App extends Component {
               .then(res =>res.json())
               .then(data => {
                 if(data.respuesta==true){
-                  this.agregarNumeros(data.sinVerificar,data.sinComprobante,data.completos)
+                  this.agregarNumeros(data.sinVerificar,data.sinComprobante,data.completos,data.usuarios)
                 }
                 else{
                   console.log(data)

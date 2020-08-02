@@ -15,7 +15,7 @@ export default {
                 // },
                 {
                     id: 'usuarios',
-                    title: 'Usuarios',
+                    title: `Usuarios (${localStorage.getItem('usuarios')})`,
                     type: 'item',
                     url: '/usuarios',
                     icon: 'fa fa-user-circle',

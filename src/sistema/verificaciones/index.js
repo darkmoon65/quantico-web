@@ -22,7 +22,7 @@ class IndexVerificaciones extends Component {
     this.handleChange = this.handleChange.bind(this);
   }
   descargarExcel(){
-    Files.exportToCSV(this.state.tb_verificaciones,"verificaciones");
+    Files.exportToCSV(this.state.tb_verificaciones.data,"verificaciones");
   }
   cambiarModalVerVerificaciones(){
         this.setState({
@@ -42,7 +42,7 @@ class IndexVerificaciones extends Component {
         a.splice(index,1)
 
       this.setState({
-        arrayImagenes: a
+        arrayImagenes: a,
       },()=>{
         this.fetchVerificaciones()
       })
@@ -134,34 +134,6 @@ class IndexVerificaciones extends Component {
       console.log(name)
     })
   }
-  handleChangeFile (e){
-        var file = e.target.files[0];
-        var fileData = new FileReader();
-        if(file){
-          fileData.readAsDataURL(file);
-        }
-        else{
-          cogoToast.warn("Se quito la imagen");
-        }
-        if(e.target.name == "imgTarjeta"){
-          fileData.onload = (event)=> {
-            this.setState({imagenTarjeta: fileData.result},
-              ()=>{
-                  cogoToast.success("Imagen de tarjeta lista")
-                }
-              );
-            }
-        }
-        else if (e.target.name == "imgCurso") {
-          fileData.onload = (event)=> {
-            this.setState({imagenCurso: fileData.result},
-              ()=>{
-                  cogoToast.success("Imagen de curso lista")
-                }
-              );
-            }
-        }
-    }
 
   fetchVerificaciones(boleano,numero){
       fetch(`${Config.api}verificaciones/mostrar?page=${numero}`,

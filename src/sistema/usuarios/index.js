@@ -18,6 +18,7 @@ class IndexUsuarios extends Component {
       rol_tb:[],
       var_texto_numeroPagina:1,
       valor:'',
+      buscarT:'apellidos',
 
       id:'',
       nombre:'',
@@ -54,7 +55,7 @@ class IndexUsuarios extends Component {
     })
   }
   fetchTable(bolean,numero){
-    fetch(`${Config.api}usuarios/mostrar?page=${numero}&buscar=${this.state.valor}`,
+    fetch(`${Config.api}usuarios/mostrar?page=${numero}&${this.state.buscarT}=${this.state.valor}`,
       {
         mode:'cors',
         method: 'GET',
@@ -69,7 +70,7 @@ class IndexUsuarios extends Component {
       .then(data => {
         if(data){
           this.setState({
-            tb_users: data,
+            tb_users: data['datos'],
             var_texto_numeroPagina: numero
           },()=>{console.log(this.state.tb_users)})
         }
@@ -386,7 +387,7 @@ class IndexUsuarios extends Component {
 
 
   componentDidMount(){
-    this.fetchTable();
+    this.fetchTable(true,1);
     console.log(localStorage.getItem('token'));
   }
 
@@ -401,13 +402,14 @@ class IndexUsuarios extends Component {
                             <input type="text" onChange={this.handleChangeBuscador} />
 
                             <span className="p-5"><button className="btn btn-sm btn-success" type="button" onClick={()=>this.descargarExcel()}>Descargar excel</button></span>
-                              <table id="tb_users" className="table table-striped" style={{width:'100%'}}>
+                              <table id="tb_users" className="table table-striped table-responsive" >
                                   <thead>
                                       <tr>
                                           <th>Nombres</th>
                                           <th>Apellidos</th>
                                           <th>Membresia</th>
                                           <th>Rol</th>
+                                          <th>Correo</th>
                                           <th>Bloqueado</th>
                                       </tr>
                                     </thead>
@@ -421,9 +423,11 @@ class IndexUsuarios extends Component {
                                                       <td>{task.apellidos}</td>
                                                       <td>{task.membresia}</td>
                                                       <td>{task.rol}</td>
+                                                      <td>{task.correo}</td>
                                                       {task.bloqueado ?
                                                          <td>si</td>
                                                        : <td>No</td>}
+
                                                       <th>
                                                       <button className="btn btn-sm btn-primary ver" type="button" onClick={()=>this.editarUsers(
                                                           task.id,
@@ -453,7 +457,7 @@ class IndexUsuarios extends Component {
                                     }}
                                   />
                                       {
-                                          <Paginar data={this.state.tb_users} fetch={(bolean,numero)=>this.fetchTable(bolean,numero)} ></Paginar>
+                                            <Paginar data={this.state.tb_users} fetch={(bolean,numero)=>this.fetchTable(bolean,numero)} ></Paginar>
                                       }
                                   <Pagination.Next
                                       onClick={() => {

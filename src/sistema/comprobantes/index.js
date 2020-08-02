@@ -94,7 +94,8 @@ class IndexComprobantes extends Component {
         ),
         headers: {
             'Accept' : 'application/json',
-            'Content-type' : 'application/json'
+            'Content-type' : 'application/json',
+
         }
       }
     )
