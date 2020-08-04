@@ -32,8 +32,9 @@ class IndexContactos extends Component {
           estadoModalEditarContactos: !this.state.estadoModalEditarContactos
         })
   }
-  editarContacto(nombre,numero,cargo){
+  editarContacto(id,nombre,numero,cargo){
     this.setState({
+      id: id,
       nombreEditar:nombre,
       numeroEditar:numero,
       cargoEditar:cargo
@@ -45,6 +46,7 @@ class IndexContactos extends Component {
   clean(){
     this.setState({
       estadoModalCrearContactos: false,
+      estadoModalEditarContactos: false,
       nombreCrear:'',
       numeroCrear:'',
       cargoCrear:''
@@ -98,6 +100,7 @@ class IndexContactos extends Component {
         mode:'cors',
         method: 'POST',
         body: JSON.stringify({
+              id: this.state.id,
               nombre: this.state.nombreEditar,
               numero: this.state.numeroEditar,
               cargo: this.state.cargoEditar
@@ -216,7 +219,7 @@ class IndexContactos extends Component {
                                                 <td>{task.numero}</td>
                                                 <td>{task.cargo}</td>
                                                 <td>
-                                                  <button className="btn btn-sm btn-primary" type="button" onClick={()=>this.editarContacto(task.nombre,task.numero,task.cargo)}>
+                                                  <button className="btn btn-sm btn-primary" type="button" onClick={()=>this.editarContacto(task.id,task.nombre,task.numero,task.cargo)}>
                                                     <i className="fa fa-pencil" ></i>
                                                   </button>
                                                   <button className="btn btn-sm btn-danger" type="button" onClick={()=>this.eliminarContacto(task.id)}>

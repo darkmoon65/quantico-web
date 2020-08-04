@@ -14,8 +14,10 @@ class IndexSugerencias extends Component {
       tb_sugerencias:[],
       //modales
       estadoModalVerSugerencias:false,
+      valor:''
     }
     this.handleChange = this.handleChange.bind(this);
+    this.handleChangeBuscador = this.handleChangeBuscador.bind(this);
   }
   descargarExcel(){
     Files.exportToCSV(this.state.tb_sugerencias.datos,"sugerencias");
@@ -32,7 +34,7 @@ class IndexSugerencias extends Component {
       nombreCrear:'',
       numeroCrear:'',
       cargoCrear:''
-    },()=>this.fetchContactos())
+    },()=>this.fetchSugerencias())
   }
 
   handleChange(e){
@@ -43,40 +45,16 @@ class IndexSugerencias extends Component {
       console.log(value)
     })
   }
+  handleChangeBuscador(e){
+    const value = e.target.value;
+    this.setState({
+      valor: value
+    },()=>{
+      console.log(value);
+      this.fetchSugerencias();
+    })
+  }
 
-  crearContacto(){
-    fetch(`${Config.api}contactos/crear`,
-      {
-        mode:'cors',
-        method: 'POST',
-        body: JSON.stringify({
-              nombre: this.state.nombreCrear,
-              numero: this.state.numeroCrear,
-              cargo: this.state.cargoCrear
-          }
-        ),
-        headers: {
-            'Accept' : 'application/json',
-            'Content-type' : 'application/json',
-            'api_token': localStorage.getItem('token')
-        }
-      }
-    )
-      .then(res =>res.json())
-      .then(data => {
-        if(data.respuesta==true){
-          cogoToast.success("Contacto creado");
-          this.clean();
-        }
-        else{
-          cogoToast.error("Error al crear el contacto")
-          console.log("hubo un error con la peticion")
-        }
-    }).catch((error)=> {
-      cogoToast.error("Hubo un error al crear el contacto")
-      console.log('Hubo un problema con la petición Fetch:' + error.message);
-  });
-}
   eliminarSugerencia(id){
 
   }
@@ -91,8 +69,8 @@ class IndexSugerencias extends Component {
       fechaVer: fecha
     },()=>this.cambiarModalVerSugerencias())
   }
-  fetchContactos(){
-      fetch(`${Config.api}sugerencias/mostrar`,
+  fetchSugerencias(boleano,numero){
+      fetch(`${Config.api}sugerencias/mostrar?buscar=${this.state.valor}`,
         {
           mode:'cors',
           method: 'GET',
@@ -107,7 +85,7 @@ class IndexSugerencias extends Component {
         .then(data => {
           if(data.respuesta==true){
             this.setState({
-              tb_sugerencias: data
+              tb_sugerencias: data['datos']
             },()=>{console.log(this.state.tb_sugerencias)})
           }
           else{
@@ -119,7 +97,7 @@ class IndexSugerencias extends Component {
     });  }
 
   componentDidMount(){
-      this.fetchContactos();
+      this.fetchSugerencias();
       console.log(localStorage.getItem('token'));
     }
     render() {
@@ -131,7 +109,11 @@ class IndexSugerencias extends Component {
                         <table id="tb_membresia" className="table table-striped" style={{width:'100%'}}>
                             <thead>
                                 <tr>
+
+                                    <th><h4 className="card-title">Buscar</h4></th>
+                                    <th><input type="text" onChange={this.handleChangeBuscador} /></th>
                                     <th><button className="btn btn-sm btn-success" type="button" onClick={()=>this.descargarExcel()}>Descargar excel</button></th>
+
                                 </tr>
                                 <tr>
                                     <th>Nombres</th>
@@ -142,8 +124,8 @@ class IndexSugerencias extends Component {
                               </thead>
                               <tbody>
                                    {
-                                    this.state.tb_sugerencias.datos ?
-                                    this.state.tb_sugerencias.datos.map(task =>{
+                                    this.state.tb_sugerencias.data ?
+                                    this.state.tb_sugerencias.data.map(task =>{
                                         return (
                                             <tr key={task.id}>
                                                 <td>{task.nombres}</td>

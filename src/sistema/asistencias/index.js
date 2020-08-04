@@ -14,11 +14,13 @@ class IndexAsistencias extends Component {
     this.state = {
       tb_asistencias:[],
       asistenciasTablaVer:[],
+      valor:'',
       //modales
       verAsistencia:false,
       estadoModalVerAsistencias:false,
     }
     this.handleChange = this.handleChange.bind(this);
+    this.handleChangeBuscador = this.handleChangeBuscador.bind(this);
   }
 
   cambiarModalVerAsistencias(){
@@ -44,6 +46,15 @@ class IndexAsistencias extends Component {
       console.log(value)
     })
   }
+  handleChangeBuscador(e){
+    const value = e.target.value;
+    this.setState({
+      valor: value
+    },()=>{
+      console.log(value);
+      this.fetchAsistencias();
+    })
+  }
 
   eliminarAsistencias(id){
 
@@ -62,8 +73,8 @@ class IndexAsistencias extends Component {
       fechaVer: fecha
     },()=>this.cambiarModalVerAsistencias())
   }
-  fetchAsistencias(){
-      fetch(`${Config.api}asistencias/mostrar`,
+  fetchAsistencias(boleano,numero){
+      fetch(`${Config.api}asistencias/mostrar?buscar=${this.state.valor}`,
         {
           mode:'cors',
           method: 'GET',
@@ -124,8 +135,6 @@ class IndexAsistencias extends Component {
                         <table id="tb_membresia" className="table table-striped" style={{width:'100%'}}>
                             <thead>
                                 <tr>
-                                    <th><h4 className="card-title">Buscar </h4></th>
-                                    <th><input type="text" onChange={this.handleChangeBuscador} /></th>
                                     <th><button className="btn btn-sm btn-success" type="button" onClick={()=>this.descargarExcel()}>Descargar excel</button></th>
                                     <th><button className="btn btn-sm btn-primary" type="button" onClick={()=>this.cambiarVerPrincipal()}>
                                       Regresar
@@ -161,6 +170,8 @@ class IndexAsistencias extends Component {
                 <Row>
                   <Col>
                       <Card title='Cursos Activos' isOption>
+                      <h4 className="card-title">Buscar </h4>
+                      <span><input type="text" onChange={this.handleChangeBuscador} /></span>
                       <table id="tb_membresia" className="table table-striped" style={{width:'100%'}}>
                           <thead>
                               <tr>
