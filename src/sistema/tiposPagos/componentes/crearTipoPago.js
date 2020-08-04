@@ -139,7 +139,7 @@ class CrearTipoPago extends Component {
                     nombre                   : this.state.nombreTiposPago,
                     integracion              : this.state.integracionCrear,
                     esCuentaBancaria         : this.state.esCuentaBancariaCrear,
-                    esDatoFinanciero         : this.state.esCuentaBancariaCrear,
+                    esDatoFinanciero         : this.state.esDatoFinanciero,
                     oculto                   : this.state.ocultoCrear,
                     imagen                   : this.state.imagen,
                     titular                  : this.state.titular,

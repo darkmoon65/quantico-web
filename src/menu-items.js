@@ -106,7 +106,7 @@ export default {
                 },
                 {
                     id: 'cuentas',
-                    title: 'Cuentas Bancarias',
+                    title: 'Datos Financieros',
                     type: 'item',
                     url: '/cuentasBancarias',
                     icon: 'feather icon-home',
