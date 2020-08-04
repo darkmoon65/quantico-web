@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Row, Col,Modal} from 'react-bootstrap';
 
+import { Redirect } from 'react-router-dom'
 import Aux from "../../hoc/_Aux";
 import Card from "../../App/components/MainCard";
 import cogoToast from "cogo-toast";
@@ -12,7 +13,9 @@ class IndexAsistencias extends Component {
     super();
     this.state = {
       tb_asistencias:[],
+      asistenciasTablaVer:[],
       //modales
+      verAsistencia:false,
       estadoModalVerAsistencias:false,
     }
     this.handleChange = this.handleChange.bind(this);
@@ -46,7 +49,7 @@ class IndexAsistencias extends Component {
 
   }
   descargarExcel(){
-    Files.exportToCSV(this.state.tb_asistencias.datos,"asistencias");
+    Files.exportToCSV(this.state.asistenciasTablaVer,"asistencias");
   }
   verAsistencia(id,nombre,apellido,correo,celular,sugerencia,fecha){
     this.setState({
@@ -74,8 +77,9 @@ class IndexAsistencias extends Component {
         .then(res =>res.json())
         .then(data => {
           if(data.respuesta==true){
+            console.log(data);
             this.setState({
-              tb_asistencias: data
+              tb_asistencias: data['datos']
             },()=>{console.log(this.state.tb_asistencias)})
           }
           else{
@@ -85,7 +89,25 @@ class IndexAsistencias extends Component {
       }).catch((error)=> {
         console.log('Hubo un problema con la petición Fetch:' + error.message);
     });  }
+  cambiarVerAsistencias(id){
+      var array = this.state.tb_asistencias.data
+      let asistencias
+      array.map((data)=>{
+        if(data.id==id){
+           asistencias = data.asistencias
+        }
+      })
 
+      this.setState({
+        verAsistencia: true,
+        asistenciasTablaVer: asistencias
+      })
+  }
+  cambiarVerPrincipal(id){
+      this.setState({
+        verAsistencia: false,
+      })
+  }
   componentDidMount(){
       this.fetchAsistencias();
       console.log(localStorage.getItem('token'));
@@ -93,101 +115,91 @@ class IndexAsistencias extends Component {
     render() {
         return (
             <Aux>
+            {
+
+                this.state.verAsistencia?
                 <Row>
                     <Col>
                         <Card title='Asistencias' isOption>
-                        <button className="btn btn-sm btn-success" type="button" onClick={()=>this.descargarExcel()}>Descargar excel</button>
                         <table id="tb_membresia" className="table table-striped" style={{width:'100%'}}>
                             <thead>
                                 <tr>
+                                    <th><h4 className="card-title">Buscar </h4></th>
+                                    <th><input type="text" onChange={this.handleChangeBuscador} /></th>
+                                    <th><button className="btn btn-sm btn-success" type="button" onClick={()=>this.descargarExcel()}>Descargar excel</button></th>
+                                    <th><button className="btn btn-sm btn-primary" type="button" onClick={()=>this.cambiarVerPrincipal()}>
+                                      Regresar
+                                    </button></th>
+                                </tr>
+                                <tr>
                                     <th>Nombres</th>
                                     <th>Apellidos</th>
+                                    <th>Correo</th>
                                     <th>Celular</th>
-                                    <th>Fecha</th>
                                 </tr>
                               </thead>
                               <tbody>
                                    {
-                                    this.state.tb_asistencias.datos ?
-                                    this.state.tb_asistencias.datos.map(task =>{
+                                    this.state.asistenciasTablaVer ?
+                                    this.state.asistenciasTablaVer.map((task,index) =>{
                                         return (
-                                            <tr key={task.id}>
+                                            <tr key={index}>
                                                 <td>{task.nombres}</td>
                                                 <td>{task.apellidos}</td>
+                                                <td>{task.correo}</td>
                                                 <td>{task.celular}</td>
-                                                <td>{task.fecha}</td>
-                                                <td>
-                                                  <button className="btn btn-sm btn-primary" type="button" onClick={()=>this.verAsistencia(
-                                                    task.id,
-                                                    task.nombres,
-                                                    task.apellidos,
-                                                    task.correo,
-                                                    task.celular,
-                                                    task.sugerencia,
-                                                    task.fecha
-                                                  )}>
-                                                    <i className="fa fa-eye" ></i>
-                                                  </button>
-                                                  <button className="btn btn-sm btn-danger" type="button" onClick={()=>this.eliminarAsistencias(task.id)}>
-                                                    <i className="fa fa-trash" ></i>
-                                                  </button>
-                                                </td>
                                             </tr>
                                         );
                                     } )   : null
                                 }
                             </tbody>
                         </table>
-                        
                         </Card>
                     </Col>
                 </Row>
-                <Modal
-                    size="lg"
-                    show={this.state.estadoModalVerAsistencias}
-                    onHide={() => this.cambiarModalVerAsistencias()}
-                    >
-                    <Modal.Header closeButton>
-                      <Modal.Title id="example-custom-modal-styling-title">
-                        Ver asistencias
-                      </Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                            <div className="card w-100">
-                                <div className="modal-body">
-                                    <div className="card-body">
-                                          <div className="p-2">
-                                            <label>Nombres:</label>
-                                            <span>&nbsp;&nbsp;{this.state.nombreVer}</span><br/>
-                                          </div>
-                                          <div className="p-2">
-                                            <label>Apellidos:</label>
-                                            <span>&nbsp;&nbsp;{this.state.apellidoVer}</span><br/>
-                                          </div>
-                                          <div className="p-2">
-                                            <label>Correo:</label>
-                                            <span>&nbsp;&nbsp;{this.state.correoVer}</span><br/>
-                                          </div>
-                                          <div className="p-2">
-                                            <label>Celular:</label>
-                                            <span>&nbsp;&nbsp;{this.state.celularVer}</span><br/>
-                                          </div>
-                                          <div className="p-2">
-                                            <label>Fecha:</label>
-                                            <span>&nbsp;&nbsp;{this.state.fechaVer}</span><br/>
-                                          </div>
-                                          <div className="p-2">
-                                            <label>Sugerencia:</label><br/>
-                                            <span>{this.state.sugerenciaVer}</span><br/>
-                                          </div>
-                                          <div className="p-2">
-                                            <button type="button" className="btn btn-primary" onClick={()=>this.cambiarModalVerAsistencias()}>Aceptar</button>
-                                          </div>
-                                      </div>
-                                  </div>
-                              </div>
-                    </Modal.Body>
-                  </Modal>
+                :
+                <Row>
+                  <Col>
+                      <Card title='Cursos Activos' isOption>
+                      <table id="tb_membresia" className="table table-striped" style={{width:'100%'}}>
+                          <thead>
+                              <tr>
+                                  <th>Nombre</th>
+                                  <th>Inicio</th>
+                                  <th>Fin</th>
+                                  <th>Total de asistencias</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                                 {
+                                  this.state.tb_asistencias.data ?
+                                  this.state.tb_asistencias.data.map(task =>{
+                                      return (
+                                          <tr key={task.id}>
+                                              <td>{task.nombre}</td>
+                                              <td>{task.inicio}</td>
+                                              <td>{task.fin}</td>
+                                              <td>{task.totalAsistencias}</td>
+                                              <td>
+                                                <button className="btn btn-sm btn-primary" type="button" onClick={()=>this.cambiarVerAsistencias(task.id)}>
+                                                  <i className="fa fa-eye" ></i>
+                                                </button>
+                                                <button className="btn btn-sm btn-danger" type="button" onClick={()=>this.eliminarAsistencias(task.id)}>
+                                                  <i className="fa fa-trash" ></i>
+                                                </button>
+                                              </td>
+                                          </tr>
+                                      );
+                                  } )   : null
+                              }
+                          </tbody>
+                      </table>
+
+                      </Card>
+                  </Col>
+                </Row>
+            }
+
             </Aux>
         );
     }

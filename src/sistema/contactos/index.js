@@ -14,6 +14,7 @@ class IndexContactos extends Component {
       tb_contactos:[],
       //modales
       estadoModalCrearContactos:false,
+      estadoModalEditarContactos:false
     }
     this.handleChange = this.handleChange.bind(this);
   }
@@ -26,6 +27,20 @@ class IndexContactos extends Component {
           estadoModalCrearContactos: !this.state.estadoModalCrearContactos
         })
   }
+  cambiarModalEditarContactos(){
+        this.setState({
+          estadoModalEditarContactos: !this.state.estadoModalEditarContactos
+        })
+  }
+  editarContacto(nombre,numero,cargo){
+    this.setState({
+      nombreEditar:nombre,
+      numeroEditar:numero,
+      cargoEditar:cargo
+    },()=>this.cambiarModalEditarContactos())
+  }
+
+
 
   clean(){
     this.setState({
@@ -44,35 +59,6 @@ class IndexContactos extends Component {
       console.log(value)
     })
   }
-  handleChangeFile (e){
-        var file = e.target.files[0];
-        var fileData = new FileReader();
-        if(file){
-          fileData.readAsDataURL(file);
-        }
-        else{
-          cogoToast.warn("Se quito la imagen");
-        }
-        if(e.target.name == "imgTarjeta"){
-          fileData.onload = (event)=> {
-            this.setState({imagenTarjeta: fileData.result},
-              ()=>{
-                  cogoToast.success("Imagen de tarjeta lista")
-                }
-              );
-            }
-        }
-        else if (e.target.name == "imgCurso") {
-          fileData.onload = (event)=> {
-            this.setState({imagenCurso: fileData.result},
-              ()=>{
-                  cogoToast.success("Imagen de curso lista")
-                }
-              );
-            }
-        }
-    }
-
   crearContacto(){
     fetch(`${Config.api}contactos/crear`,
       {
@@ -105,6 +91,39 @@ class IndexContactos extends Component {
       cogoToast.error("Hubo un error al crear el contacto")
       console.log('Hubo un problema con la petición Fetch:' + error.message);
   });
+}
+  sendEditarContacto(){
+    fetch(`${Config.api}contactos/editar`,
+      {
+        mode:'cors',
+        method: 'POST',
+        body: JSON.stringify({
+              nombre: this.state.nombreEditar,
+              numero: this.state.numeroEditar,
+              cargo: this.state.cargoEditar
+          }
+        ),
+        headers: {
+            'Accept' : 'application/json',
+            'Content-type' : 'application/json',
+            'api_token': localStorage.getItem('token')
+        }
+      }
+    )
+      .then(res =>res.json())
+      .then(data => {
+        if(data.respuesta==true){
+          cogoToast.success("Contacto editado");
+          this.clean();
+        }
+        else{
+          cogoToast.error("Error al editar el contacto")
+          console.log("hubo un error con la peticion")
+        }
+    }).catch((error)=> {
+      cogoToast.error("Hubo un error al editar el contacto")
+      console.log('Hubo un problema con la petición Fetch:' + error.message);
+    });
 }
   eliminarContacto(id){
     fetch(`${Config.api}contactos/eliminar`,
@@ -153,7 +172,7 @@ class IndexContactos extends Component {
         .then(data => {
           if(data.respuesta==true){
             this.setState({
-              tb_contactos: data
+              tb_contactos: data['datos']
             },()=>{console.log(this.state.tb_contactos)})
           }
           else{
@@ -189,14 +208,17 @@ class IndexContactos extends Component {
                               </thead>
                               <tbody>
                                    {
-                                    this.state.tb_contactos.datos ?
-                                    this.state.tb_contactos.datos.map(task =>{
+                                    this.state.tb_contactos.data ?
+                                    this.state.tb_contactos.data.map(task =>{
                                         return (
                                             <tr key={task.id}>
                                                 <td>{task.nombre}</td>
                                                 <td>{task.numero}</td>
                                                 <td>{task.cargo}</td>
                                                 <td>
+                                                  <button className="btn btn-sm btn-primary" type="button" onClick={()=>this.editarContacto(task.nombre,task.numero,task.cargo)}>
+                                                    <i className="fa fa-pencil" ></i>
+                                                  </button>
                                                   <button className="btn btn-sm btn-danger" type="button" onClick={()=>this.eliminarContacto(task.id)}>
                                                     <i className="fa fa-trash" ></i>
                                                   </button>
@@ -244,6 +266,40 @@ class IndexContactos extends Component {
                               </div>
                     </Modal.Body>
                   </Modal>
+                  <Modal
+                      size="lg"
+                      show={this.state.estadoModalEditarContactos}
+                      onHide={() => this.cambiarModalEditarContactos()}
+                      >
+                      <Modal.Header closeButton>
+                        <Modal.Title id="example-custom-modal-styling-title">
+                          Crear Contactos
+                        </Modal.Title>
+                      </Modal.Header>
+                      <Modal.Body>
+                              <div className="card w-100">
+                                  <div className="modal-body">
+                                      <div className="card-body">
+                                            <div>
+                                              <label>Nombre:</label><br/>
+                                              <input type="text" name="nombreEditar" className="form-control" onChange={this.handleChange} defaultValue={this.state.nombreEditar}/>
+                                            </div>
+                                            <div>
+                                              <label>Numero:</label><br/>
+                                              <input type="number" name="numeroEditar" className="form-control" onChange={this.handleChange} defaultValue={this.state.numeroEditar}/>
+                                            </div>
+                                            <div>
+                                              <label>Cargo:</label><br/>
+                                              <input type="text" name="cargoEditar" className="form-control" onChange={this.handleChange} defaultValue={this.state.cargoEditar}/>
+                                            </div>
+                                            <div className="p-2">
+                                              <button type="button" className="btn btn-primary" onClick={()=>this.sendEditarContacto()} >Guardar cambios</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                      </Modal.Body>
+                    </Modal>
             </Aux>
         );
     }

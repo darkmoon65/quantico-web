@@ -31,17 +31,21 @@ class IndexRedes extends Component {
           estadoModalVerRed: !this.state.estadoModalVerRed
         })
   }
-  verRed(imagen){
+  verRed(id,nombre,url,imagen){
     this.setState({
-      imagenVer: imagen
+        id:id,
+        nombreEditar:nombre,
+        urlEditar: url,
+        imagenVer: imagen
     },()=>this.cambiarModalVerRed())
   }
   clean(){
     this.setState({
       estadoModalCrearRed: false,
+      estadoModalVerRed:false,
       nombreCrear:'',
-      numeroCrear:'',
-      cargoCrear:''
+      urlCrear:'',
+      imagenCrear:null
     },()=>this.fetchRedes())
   }
 
@@ -81,6 +85,40 @@ class IndexRedes extends Component {
         body: JSON.stringify({
               nombre: this.state.nombreCrear,
               url: this.state.urlCrear,
+              imagen: this.state.imagenCrear
+          }
+        ),
+        headers: {
+            'Accept' : 'application/json',
+            'Content-type' : 'application/json',
+            'api_token': localStorage.getItem('token')
+        }
+      }
+    )
+      .then(res =>res.json())
+      .then(data => {
+        if(data.respuesta==true){
+          cogoToast.success("red social creado");
+          this.clean();
+        }
+        else{
+          cogoToast.error("Error al crear el red social")
+          console.log("hubo un error con la peticion")
+        }
+    }).catch((error)=> {
+      cogoToast.error("Hubo un error al crear el red social")
+      console.log('Hubo un problema con la petición Fetch:' + error.message);
+  });
+}
+  editarRed(){
+    fetch(`${Config.api}redSocial/editar`,
+      {
+        mode:'cors',
+        method: 'POST',
+        body: JSON.stringify({
+              id: this.state.id,
+              nombre: this.state.nombreEditar,
+              url: this.state.urlEditar,
               imagen: this.state.imagenCrear
           }
         ),
@@ -195,8 +233,13 @@ class IndexRedes extends Component {
                                                 <td>{task.nombre}</td>
                                                 <td>{task.url}</td>
                                                 <td>
-                                                  <button className="btn btn-sm btn-info" type="button" onClick={()=>this.verRed(task.imagen)}>
-                                                    <i className="fa fa-eye" ></i>
+                                                  <button className="btn btn-sm btn-info" type="button" onClick={()=>this.verRed(
+                                                    task.id,
+                                                    task.nombre,
+                                                    task.url,
+                                                    task.imagen
+                                                  )}>
+                                                    <i className="fa fa-pencil" ></i>
                                                   </button>
                                                   <button className="btn btn-sm btn-danger" type="button" onClick={()=>this.eliminarRed(task.id)}>
                                                     <i className="fa fa-trash" ></i>
@@ -252,16 +295,33 @@ class IndexRedes extends Component {
                       >
                       <Modal.Header closeButton>
                         <Modal.Title id="example-custom-modal-styling-title">
-                          Ver Enlace
+                          Editar Enlace
                         </Modal.Title>
                       </Modal.Header>
                       <Modal.Body>
                               <div className="card w-100">
                                   <div className="modal-body">
                                       <div className="card-body">
-                                          <label>Imagen:</label><br/>
+
+
+                                          <div>
+                                            <label>Nombre:</label><br/>
+                                            <input type="text" name="nombreEditar" className="form-control" onChange={this.handleChange} defaultValue={this.state.nombreEditar}/>
+                                          </div>
+                                          <div>
+                                            <label>Url:</label><br/>
+                                            <input type="text" name="urlEditar" className="form-control" onChange={this.handleChange} defaultValue={this.state.urlEditar}/>
+                                          </div>
                                           <div className=" p-1">
+                                            <label>Imagen(Actual):</label><br/>
                                             <img src={this.state.imagenVer} width="400" height="400"/>
+                                          </div>
+                                          <div className="input-group p-1">
+                                            <label>Imagen(Nueva):</label><br/>
+                                            <input type="file" className="form-control-file" name="imagenCrear" onChange={e =>this.handleChangeFile(e)}/>
+                                          </div>
+                                          <div className="p-2">
+                                            <button type="button" className="btn btn-primary" onClick={()=>this.editarRed()} >Guardar cambios</button>
                                           </div>
                                         </div>
                                     </div>

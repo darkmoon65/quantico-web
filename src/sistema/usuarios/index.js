@@ -55,7 +55,7 @@ class IndexUsuarios extends Component {
     })
   }
   fetchTable(bolean,numero){
-    fetch(`${Config.api}usuarios/mostrar?page=${numero}&${this.state.buscarT}=${this.state.valor}`,
+    fetch(`${Config.api}usuarios/mostrar?page=${numero}&columna=${this.state.buscarT}&buscar=${this.state.valor}`,
       {
         mode:'cors',
         method: 'GET',
@@ -68,7 +68,7 @@ class IndexUsuarios extends Component {
     )
       .then(res =>res.json())
       .then(data => {
-        if(data){
+        if(data.respuesta==true){
           this.setState({
             tb_users: data['datos'],
             var_texto_numeroPagina: numero
@@ -379,9 +379,6 @@ class IndexUsuarios extends Component {
       const {name, value} = e.target;
       this.setState({
         [name]: value
-      },()=>{
-        console.log(this.state.rolIdMod)
-        console.log(this.state.membresiaIdMod)
       })
     }
 
@@ -400,7 +397,16 @@ class IndexUsuarios extends Component {
                         <Card title='Registro de usuarios' isOption>
                             <h4 className="card-title">Buscar</h4>
                             <input type="text" onChange={this.handleChangeBuscador} />
+                            <span className="p-5">
 
+                                <select  name="buscarT" id="tipoProducto" style={{width: '15%'}} onChange={this.handleChange} value={this.state.buscarT}>
+                                    <option key={1} value={"nombres"}>Nombres</option>
+                                    <option key={2} value={"apellidos"}>Apellidos</option>
+                                    <option key={3} value={"membresia"}>Membresia</option>
+                                    <option key={4} value={"rol"}>Rol</option>
+                                    <option key={5} value={"correo"}>Correo</option>
+                                </select>
+                            </span>
                             <span className="p-5"><button className="btn btn-sm btn-success" type="button" onClick={()=>this.descargarExcel()}>Descargar excel</button></span>
                               <table id="tb_users" className="table table-striped table-responsive" >
                                   <thead>

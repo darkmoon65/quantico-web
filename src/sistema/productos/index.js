@@ -37,11 +37,6 @@ class IndexProductos extends Component {
           estadoModalCrearProductos: !this.state.estadoModalCrearProductos
         })
   }
-  cambiarModalCrearTipoProductos(){
-        this.setState({
-          estadoModalCrearTipoProductos: !this.state.estadoModalCrearTipoProductos
-        })
-  }
   cambiarModalEditarProductos(){
         this.setState({
           estadoModalEditarProductos: !this.state.estadoModalEditarProductos
@@ -71,7 +66,7 @@ class IndexProductos extends Component {
       },()=>this.fetchProductos())
     }
 
-    exeEnviar(){
+    exeEnviar(ope){
     let a = this.state.countMembresia
     let r = []
     for(let i = 1; i <= a.length;i++){
@@ -90,10 +85,18 @@ class IndexProductos extends Component {
     }else{
       z = true
     }
-    this.setState({
-      descuentosArray: r,
-      productoCrearId: z
-    },()=>this.enviarCrearProducto())
+    if (ope=="crear"){
+      this.setState({
+        descuentosArray: r,
+        productoCrearId: z
+      },()=>this.enviarCrearProducto())
+    }else if (ope=="editar") {
+      this.setState({
+        descuentosArray: r,
+        productoCrearId: z
+      },()=>this.enviarEditarProducto())
+    }
+
   }
 
     membresiaCount(){
@@ -199,9 +202,158 @@ class IndexProductos extends Component {
         });
       }
     }
+    enviarEditarProducto(){
+      if(this.state.tipoEditarIdR == 2){
+        fetch(`${Config.api}productos/editar`,
+          {
+            mode:'cors',
+            method: 'POST',
+            body: JSON.stringify({
+              id: this.state.id,
+              tipo : this.state.tipoEditarIdR,
+              prodPropio: this.state.productoEditarId,
+              nombre: this.state.nombreEditar,
+              descripcion: this.state.descripcionEditar,
+              costo: this.state.costoEditar,
+              imagen: this.state.imagenProducto,
+              imagenExpositor: this.state.imagenExpositor,
+              descuentos: this.state.descuentosArray,
+              expositor: this.state.expositorEditar,
+              linkSala: this.state.linkSalaEditar,
+              linkppt: this.state.linkpptEditar
+              }
+            ),
+            headers: {
+                'Accept' : 'application/json',
+                'Content-type' : 'application/json',
+                'api_token': localStorage.getItem('token')
+            }
+          }
+        )
+          .then(res =>res.json())
+          .then(data => {
+            if(data.respuesta==true){
+              cogoToast.success("Producto creado");
+              this.clean();
+            }
+            else{
+              console.log(data)
+              cogoToast.error("No se creo,verifique los datos")
+              console.log("hubo un error con la peticion")
+            }
+        }).catch((error)=> {
+          cogoToast.error("No se creo el producto")
+          console.log('Hubo un problema con la petición Fetch:' + error.message);
+      });
+    }
+    else {
+          fetch(`${Config.api}productos/editar`,
+            {
+              mode:'cors',
+              method: 'POST',
+              body: JSON.stringify({
+                  id : this.state.id,
+                  tipo : this.state.tipoEditarIdR,
+                  prodPropio: this.state.productoEditarId,
+                  nombre: this.state.nombreEditar,
+                  descripcion: this.state.descripcionEditar,
+                  costo: this.state.costoEditar,
+                  imagen: this.state.imagenProducto,
+                  imagenExpositor: this.state.imagenExpositor,
+                  descuentos: this.state.descuentosArray,
+                  expositor: this.state.expositorEditar,
+                  duracion: this.state.duracionEditar,
+                  horaInicio: this.state.horaInicioEditar,
+                  horaFin: this.state.horaFinEditar,
+                  inicio: this.state.fechaInicioEditar,
+                  fin: this.state.fechaFinEditar,
+                  linkppt: this.state.linkpptEditar,
+                  linkSala: this.state.linkSalaEditar,
+                  prerrequisito: this.state.preEditarId
+                }
+              ),
+              headers: {
+                  'Accept' : 'application/json',
+                  'Content-type' : 'application/json',
+                  'api_token': localStorage.getItem('token')
+              }
+            }
+          )
+            .then(res =>res.json())
+            .then(data => {
+              if(data.respuesta==true){
+                cogoToast.success("Producto creada");
+                this.clean();
+              }
+              else{
+                console.log(data)
+                cogoToast.error("No se creo,verifique los datos")
+                console.log("hubo un error con la peticion")
+              }
+          }).catch((error)=> {
+            cogoToast.error("No se creo el producto")
+            console.log('Hubo un problema con la petición Fetch:' + error.message);
+        });
+      }
+    }
 
-    editarProducto(){
+    editarProducto(id,nombre,tipo,costo,datosExtra,descuentos){
+      let prodPropio = datosExtra.prodPropio;
+      let prerequisito = datosExtra.prerequisito ;
+      let descripcion = datosExtra.descripcion;
+      let expositor = datosExtra.expositor;
+      let imagenExpositor = datosExtra.imagenExpositor;
+      let duracion = datosExtra.duracion;
+      let horaInicio = datosExtra.horaInicio;
+      let horaFin = datosExtra.horaFin;
+      let inicio = datosExtra.inicio;
+      let fin = datosExtra.fin;
+      let imagen = datosExtra.imagen;
+      let linkppt = datosExtra.linkPPT;
+      let linkSala = datosExtra.linkSala;
 
+      if(tipo=="Libro"){
+        this.setState({detallesExtras:[0]})
+      }
+      else{
+          this.setState({detallesExtras:[1]})
+      }
+      if(descuentos){
+         let descuentoNew=[];
+         descuentos.map((data,index)=>{
+              descuentoNew[data.membresia] = data.porcentaje
+         })
+
+        this.setState({
+          descuento1:descuentoNew[1],
+          descuento2:descuentoNew[2],
+          descuento3:descuentoNew[3],
+          descuento4:descuentoNew[4],
+          descuento5:descuentoNew[5],
+          descuento6:descuentoNew[6],
+          descuento7:descuentoNew[7]
+        },()=>console.log(this.state.descuento1))
+      }
+
+      this.setState({
+          id:id,
+          nombreEditar:nombre,
+          tipoEditarId:tipo,
+          costoEditar:costo,
+          productoEditarId: prodPropio,
+          preEditarId: prerequisito,
+          descripcionEditar: descripcion,
+          expositorEditar: expositor,
+          imagenExpositorVer: imagenExpositor,
+          duracionEditar : duracion,
+          horaInicioEditar : horaInicio,
+          horaFinEditar : horaFin,
+          fechaInicioEditar : inicio,
+          fechaFinEditar : fin,
+          imagenVer : imagen,
+          linkpptEditar : linkppt,
+          linkSalaEditar : linkSala
+      },()=>this.cambiarModalEditarProductos())
     }
 
     eliminarProducto(id){
@@ -345,12 +497,29 @@ class IndexProductos extends Component {
 
     handleChange(e){
       const {name, value} = e.target;
+
       if(name == "tipoCrearId"){
         if(value==2 || value==''){
           this.setState({detallesExtras:[0]})
         }
         else{
             this.setState({detallesExtras:[1]})
+        }
+      }
+      if(name == "tipoEditarId"){
+        const selectedIndex = e.target.options.selectedIndex;
+        const key = e.target.options[selectedIndex].getAttribute('key-a');
+        if(value=="Libro" || value==''){
+          this.setState({
+            detallesExtras:[0],
+            tipoEditarIdR: key
+          },()=>console.log(this.state.tipoEditarIdR))
+        }
+        else{
+            this.setState({
+              detallesExtras:[1],
+              tipoEditarIdR: key
+            },()=>console.log(this.state.tipoEditarIdR))
         }
       }
 
@@ -428,6 +597,16 @@ class IndexProductos extends Component {
                                                   <td>{task.nombre}</td>
                                                   <td>{task.costo}</td>
                                                   <td>
+                                                    <button className="btn btn-sm btn-primary "  type="button" onClick={()=>this.editarProducto(
+                                                      task.id,
+                                                      task.nombre,
+                                                      task.tipo,
+                                                      task.costo,
+                                                      task.datosExtra,
+                                                      task.descuentos
+                                                    )}>
+                                                      <i className="fa fa-pencil" ></i>
+                                                    </button>
                                                     <button className="btn btn-sm btn-danger "  type="button" onClick={()=>this.eliminarProducto(task.id)}>
                                                       <i className="fa fa-trash" ></i>
                                                     </button>
@@ -602,7 +781,7 @@ class IndexProductos extends Component {
                                               </table>
                                           </div>
                                           <div className="mx-auto p-3">
-                                            <button type="button" className="btn btn-sm btn-primary ver" onClick={()=>this.exeEnviar()}>Crear producto</button>
+                                            <button type="button" className="btn btn-sm btn-primary ver" onClick={()=>this.exeEnviar("crear")}>Crear producto</button>
                                           </div>
                                         </div>
                                   </div>
@@ -610,6 +789,148 @@ class IndexProductos extends Component {
 
                     </Modal.Body>
                   </Modal>
+                  <Modal
+                      size="lg"
+                      show={this.state.estadoModalEditarProductos}
+                      onHide={() => this.cambiarModalEditarProductos()}
+                      >
+                      <Modal.Header closeButton>
+                        <Modal.Title id="example-custom-modal-styling-title">
+                          Editar Producto
+                        </Modal.Title>
+                      </Modal.Header>
+                      <Modal.Body>
+                              <div className="card w-75">
+                                  <div className="modal-body">
+                                      <div className="card-body">
+                                            <div>
+                                              <label>Tipo:</label>
+                                              <select className="form-control" name="tipoEditarId" style={{width: '50%'}} onChange={this.handleChange} value={this.state.tipoEditarId}>
+                                                  <option key={0} value={null}>--escoge una opcion--</option>
+                                                  {
+                                                  this.state.tb_tipoProductos.datos?
+                                                  this.state.tb_tipoProductos.datos.map((data,index)=>{
+                                                   return(
+                                                      <option key={data.id} key-a={data.id} value={data.nombre}>{data.nombre}</option>
+                                                   )
+                                                 }):null
+                                                  }
+
+                                              </select>
+                                            </div>
+                                            <div>
+                                              <label>Prerequisito:</label>
+                                              <select className="form-control" name="preEditarId" style={{width: '50%'}} onChange={this.handleChange} value={this.state.preEditarId}>
+                                                  <option key={0} value={null}>--escoge una opcion--</option>
+                                                  {
+                                                  this.state.tb_cursosPre?
+                                                  this.state.tb_cursosPre.map((data,index)=>{
+                                                   return(
+                                                      <option key={data.id} value={data.id}>{data.nombre}</option>
+                                                   )
+                                                  }):null
+                                                  }
+
+                                              </select>
+                                            </div>
+                                            <div>
+                                              <label>Producto propio:</label>
+                                              <select className="form-control" name="productoEditarId" style={{width: '50%'}} onChange={this.handleChange} value={this.state.productoEditarId}>
+                                                  <option key={0} value={null}>--escoge una opcion--</option>
+                                                  <option key={1} value={1}>Si</option>
+                                                  <option key={2} value={0}>No</option>
+                                              </select>
+                                            </div>
+                                            <div>
+                                              <label>Nombre:</label>
+                                              <input type="text" className="form-control" name="nombreEditar" onChange={this.handleChange} defaultValue={this.state.nombreEditar}/>
+                                            </div>
+                                            <div>
+                                              <label>Descripcion:</label>
+                                              <input type="text" className="form-control" name="descripcionEditar" onChange={this.handleChange} defaultValue={this.state.descripcionEditar}/>
+                                            </div>
+                                            <div>
+                                              <label>Costo:</label>
+                                              <input type="number" min="0" className="form-control" name="costoEditar" onChange={this.handleChange} defaultValue={this.state.costoEditar}/>
+                                            </div>
+                                            <label>Imagen de producto: </label>
+                                            <div className="input-group p-1">
+                                              <input type="file" className="form-control-file" name="imagenProducto" onChange={e =>this.handleChangeFile(e)}/>
+                                            </div>
+                                            <div>
+                                              <label>Expositor:</label>
+                                              <input type="text" className="form-control" name="expositorEditar" onChange={this.handleChange} defaultValue={this.state.expositorEditar}/>
+                                            </div>
+                                            <div className="p-2">
+                                              <label>Imagen de expositor:</label>
+                                              <input type="file" className="form-control-file" name="imagenExpositor" onChange={e =>this.handleChangeFile(e)}/>
+                                            </div>
+                                              {
+                                                  (this.state.detallesExtras==1) ?
+                                                  this.state.detallesExtras.map((a,index)=>{
+                                                  return(
+                                                    <div key={index} >
+                                                      <div>
+                                                        <label>Duracion:</label>
+                                                        <input type="text" className="form-control" name="duracionEditar" onChange={this.handleChange} defaultValue={this.state.duracionEditar} />
+                                                      </div>
+                                                      <div>
+                                                        <label>Hora inicio:</label>
+                                                        <input type="time" className="form-control" name="horaInicioEditar" onChange={this.handleChange} defaultValue={this.state.horaInicioEditar} />
+                                                      </div>
+                                                      <div>
+                                                        <label>Hora Fin:</label>
+                                                        <input type="time" className="form-control" name="horaFinEditar" onChange={this.handleChange} defaultValue={this.state.horaFinEditar} />
+                                                      </div>
+                                                      <div>
+                                                        <label>Fecha de inicio:</label>
+                                                        <input type="date" className="form-control" name="fechaInicioEditar" onChange={this.handleChange} defaultValue={this.state.fechaInicioEditar} />
+                                                      </div>
+                                                      <div>
+                                                        <label>Fecha de fin:</label>
+                                                        <input type="date" className="form-control" name="fechaFinEditar" onChange={this.handleChange} defaultValue={this.state.fechaFinEditar}/>
+                                                      </div>
+                                                    </div>
+                                                  )
+                                                }):null
+                                              }
+                                              <div>
+                                                <label>Link de power point:</label>
+                                                <input type="text" className="form-control" name="linkpptEditar" onChange={this.handleChange} defaultValue={this.state.linkpptEditar}/>
+                                              </div>
+                                              <div className="p-2">
+                                                <label>Descuentos: </label><br/>
+                                                  <table id="tb_membresia" className="table table-striped" style={{width:'100%'}}>
+                                                      <thead>
+                                                          <tr>
+                                                              <th>Nombre</th>
+                                                              <th>Descuento(%)</th>
+                                                          </tr>
+                                                      </thead>
+                                                    <tbody>
+                                                    {
+                                                     this.state.tb_membresias.datos ?
+                                                     this.state.tb_membresias.datos.map(task =>{
+                                                         return (
+                                                             <tr key={task.id}>
+                                                                 <td>{task.nombre}</td>
+                                                                 <td><input type="number" style={{width:'50px'}} min="0" max="100" name={'descuento'+task.id} onChange={this.handleChange} defaultValue={this.state['descuento'+task.id]}></input></td>
+                                                             </tr>
+                                                         );
+                                                     } )   : null
+                                                    }
+                                                  </tbody>
+                                                </table>
+                                            </div>
+                                            <div className="mx-auto p-3">
+                                              <button type="button" className="btn btn-sm btn-primary ver" onClick={()=>this.exeEnviar("editar")}>Guardar cambios</button>
+                                            </div>
+                                          </div>
+                                    </div>
+                                  </div>
+
+                      </Modal.Body>
+                    </Modal>
             </Aux>
         );
     }

@@ -136,7 +136,7 @@ class IndexVerificaciones extends Component {
   }
 
   fetchVerificaciones(boleano,numero){
-      fetch(`${Config.api}verificaciones/mostrar?page=${numero}`,
+      fetch(`${Config.api}verificaciones/mostrar?page=${numero}&columna=${this.state.buscarT}&buscar=${this.state.valor}`,
         {
           mode:'cors',
           method: 'GET',
@@ -174,7 +174,7 @@ class IndexVerificaciones extends Component {
                 <Row>
                     <Col>
                         <Card title='Verificaciones' isOption>
-                        <table id="tb_membresia" className="table table-striped" style={{width:'100%'}}>
+                        <table id="tb_membresia" className="table table-striped table-responsive" style={{width:'100%'}}>
                             <thead>
                                 <tr>
                                     <th><h4 className="card-title">Buscar </h4></th>
@@ -184,6 +184,7 @@ class IndexVerificaciones extends Component {
                                 <tr>
                                     <th>Nombres</th>
                                     <th>Apellidos</th>
+                                    <th>Correo</th>
                                     <th>Concepto</th>
                                     <th>Descripcion</th>
                                 </tr>
@@ -196,6 +197,7 @@ class IndexVerificaciones extends Component {
                                             <tr key={index}>
                                                 <td>{task.usuario.nombres}</td>
                                                 <td>{task.usuario.apellidos}</td>
+                                                <td>{task.usuario.correo}</td>
                                                 <td>{task.concepto}</td>
                                                 <td>{task.descripcion}</td>
                                                 <td>
