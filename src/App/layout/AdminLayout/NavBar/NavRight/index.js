@@ -87,8 +87,8 @@ class NavRight extends Component {
                             <Dropdown.Menu alignRight className="profile-notification">
                                 <div className="pro-head">
                                     <img src={Avatar1} className="img-radius" alt="User Profile"/>
-                                    <span>John Doe</span>
-                                    <a href={DEMO.BLANK_LINK} onClick={()=>{ localStorage.setItem('token', "none") }} className="dud-logout" title="Salir">
+                                    <span>Admin</span>
+                                    <a href={DEMO.BLANK_LINK} onClick={()=>{ localStorage.removeItem('token') }} className="dud-logout" title="Salir">
                                         <i className="feather icon-log-out"/>
                                     </a>
                                 </div>

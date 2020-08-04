@@ -194,7 +194,7 @@ class IndexHerramientas extends Component {
         .then(data => {
           if(data.respuesta==true){
             this.setState({
-              tb_herramientas: data
+              tb_herramientas: data['datos']
             },()=>{console.log(this.state.tb_herramientas)})
           }
           else{
@@ -227,8 +227,8 @@ class IndexHerramientas extends Component {
                               </thead>
                               <tbody>
                                    {
-                                    this.state.tb_herramientas.datos ?
-                                    this.state.tb_herramientas.datos.map(task =>{
+                                    this.state.tb_herramientas.data ?
+                                    this.state.tb_herramientas.data.map(task =>{
                                         return (
                                             <tr key={task.id}>
                                                 <td>{task.titulo}</td>

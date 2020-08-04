@@ -28,8 +28,8 @@ class IndexCompletos extends Component {
         })
   }
 
-  verResultado(id){
-    this.fetchCompletosDetalle(id);
+  verResultado(id,concepto){
+    this.fetchCompletosDetalle(id,concepto);
   }
   verDetalle(){
 
@@ -45,7 +45,7 @@ class IndexCompletos extends Component {
     })
   }
 
-  fetchCompletosDetalle(id){
+  fetchCompletosDetalle(id,concepto){
       fetch(`${Config.api}verificaciones/detalles`,
         {
           mode:'cors',
@@ -53,8 +53,8 @@ class IndexCompletos extends Component {
           headers: {
               'Accept' : 'application/json',
               'Content-type' : 'application/json',
-              'estado': '3',
               'id': id,
+              'concepto': concepto,
               'api_token': localStorage.getItem('token')
           }
         }
@@ -140,7 +140,7 @@ class IndexCompletos extends Component {
                                                 <td>{task.descripcion}</td>
                                                 <td>Completo</td>
                                                 <td>
-                                                  <button className="btn btn-sm btn-info"  type="button" onClick={()=>this.verResultado(task.id)}>
+                                                  <button className="btn btn-sm btn-info"  type="button" onClick={()=>this.verResultado(task.id,task.concepto)}>
                                                     <i className="fa fa-eye" ></i>
                                                   </button>
 

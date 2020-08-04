@@ -75,7 +75,7 @@ class App extends Component {
         });
 
         return (
-            localStorage.getItem('token') === "none"
+            localStorage.getItem('token') === null
             ?<IndexLogin/>
             :<Aux>
                 <ScrollToTop>

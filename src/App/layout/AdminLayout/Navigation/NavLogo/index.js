@@ -13,7 +13,7 @@ const navLogo = (props) => {
             <div className="navbar-brand header-logo">
                  <a href={DEMO.BLANK_LINK} className="b-brand">
                     <div className="b-bg">
-                        <i className="feather icon-trending-up" />
+                        <i className="feather icon-home" />
                     </div>
                     <span className="b-title">Quantico</span>
                  </a>

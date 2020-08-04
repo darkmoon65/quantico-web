@@ -211,14 +211,12 @@ class IndexRedes extends Component {
                 <Row>
                     <Col>
                         <Card title='Enlaces' isOption>
+                        <h4 className="card-title">Buscar </h4>
+                        <input type="text" onChange={this.handleChangeBuscador} />
+                        <span className="p-5"><button type="button" className="btn btn-primary" onClick={()=>this.cambiarModalCrearRed()}>Crear Enlaces</button></span>
+                        <span className="p-5"><button className="btn btn-sm btn-success" type="button" onClick={()=>this.descargarExcel()}>Descargar excel</button></span>
                         <table id="tb_membresia" className="table table-striped" style={{width:'100%'}}>
                             <thead>
-                                <tr>
-                                    <th><h4 className="card-title">Buscar </h4></th>
-                                    <th><input type="text" onChange={this.handleChangeBuscador} /></th>
-                                    <th><button type="button" className="btn btn-primary" onClick={()=>this.cambiarModalCrearRed()}>Crear Enlaces</button></th>
-                                    <th><button className="btn btn-sm btn-success" type="button" onClick={()=>this.descargarExcel()}>Descargar excel</button></th>
-                                </tr>
                                 <tr>
                                     <th>Nombre</th>
                                     <th>Url</th>
