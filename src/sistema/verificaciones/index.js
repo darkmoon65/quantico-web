@@ -211,29 +211,29 @@ class IndexVerificaciones extends Component {
                                 }
                             </tbody>
                         </table>
-                            <div className="float-right">
+                        <div className="float-right">
                             <Pagination  >
-                              <Pagination.Prev
-                                  onClick={() => {
-                                    this.fetchVerificaciones(
-                                      true,
-                                      this.state.var_texto_numeroPagina-1,
-                                  )
-                                }}
-                              />
-                                  {
-                                      <Paginar data={this.state.tb_verificaciones} fetch={(bolean,numero)=>this.fetchVerificaciones(bolean,numero)} ></Paginar>
-                                  }
-                              <Pagination.Next
-                                  onClick={() => {
-                                    this.fetchVerificaciones(
-                                      true,
-                                      this.state.var_texto_numeroPagina+1,
-
+                                <Pagination.Prev
+                                    onClick={() => {
+                                      this.fetchVerificaciones(
+                                        true,
+                                        this.state.var_texto_numeroPagina-1,
                                     )
                                   }}
-                              />
-                          </Pagination>
+                                />
+                                    {
+                                        <Paginar data={this.state.tb_verificaciones} fetch={(bolean,numero)=>this.fetchVerificaciones(bolean,numero)} ></Paginar>
+                                    }
+                                <Pagination.Next
+                                    onClick={() => {
+                                      this.fetchVerificaciones(
+                                        true,
+                                        this.state.var_texto_numeroPagina+1,
+
+                                      )
+                                    }}
+                                />
+                            </Pagination>
                           </div>
                         </Card>
                     </Col>

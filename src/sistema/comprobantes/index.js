@@ -1,17 +1,19 @@
 import React, {Component} from 'react';
-import {Row, Col,Modal} from 'react-bootstrap';
+import {Row, Col,Modal,Pagination} from 'react-bootstrap';
 
 import Aux from "../../hoc/_Aux";
 import Card from "../../App/components/MainCard";
 import cogoToast from "cogo-toast";
 import Config from "../../config"
 import Files from "../../files"
+import Paginar from "../../paginate"
 
 class IndexComprobantes extends Component {
   constructor(){
     super();
     this.state = {
       tb_comprobantes:[],
+      var_texto_numeroPagina:1,
 
       //modales
       estadoModalSubirComprobantes:false,
@@ -21,7 +23,7 @@ class IndexComprobantes extends Component {
   }
 
   descargarExcel(){
-    Files.exportToCSV(this.state.tb_comprobantes,"comprobantes");
+    Files.exportToCSV(this.state.tb_comprobantes.data,"comprobantes");
   }
   cambiarModalSubirComprobantes(){
         this.setState({
@@ -49,8 +51,8 @@ class IndexComprobantes extends Component {
     })
   }
 
-  fetchComprobantes(){
-      fetch(`${Config.api}verificaciones/mostrar`,
+  fetchComprobantes(boleano,numero){
+      fetch(`${Config.api}verificaciones/mostrar?page=${numero}`,
         {
           mode:'cors',
           method: 'GET',
@@ -64,9 +66,10 @@ class IndexComprobantes extends Component {
       )
         .then(res =>res.json())
         .then(data => {
-          if(data){
+          if(data.respuesta==true){
             this.setState({
-              tb_comprobantes: data
+              tb_comprobantes: data['datos'],
+              var_texto_numeroPagina:numero
             },()=>{console.log(this.state.tb_comprobantes)})
           }
           else{
@@ -152,7 +155,7 @@ class IndexComprobantes extends Component {
                   }
           }
   componentDidMount(){
-      this.fetchComprobantes();
+      this.fetchComprobantes(true,1);
       console.log(localStorage.getItem('token'));
     }
     render() {
@@ -179,8 +182,8 @@ class IndexComprobantes extends Component {
                               </thead>
                               <tbody>
                                    {
-                                    this.state.tb_comprobantes.datos ?
-                                    this.state.tb_comprobantes.datos.data.map(task =>{
+                                    this.state.tb_comprobantes.data ?
+                                    this.state.tb_comprobantes.data.map(task =>{
                                         return (
                                             <tr key={task.id}>
                                                 <td>{task.usuario.nombres}</td>
@@ -200,6 +203,30 @@ class IndexComprobantes extends Component {
                                 }
                             </tbody>
                         </table>
+                        <div className="float-right">
+                              <Pagination  >
+                                <Pagination.Prev
+                                    onClick={() => {
+                                      this.fetchComprobantes(
+                                        true,
+                                        this.state.var_texto_numeroPagina-1,
+                                    )
+                                  }}
+                                />
+                                    {
+                                        <Paginar data={this.state.tb_comprobantes} fetch={(bolean,numero)=>this.fetchComprobantes(bolean,numero)} ></Paginar>
+                                    }
+                                <Pagination.Next
+                                    onClick={() => {
+                                      this.fetchComprobantes(
+                                        true,
+                                        this.state.var_texto_numeroPagina+1,
+
+                                      )
+                                    }}
+                                />
+                            </Pagination>
+                          </div>
                         </Card>
                     </Col>
                 </Row>

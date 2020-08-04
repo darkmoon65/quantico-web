@@ -1,17 +1,19 @@
 import React, {Component} from 'react';
-import {Row, Col,Modal} from 'react-bootstrap';
+import {Row, Col,Modal,Pagination} from 'react-bootstrap';
 
 import Aux from "../../hoc/_Aux";
 import Card from "../../App/components/MainCard";
 import cogoToast from "cogo-toast";
 import Config from "../../config"
 import Files from "../../files"
+import Paginar from "../../paginate"
 
 class IndexIntranet extends Component {
   constructor(){
     super();
     this.state = {
       tb_intranet:[],
+      var_texto_numeroPagina:1,
       //modales
       estadoModalCrearIntranet:false,
       estadoModalEditarIntranet:false,
@@ -157,8 +159,8 @@ class IndexIntranet extends Component {
       console.log('Hubo un problema con la petición Fetch:' + error.message);
   });
 }
-  fetchIntranet(){
-      fetch(`${Config.api}inversiones/mostrarCuentas`,
+  fetchIntranet(boleano,numero){
+      fetch(`${Config.api}inversiones/mostrarCuentas?page=${numero}`,
         {
           mode:'cors',
           method: 'GET',
@@ -173,7 +175,8 @@ class IndexIntranet extends Component {
         .then(data => {
           if(data.respuesta==true){
             this.setState({
-              tb_intranet: data
+              tb_intranet: data['datos'],
+              var_texto_numeroPagina: numero
             },()=>{console.log(this.state.tb_intranet)})
           }
           else{
@@ -196,8 +199,6 @@ class IndexIntranet extends Component {
                         <table id="tb_membresia" className="table table-striped" style={{width:'100%'}}>
                             <thead>
                                 <tr>
-                                    <th><h4 className="card-title">Buscar </h4></th>
-                                    <th><input type="text" onChange={this.handleChangeBuscador} /></th>
                                     <th><button className="btn btn-sm btn-success" type="button" onClick={()=>this.descargarExcel()}>Descargar excel</button></th>
                                 </tr>
                                 <tr>
@@ -208,8 +209,8 @@ class IndexIntranet extends Component {
                               </thead>
                               <tbody>
                                    {
-                                    this.state.tb_intranet.datos ?
-                                    this.state.tb_intranet.datos.data.map(task =>{
+                                    this.state.tb_intranet.data ?
+                                    this.state.tb_intranet.data.map(task =>{
                                         return (
                                             <tr key={task.id}>
                                                 <td>{task.nombres}</td>
@@ -230,6 +231,30 @@ class IndexIntranet extends Component {
                                 }
                             </tbody>
                         </table>
+                        <div className="float-right">
+                        <Pagination  >
+                              <Pagination.Prev
+                                  onClick={() => {
+                                    this.fetchIntranet(
+                                      true,
+                                      this.state.var_texto_numeroPagina-1,
+                                  )
+                                }}
+                              />
+                                  {
+                                        <Paginar data={this.state.tb_intranet} fetch={(bolean,numero)=>this.fetchIntranet(bolean,numero)} ></Paginar>
+                                  }
+                              <Pagination.Next
+                                  onClick={() => {
+                                    this.fetchIntranet(
+                                      true,
+                                      this.state.var_texto_numeroPagina+1,
+
+                                    )
+                                  }}
+                              />
+                          </Pagination>
+                          </div>
                         </Card>
                     </Col>
                 </Row>

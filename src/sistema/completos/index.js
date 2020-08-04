@@ -28,8 +28,11 @@ class IndexCompletos extends Component {
         })
   }
 
-  verResultado(){
-    this.cambiarModalVerCompletos();
+  verResultado(id){
+    this.fetchCompletosDetalle(id);
+  }
+  verDetalle(){
+
   }
 
 
@@ -41,6 +44,35 @@ class IndexCompletos extends Component {
       console.log(value)
     })
   }
+
+  fetchCompletosDetalle(id){
+      fetch(`${Config.api}verificaciones/detalles`,
+        {
+          mode:'cors',
+          method: 'GET',
+          headers: {
+              'Accept' : 'application/json',
+              'Content-type' : 'application/json',
+              'estado': '3',
+              'id': id,
+              'api_token': localStorage.getItem('token')
+          }
+        }
+      )
+        .then(res =>res.json())
+        .then(data => {
+          if(data){
+            this.setState({
+              tb_detalles: data
+            },()=>{console.log(this.state.tb_detalles)})
+          }
+          else{
+            console.log(data)
+            console.log("hubo un error con la peticion")
+          }
+      }).catch((error)=> {
+        console.log('Hubo un problema con la petición Fetch:' + error.message);
+    });  }
 
   fetchCompletos(){
       fetch(`${Config.api}verificaciones/mostrar`,
@@ -98,9 +130,9 @@ class IndexCompletos extends Component {
                               <tbody>
                                    {
                                     this.state.tb_completos.datos ?
-                                    this.state.tb_completos.datos.data.map(task =>{
+                                    this.state.tb_completos.datos.data.map((task,index) =>{
                                         return (
-                                            <tr key={task.id}>
+                                            <tr key={index}>
                                                 <td>{task.usuario.nombres}</td>
                                                 <td>{task.usuario.apellidos}</td>
                                                 <td>{task.total}</td>

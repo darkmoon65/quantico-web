@@ -15,11 +15,13 @@ class IndexCitas extends Component {
       tb_citas:[],
       estadoFechaEditar:1,
       linkEditar:'',
+      valor:'',
       //modales
       estadoModalEditarCitas:false,
       linkB:true
     }
     this.handleChange = this.handleChange.bind(this);
+    this.handleChangeBuscador = this.handleChangeBuscador.bind(this);
   }
 
   descargarExcel(){
@@ -72,10 +74,18 @@ class IndexCitas extends Component {
       console.log(value)
     })
   }
-
+  handleChangeBuscador(e){
+    const value = e.target.value;
+    this.setState({
+      valor: value
+    },()=>{
+      console.log(value);
+      this.fetchCitas();
+    })
+  }
   sendEditarCita(){
 
-    if(this.state.opeEstadoEditarFecha && this.state.estadoFecha==1 && this.state.linkEditar==''){
+    if(this.state.opeEstadoEditarFecha && this.state.estadoFechaEditar==1 && this.state.linkEditar==''){
       cogoToast.error("debe llenar el campo link");
     }
     else{
@@ -132,6 +142,7 @@ class IndexCitas extends Component {
           id: id,
           opeEstadoEditarFecha: fecha,
           estadoCitaEditar:1,
+          linkB:false,
           usuarioId: usuarioId
       },()=>this.cambiarModalEditarCitas())
     }
@@ -141,7 +152,7 @@ class IndexCitas extends Component {
 
   }
   fetchCitas(bolean,numero){
-      fetch(`${Config.api}citas/mostrar?page=${numero}`,
+      fetch(`${Config.api}citas/mostrar?page=${numero}&buscar=${this.state.valor}`,
         {
           mode:'cors',
           method: 'GET',
@@ -178,7 +189,9 @@ class IndexCitas extends Component {
                 <Row>
                     <Col>
                         <Card title='Citas' isOption>
-                          <button className="btn btn-sm btn-success" type="button" onClick={()=>this.descargarExcel()}>Descargar excel</button>
+                          <h4 className="card-title">Buscar</h4>
+                          <input type="text" onChange={this.handleChangeBuscador} />
+                          <span className="p-5"><button className="btn btn-sm btn-success" type="button" onClick={()=>this.descargarExcel()}>Descargar excel</button></span>
                           <table id="tb_membresia" className="table table-striped" style={{width:'100%'}}>
                             <thead>
                                 <tr>
