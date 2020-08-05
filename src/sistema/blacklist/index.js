@@ -11,6 +11,7 @@ class IndexBlackList extends Component {
     super();
     this.state = {
       tb_blackList:[],
+      tipoBloqueo:1,
       //modales
       estadoModalBloquear:false,
     }
@@ -52,9 +53,10 @@ class IndexBlackList extends Component {
         }
         else{
           console.log(data)
-          console.log("hubo un error con la peticion")
+          cogoToast.error("Error, no se pudo desbloquear");
         }
     }).catch((error)=> {
+      cogoToast.error("Error, no se pudo desbloquear");
       console.log('Hubo un problema con la petición Fetch:' + error.message);
   });
 }
@@ -81,10 +83,10 @@ class IndexBlackList extends Component {
           this.clean()
         }
         else{
-          console.log(data)
-          console.log("hubo un error con la peticion")
+          cogoToast.error("Error, no se pudo bloquear");
         }
     }).catch((error)=> {
+      cogoToast.error("Error, no se pudo bloquear");
       console.log('Hubo un problema con la petición Fetch:' + error.message);
   });
 }
@@ -113,10 +115,11 @@ class IndexBlackList extends Component {
       )
         .then(res =>res.json())
         .then(data => {
-          if(data){
+          console.log(data)
+          if(data.respuesta==true){
             this.setState({
               tb_blackList: data
-            },()=>{console.log(this.state.tb_blacklist)})
+            },()=>{console.log(this.state.tb_blackList)})
           }
           else{
             console.log(data)
@@ -185,15 +188,27 @@ class IndexBlackList extends Component {
                             <div className="card w-100">
                                 <div className="modal-body">
                                     <div className="card-body text-center">
-                                          <div>
                                             <div>
-                                              <label>Correo:</label><br/>
-                                              <input type="text" name="correoBloquear" className="form-control" onChange={this.handleChange}/>
+                                              <select name="tipoBloqueo" style={{width: '15%'}} onChange={this.handleChange} value={this.state.tipoBloqueo}>
+                                                    <option key={1} value={1}>Por correo</option>
+                                                    <option key={2} value={2}>Por DNI</option>
+                                              </select>
                                             </div>
+                                            {
+                                            this.state.tipoBloqueo==1?
+                                              <div>
+                                                <label>Correo:</label><br/>
+                                                <input type="text" name="correoBloquear" className="form-control" onChange={this.handleChange}/>
+                                              </div>
+                                              :
+                                              <div>
+                                                <label>DNI:</label><br/>
+                                                <input type="text" name="dniBloquear" className="form-control" onChange={this.handleChange}/>
+                                              </div>
+                                            }
                                             <div className="p-2">
                                               <button type="button" className="btn btn-primary" onClick={()=>this.bloquear()} >Bloquear</button>
                                             </div>
-                                          </div>
                                       </div>
                                   </div>
                               </div>

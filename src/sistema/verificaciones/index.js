@@ -37,14 +37,16 @@ class IndexVerificaciones extends Component {
     this.cambiarModalVerVerificaciones();
   }
 
-  imagenQuitar(index){
+  imagenQuitar(index,id){
+    let num = id +1
     let a = this.state.arrayImagenes
         a.splice(index,1)
 
       this.setState({
-        arrayImagenes: a,
+        ['comentario'+num]:'',
+        arrayImagenes: a
       },()=>{
-        this.fetchVerificaciones()
+        this.fetchVerificaciones(true,1)
       })
   }
 
@@ -76,11 +78,11 @@ class IndexVerificaciones extends Component {
               console.log(data)
               if(concepto=="Membresia"){
                   cogoToast.warn(data.mensaje);
-                  this.imagenQuitar(index);
+                  this.imagenQuitar(index,id);
               }
               else{
                   cogoToast.success("Imagen denegada");
-                  this.imagenQuitar(index);
+                  this.imagenQuitar(index,id);
               }
             }
             else{
@@ -136,7 +138,7 @@ class IndexVerificaciones extends Component {
   }
 
   fetchVerificaciones(boleano,numero){
-      fetch(`${Config.api}verificaciones/mostrar?page=${numero}&columna=${this.state.buscarT}&buscar=${this.state.valor}`,
+      fetch(`${Config.api}verificaciones/mostrar?page=${numero}`,
         {
           mode:'cors',
           method: 'GET',

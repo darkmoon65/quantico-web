@@ -245,8 +245,6 @@ class IndexSlider extends Component {
                           <table id="tb_sliders" className="table table-striped" style={{width:'90%'}}>
                               <thead>
                                   <tr>
-                                      <th><h4 className="card-title">Buscar </h4></th>
-                                      <th><input type="text" onChange={this.handleChangeBuscador} /></th>
                                       <th><button className="btn btn-sm btn-primary ver" type="button" onClick={()=>this.cambiarModalCrearSliders()}>Crear Slider</button></th>
                                       <th><button className="btn btn-sm btn-success" type="button" onClick={()=>this.descargarExcel()}>Descargar excel</button></th>
                                   </tr>

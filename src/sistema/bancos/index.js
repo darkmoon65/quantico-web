@@ -111,11 +111,11 @@ class IndexBancos extends Component {
           this.clean();
         }
         else{
-          cogoToast.error("Error al crear el banco")
+          cogoToast.error("Error al eliminar el banco")
           console.log("hubo un error con la peticion")
         }
     }).catch((error)=> {
-      cogoToast.error("Hubo un error al crear el banco")
+      cogoToast.error("Hubo un error al eliminar el banco")
       console.log('Hubo un problema con la petición Fetch:' + error.message);
   });
 }

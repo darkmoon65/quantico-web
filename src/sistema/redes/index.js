@@ -98,15 +98,15 @@ class IndexRedes extends Component {
       .then(res =>res.json())
       .then(data => {
         if(data.respuesta==true){
-          cogoToast.success("red social creado");
+          cogoToast.success("Enlace creado");
           this.clean();
         }
         else{
-          cogoToast.error("Error al crear el red social")
+          cogoToast.error("Error al crear el enlace")
           console.log("hubo un error con la peticion")
         }
     }).catch((error)=> {
-      cogoToast.error("Hubo un error al crear el red social")
+      cogoToast.error("Hubo un error al crear el enlace")
       console.log('Hubo un problema con la petición Fetch:' + error.message);
   });
 }
@@ -132,15 +132,15 @@ class IndexRedes extends Component {
       .then(res =>res.json())
       .then(data => {
         if(data.respuesta==true){
-          cogoToast.success("red social creado");
+          cogoToast.success("Enlace editado");
           this.clean();
         }
         else{
-          cogoToast.error("Error al crear el red social")
+          cogoToast.error("Error al editar enlace")
           console.log("hubo un error con la peticion")
         }
     }).catch((error)=> {
-      cogoToast.error("Hubo un error al crear el red social")
+      cogoToast.error("Hubo un error al editar enlace")
       console.log('Hubo un problema con la petición Fetch:' + error.message);
   });
 }
@@ -163,15 +163,15 @@ class IndexRedes extends Component {
       .then(res =>res.json())
       .then(data => {
         if(data.respuesta==true){
-          cogoToast.success("red social eliminado");
+          cogoToast.success("Enlace eliminado");
           this.clean();
         }
         else{
-          cogoToast.error("Error al crear el red social")
+          cogoToast.error("Error al eliminar enlaces")
           console.log("hubo un error con la peticion")
         }
     }).catch((error)=> {
-      cogoToast.error("Hubo un error al crear el red social")
+      cogoToast.error("Hubo un error al eliminar enlaces")
       console.log('Hubo un problema con la petición Fetch:' + error.message);
   });
 }
@@ -211,8 +211,6 @@ class IndexRedes extends Component {
                 <Row>
                     <Col>
                         <Card title='Enlaces' isOption>
-                        <h4 className="card-title">Buscar </h4>
-                        <input type="text" onChange={this.handleChangeBuscador} />
                         <span className="p-5"><button type="button" className="btn btn-primary" onClick={()=>this.cambiarModalCrearRed()}>Crear Enlaces</button></span>
                         <span className="p-5"><button className="btn btn-sm btn-success" type="button" onClick={()=>this.descargarExcel()}>Descargar excel</button></span>
                         <table id="tb_membresia" className="table table-striped" style={{width:'100%'}}>

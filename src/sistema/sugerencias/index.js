@@ -1,17 +1,20 @@
 import React, {Component} from 'react';
-import {Row, Col,Modal} from 'react-bootstrap';
+import {Row, Col,Modal,Pagination} from 'react-bootstrap';
 
 import Aux from "../../hoc/_Aux";
 import Card from "../../App/components/MainCard";
 import cogoToast from "cogo-toast";
 import Config from "../../config"
 import Files from "../../files"
+import Paginar from "../../paginate"
 
 class IndexSugerencias extends Component {
   constructor(){
     super();
     this.state = {
       tb_sugerencias:[],
+      valor:'',
+      buscarT:'nombres',
       //modales
       estadoModalVerSugerencias:false,
       valor:''
@@ -70,7 +73,7 @@ class IndexSugerencias extends Component {
     },()=>this.cambiarModalVerSugerencias())
   }
   fetchSugerencias(boleano,numero){
-      fetch(`${Config.api}sugerencias/mostrar?buscar=${this.state.valor}`,
+      fetch(`${Config.api}sugerencias/mostrar?page=${numero}&columna=${this.state.buscarT}&buscar=${this.state.valor}`,
         {
           mode:'cors',
           method: 'GET',
@@ -85,7 +88,8 @@ class IndexSugerencias extends Component {
         .then(data => {
           if(data.respuesta==true){
             this.setState({
-              tb_sugerencias: data['datos']
+              tb_sugerencias: data['datos'],
+              var_texto_numeroPagina: numero
             },()=>{console.log(this.state.tb_sugerencias)})
           }
           else{
@@ -97,7 +101,7 @@ class IndexSugerencias extends Component {
     });  }
 
   componentDidMount(){
-      this.fetchSugerencias();
+      this.fetchSugerencias(true,1);
       console.log(localStorage.getItem('token'));
     }
     render() {
@@ -106,15 +110,19 @@ class IndexSugerencias extends Component {
                 <Row>
                     <Col>
                         <Card title='Sugerencias' isOption>
+                        <h4 className="card-title">Buscar</h4>
+                        <input type="text" onChange={this.handleChangeBuscador} />
+                        <span className="p-5">
+                          <select  name="buscarT" id="tipoProducto" style={{width: '15%'}} onChange={this.handleChange} value={this.state.buscarT}>
+                                <option key={1} value={"nombres"}>Nombres</option>
+                                <option key={2} value={"apellidos"}>Apellidos</option>
+                                <option key={3} value={"celular"}>Celular</option>
+                                <option key={4} value={"fecha"}>Fecha</option>
+                          </select>
+                        </span>
+                        <span className="p-5"><button className="btn btn-sm btn-success" type="button" onClick={()=>this.descargarExcel()}>Descargar excel</button></span>
                         <table id="tb_membresia" className="table table-striped" style={{width:'100%'}}>
                             <thead>
-                                <tr>
-
-                                    <th><h4 className="card-title">Buscar</h4></th>
-                                    <th><input type="text" onChange={this.handleChangeBuscador} /></th>
-                                    <th><button className="btn btn-sm btn-success" type="button" onClick={()=>this.descargarExcel()}>Descargar excel</button></th>
-
-                                </tr>
                                 <tr>
                                     <th>Nombres</th>
                                     <th>Apellidos</th>
@@ -154,6 +162,32 @@ class IndexSugerencias extends Component {
                                 }
                             </tbody>
                         </table>
+                        <div className="float-right">
+                                <Pagination  >
+                                  <Pagination.Prev
+                                      onClick={() => {
+                                        this.fetchSugerencias(
+                                          true,
+                                          this.state.var_texto_numeroPagina-1,
+                                      )
+
+                                    }}
+                                  />
+                                      {
+                                         <Paginar data={this.state.tb_sugerencias} fetch={(bolean,numero)=>this.fetchSugerencias(bolean,numero)} ></Paginar>
+                                      }
+                                  <Pagination.Next
+                                      onClick={() => {
+                                        this.fetchSugerencias(
+                                          true,
+                                          this.state.var_texto_numeroPagina+1,
+
+                                        )
+
+                                      }}
+                                  />
+                              </Pagination>
+                            </div>
                         </Card>
                     </Col>
                 </Row>

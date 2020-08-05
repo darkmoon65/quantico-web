@@ -16,6 +16,7 @@ class IndexCitas extends Component {
       estadoFechaEditar:1,
       linkEditar:'',
       valor:'',
+      buscarT:'nombres',
       //modales
       estadoModalEditarCitas:false,
       linkB:true
@@ -152,7 +153,7 @@ class IndexCitas extends Component {
 
   }
   fetchCitas(bolean,numero){
-      fetch(`${Config.api}citas/mostrar?page=${numero}&buscar=${this.state.valor}`,
+      fetch(`${Config.api}citas/mostrar?page=${numero}&columna=${this.state.buscarT}&buscar=${this.state.valor}`,
         {
           mode:'cors',
           method: 'GET',
@@ -191,6 +192,13 @@ class IndexCitas extends Component {
                         <Card title='Citas' isOption>
                           <h4 className="card-title">Buscar</h4>
                           <input type="text" onChange={this.handleChangeBuscador} />
+                          <span className="p-5">
+                            <select  name="buscarT" id="tipoProducto" style={{width: '15%'}} onChange={this.handleChange} value={this.state.buscarT}>
+                                  <option key={1} value={"nombres"}>Nombres</option>
+                                  <option key={2} value={"apellidos"}>Apellidos</option>
+                                  <option key={3} value={"fecha"}>Fecha</option>
+                            </select>
+                          </span>
                           <span className="p-5"><button className="btn btn-sm btn-success" type="button" onClick={()=>this.descargarExcel()}>Descargar excel</button></span>
                           <table id="tb_membresia" className="table table-striped" style={{width:'100%'}}>
                             <thead>

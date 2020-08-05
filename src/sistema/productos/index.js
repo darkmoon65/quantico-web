@@ -69,16 +69,38 @@ class IndexProductos extends Component {
     exeEnviar(ope){
     let a = this.state.countMembresia
     let r = []
-    for(let i = 1; i <= a.length;i++){
-      let z = `this.state.descuento${i}`
-      let ok = eval(z)
-      if(ok){
-        r.push({
-          membresia: i,
-          porcentaje: ok
-        })
+
+    if(ope=="crear"){
+      for(let i = 1; i <= a.length;i++){
+        let z = `this.state.descuento${i}`
+        let ok = eval(z)
+        if(ok){
+          r.push({
+            membresia: i,
+            porcentaje: ok
+          })
+        }
       }
     }
+    else if (ope=="editar") {
+      for(let i = 1; i <= a.length;i++){
+        let z = `this.state.descuento${i}`
+        let ok = eval(z)
+        if(ok){
+          r.push({
+            membresia: i,
+            porcentaje: ok
+          })
+        }else{
+          r.push({
+            membresia: i,
+            porcentaje: 0
+          })
+        }
+
+      }
+    }
+
     let z = this.state.productoCrearId
     if(z == 0){
       z = false
@@ -203,14 +225,14 @@ class IndexProductos extends Component {
       }
     }
     enviarEditarProducto(){
-      if(this.state.tipoEditarIdR == 2){
+      if(this.state.tipoEditarId == 2){
         fetch(`${Config.api}productos/editar`,
           {
             mode:'cors',
             method: 'POST',
             body: JSON.stringify({
               id: this.state.id,
-              tipo : this.state.tipoEditarIdR,
+              tipo : this.state.tipoEditarId,
               prodPropio: this.state.productoEditarId,
               nombre: this.state.nombreEditar,
               descripcion: this.state.descripcionEditar,
@@ -253,7 +275,7 @@ class IndexProductos extends Component {
               method: 'POST',
               body: JSON.stringify({
                   id : this.state.id,
-                  tipo : this.state.tipoEditarIdR,
+                  tipo : this.state.tipoEditarId,
                   prodPropio: this.state.productoEditarId,
                   nombre: this.state.nombreEditar,
                   descripcion: this.state.descripcionEditar,
@@ -297,7 +319,7 @@ class IndexProductos extends Component {
       }
     }
 
-    editarProducto(id,nombre,tipo,costo,datosExtra,descuentos){
+    editarProducto(id,nombre,tipoId,costo,datosExtra,descuentos){
       let prodPropio = datosExtra.prodPropio;
       let prerequisito = datosExtra.prerequisito ;
       let descripcion = datosExtra.descripcion;
@@ -312,7 +334,7 @@ class IndexProductos extends Component {
       let linkppt = datosExtra.linkPPT;
       let linkSala = datosExtra.linkSala;
 
-      if(tipo=="Libro"){
+      if(tipoId==2){
         this.setState({detallesExtras:[0]})
       }
       else{
@@ -332,13 +354,13 @@ class IndexProductos extends Component {
           descuento5:descuentoNew[5],
           descuento6:descuentoNew[6],
           descuento7:descuentoNew[7]
-        },()=>console.log(this.state.descuento1))
+        })
       }
 
       this.setState({
           id:id,
           nombreEditar:nombre,
-          tipoEditarId:tipo,
+          tipoEditarId:tipoId,
           costoEditar:costo,
           productoEditarId: prodPropio,
           preEditarId: prerequisito,
@@ -507,19 +529,15 @@ class IndexProductos extends Component {
         }
       }
       if(name == "tipoEditarId"){
-        const selectedIndex = e.target.options.selectedIndex;
-        const key = e.target.options[selectedIndex].getAttribute('key-a');
-        if(value=="Libro" || value==''){
+        if(value==2 || value==''){
           this.setState({
             detallesExtras:[0],
-            tipoEditarIdR: key
-          },()=>console.log(this.state.tipoEditarIdR))
+          })
         }
         else{
             this.setState({
               detallesExtras:[1],
-              tipoEditarIdR: key
-            },()=>console.log(this.state.tipoEditarIdR))
+            })
         }
       }
 
@@ -600,7 +618,7 @@ class IndexProductos extends Component {
                                                     <button className="btn btn-sm btn-primary "  type="button" onClick={()=>this.editarProducto(
                                                       task.id,
                                                       task.nombre,
-                                                      task.tipo,
+                                                      task.tipoId,
                                                       task.costo,
                                                       task.datosExtra,
                                                       task.descuentos
@@ -811,7 +829,7 @@ class IndexProductos extends Component {
                                                   this.state.tb_tipoProductos.datos?
                                                   this.state.tb_tipoProductos.datos.map((data,index)=>{
                                                    return(
-                                                      <option key={data.id} key-a={data.id} value={data.nombre}>{data.nombre}</option>
+                                                      <option key={data.id} value={data.id}>{data.nombre}</option>
                                                    )
                                                  }):null
                                                   }

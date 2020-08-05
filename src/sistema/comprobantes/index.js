@@ -130,7 +130,7 @@ class IndexComprobantes extends Component {
           fileData.onload = (event)=> {
               this.setState({imgComprobante: fileData.result},
                 ()=>{
-                    cogoToast.success("Imagen de tarjeta lista");
+                    cogoToast.success("Imagen de comprobante lista");
                     console.log(this.state.imgComprobante)
                   }
                 );

@@ -32,7 +32,15 @@ class IndexCompletos extends Component {
     this.fetchCompletosDetalle(id,concepto);
   }
   verDetalle(){
-
+    this.setState({
+      nombresVer:this.state.tb_detalles.nombres,
+      apellidosVer:this.state.tb_detalles.apellidos,
+      celularVer:this.state.tb_detalles.celular,
+      correoVer:this.state.tb_detalles.correo,
+      nombreMVer:this.state.tb_detalles.nombre,
+      totalVer:this.state.tb_detalles.total,
+      imagenComprobanteCompraVer:this.state.tb_detalles.comprobanteCompra
+    },()=>this.cambiarModalVerCompletos())
   }
 
 
@@ -46,25 +54,27 @@ class IndexCompletos extends Component {
   }
 
   fetchCompletosDetalle(id,concepto){
-      fetch(`${Config.api}verificaciones/detalles`,
+      console.log(id)
+      fetch(`${Config.api}verificaciones/detalles?concepto=${concepto}&id=${id}`,
         {
           mode:'cors',
           method: 'GET',
           headers: {
               'Accept' : 'application/json',
               'Content-type' : 'application/json',
-              'id': id,
-              'concepto': concepto,
               'api_token': localStorage.getItem('token')
           }
         }
       )
         .then(res =>res.json())
         .then(data => {
-          if(data){
+          if(data.respuesta==true){
             this.setState({
-              tb_detalles: data
-            },()=>{console.log(this.state.tb_detalles)})
+              tb_detalles: data['datos']
+            },()=>{
+              console.log(this.state.tb_detalles);
+              this.verDetalle()
+            })
           }
           else{
             console.log(data)
@@ -169,11 +179,34 @@ class IndexCompletos extends Component {
                                 <div className="modal-body">
                                     <div className="card-body text-center">
                                           <div>
-                                            <label>Nombre:</label><br/>
-                                            <label>Apellidos:</label><br/>
-                                            <label>Total:</label><br/>
-                                            <label>Concepto:</label><br/>
-                                            <label>Descripcion:</label><br/>
+                                            <div>
+                                              <label>Nombres:</label><br/>
+                                              <h4>{this.state.nombresVer}</h4>
+                                            </div>
+                                            <div>
+                                              <label>Apellidos:</label><br/>
+                                              <h4>{this.state.apellidosVer}</h4>
+                                            </div>
+                                            <div>
+                                              <label>Celular:</label><br/>
+                                              <h4>{this.state.celularVer}</h4>
+                                            </div>
+                                            <div>
+                                              <label>Correo:</label><br/>
+                                              <h4>{this.state.correoVer}</h4>
+                                            </div>
+                                            <div>
+                                              <label>Nombre de Membresia:</label><br/>
+                                              <h4>{this.state.nombreMVer}</h4>
+                                            </div>
+                                            <div>
+                                              <label>Total:</label><br/>
+                                              <h4>{this.state.totalVer}</h4>
+                                            </div>
+                                            <div>
+                                              <label>Comprobante de la compra:</label><br/>
+                                              <img src={this.state.imagenComprobanteCompraVer} width="400" height="400" />
+                                            </div>
                                           </div>
                                       </div>
                                   </div>

@@ -147,8 +147,6 @@ class IndexTipoProductos extends Component {
                 <Row>
                     <Col>
                         <Card title='Tipos de productos' isOption>
-                            <h4 className="card-title">Buscar </h4>
-                            <input type="text" onChange={this.handleChangeBuscador} />
                             <span className="p-5">
                               <button type="button" className="btn btn-primary" onClick={()=>this.cambiarModalCrearTipoProductos()}>Crear Tipos de productos </button>
                               <button className="btn btn-sm btn-success" type="button" onClick={()=>this.descargarExcel()}>Descargar excel</button>
