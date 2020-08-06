@@ -14,12 +14,14 @@ class IndexComprobantes extends Component {
     this.state = {
       tb_comprobantes:[],
       var_texto_numeroPagina:1,
-
+      buscarT:"nombres",
+      valor:'',
       //modales
       estadoModalSubirComprobantes:false,
       aea:[1],
     }
     this.handleChange = this.handleChange.bind(this);
+    this.handleChangeBuscador = this.handleChangeBuscador.bind(this);
   }
 
   descargarExcel(){
@@ -50,9 +52,18 @@ class IndexComprobantes extends Component {
       console.log(value)
     })
   }
+  handleChangeBuscador(e){
+    const value = e.target.value;
+    this.setState({
+      valor: value
+    },()=>{
+      console.log(value);
+      this.fetchComprobantes(true,1);
+    })
+  }
 
   fetchComprobantes(boleano,numero){
-      fetch(`${Config.api}verificaciones/mostrar?page=${numero}`,
+      fetch(`${Config.api}verificaciones/mostrar?page=${numero}&columna=${this.state.buscarT}&buscar=${this.state.valor}`,
         {
           mode:'cors',
           method: 'GET',
@@ -164,13 +175,21 @@ class IndexComprobantes extends Component {
                 <Row>
                     <Col>
                         <Card title='Comprobantes' isOption>
+                        <h4 className="card-title">Buscar</h4>
+                        <input type="text" onChange={this.handleChangeBuscador} />
+                        <span className="p-5">
+
+                            <select  name="buscarT" id="tipoProducto" style={{width: '15%'}} onChange={this.handleChange} value={this.state.buscarT}>
+                                <option key={1} value={"nombres"}>Nombres</option>
+                                <option key={2} value={"apellidos"}>Apellidos</option>
+                                <option key={3} value={"correo"}>Correo</option>
+                                <option key={4} value={"descripcion"}>Descripcion</option>
+                            </select>
+                        </span>
+                        <span className="p-5"><button className="btn btn-sm btn-success" type="button" onClick={()=>this.descargarExcel()}>Descargar excel</button></span>
+
                         <table id="tb_membresia" className="table table-striped" style={{width:'100%'}}>
                             <thead>
-                                <tr>
-                                    <th><h4 className="card-title">Buscar </h4></th>
-                                    <th><input type="text" onChange={this.handleChangeBuscador} /></th>
-                                    <th><button className="btn btn-sm btn-success" type="button" onClick={()=>this.descargarExcel()}>Descargar excel</button></th>
-                                </tr>
                                 <tr>
                                     <th>Nombres</th>
                                     <th>Apellidos</th>
@@ -183,11 +202,11 @@ class IndexComprobantes extends Component {
                               <tbody>
                                    {
                                     this.state.tb_comprobantes.data ?
-                                    this.state.tb_comprobantes.data.map(task =>{
+                                    this.state.tb_comprobantes.data.map((task,index) =>{
                                         return (
-                                            <tr key={task.id}>
-                                                <td>{task.usuario.nombres}</td>
-                                                <td>{task.usuario.apellidos}</td>
+                                            <tr key={index}>
+                                                <td>{task.nombres}</td>
+                                                <td>{task.apellidos}</td>
                                                 <td>{task.total}</td>
                                                 <td>{task.concepto}</td>
                                                 <td>{task.descripcion}</td>

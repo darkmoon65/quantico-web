@@ -12,10 +12,13 @@ class IndexCompletos extends Component {
     super();
     this.state = {
       tb_completos:[],
+      buscarT:"nombres",
+      valor:'',
       //modales
       estadoModalVerVerCompletos:false,
     }
     this.handleChange = this.handleChange.bind(this);
+    this.handleChangeBuscador = this.handleChangeBuscador.bind(this);
   }
 
   descargarExcel(){
@@ -52,6 +55,15 @@ class IndexCompletos extends Component {
       console.log(value)
     })
   }
+  handleChangeBuscador(e){
+    const value = e.target.value;
+    this.setState({
+      valor: value
+    },()=>{
+      console.log(value);
+      this.fetchCompletos(true,1);
+    })
+  }
 
   fetchCompletosDetalle(id,concepto){
       console.log(id)
@@ -84,8 +96,8 @@ class IndexCompletos extends Component {
         console.log('Hubo un problema con la petición Fetch:' + error.message);
     });  }
 
-  fetchCompletos(){
-      fetch(`${Config.api}verificaciones/mostrar`,
+  fetchCompletos(boleano,numero){
+      fetch(`${Config.api}verificaciones/mostrar?page=${numero}&columna=${this.state.buscarT}&buscar=${this.state.valor}`,
         {
           mode:'cors',
           method: 'GET',
@@ -112,7 +124,7 @@ class IndexCompletos extends Component {
         console.log('Hubo un problema con la petición Fetch:' + error.message);
     });  }
   componentDidMount(){
-      this.fetchCompletos();
+      this.fetchCompletos(true,1);
       console.log(localStorage.getItem('token'));
     }
     render() {
@@ -121,13 +133,20 @@ class IndexCompletos extends Component {
                 <Row>
                     <Col>
                         <Card title='Completos' isOption>
+                        <h4 className="card-title">Buscar</h4>
+                        <input type="text" onChange={this.handleChangeBuscador} />
+                        <span className="p-5">
+
+                            <select  name="buscarT" id="tipoProducto" style={{width: '15%'}} onChange={this.handleChange} value={this.state.buscarT}>
+                                <option key={1} value={"nombres"}>Nombres</option>
+                                <option key={2} value={"apellidos"}>Apellidos</option>
+                                <option key={3} value={"correo"}>Correo</option>
+                                <option key={3} value={"descripcion"}>Descripcion</option>
+                            </select>
+                        </span>
+                        <span className="p-5"><button className="btn btn-sm btn-success" type="button" onClick={()=>this.descargarExcel()}>Descargar excel</button></span>
                         <table id="tb_membresia" className="table table-striped" style={{width:'100%'}}>
                             <thead>
-                                <tr>
-                                    <th><h4 className="card-title">Buscar </h4></th>
-                                    <th><input type="text" onChange={this.handleChangeBuscador} /></th>
-                                    <th><button className="btn btn-sm btn-success" type="button" onClick={()=>this.descargarExcel()}>Descargar excel</button></th>
-                                </tr>
                                 <tr>
                                     <th>Nombres</th>
                                     <th>Apellidos</th>
@@ -143,8 +162,8 @@ class IndexCompletos extends Component {
                                     this.state.tb_completos.datos.data.map((task,index) =>{
                                         return (
                                             <tr key={index}>
-                                                <td>{task.usuario.nombres}</td>
-                                                <td>{task.usuario.apellidos}</td>
+                                                <td>{task.nombres}</td>
+                                                <td>{task.apellidos}</td>
                                                 <td>{task.total}</td>
                                                 <td>{task.concepto}</td>
                                                 <td>{task.descripcion}</td>

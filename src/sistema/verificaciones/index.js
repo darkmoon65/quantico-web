@@ -15,11 +15,14 @@ class IndexVerificaciones extends Component {
       tb_verificaciones:[],
       arrayImagenes:[],
       var_texto_numeroPagina:1,
+      buscarT:"nombres",
+      valor:'',
       //modales
       estadoModalVerVerificaciones:false,
 
     }
     this.handleChange = this.handleChange.bind(this);
+    this.handleChangeBuscador = this.handleChangeBuscador.bind(this);
   }
   descargarExcel(){
     Files.exportToCSV(this.state.tb_verificaciones.data,"verificaciones");
@@ -136,9 +139,18 @@ class IndexVerificaciones extends Component {
       console.log(name)
     })
   }
+  handleChangeBuscador(e){
+    const value = e.target.value;
+    this.setState({
+      valor: value
+    },()=>{
+      console.log(value);
+      this.fetchVerificaciones(true,1);
+    })
+  }
 
   fetchVerificaciones(boleano,numero){
-      fetch(`${Config.api}verificaciones/mostrar?page=${numero}`,
+      fetch(`${Config.api}verificaciones/mostrar?page=${numero}&columna=${this.state.buscarT}&buscar=${this.state.valor}`,
         {
           mode:'cors',
           method: 'GET',
@@ -176,13 +188,20 @@ class IndexVerificaciones extends Component {
                 <Row>
                     <Col>
                         <Card title='Verificaciones' isOption>
+                        <h4 className="card-title">Buscar</h4>
+                        <input type="text" onChange={this.handleChangeBuscador} />
+                        <span className="p-5">
+
+                            <select  name="buscarT" id="tipoProducto" style={{width: '15%'}} onChange={this.handleChange} value={this.state.buscarT}>
+                                <option key={1} value={"nombres"}>Nombres</option>
+                                <option key={2} value={"apellidos"}>Apellidos</option>
+                                <option key={3} value={"correo"}>Correo</option>
+                                <option key={4} value={"descripcion"}>Descripcion</option>
+                            </select>
+                        </span>
+                        <span className="p-5"><button className="btn btn-sm btn-success" type="button" onClick={()=>this.descargarExcel()}>Descargar excel</button></span>
                         <table id="tb_membresia" className="table table-striped table-responsive" style={{width:'100%'}}>
                             <thead>
-                                <tr>
-                                    <th><h4 className="card-title">Buscar </h4></th>
-                                    <th><input type="text" onChange={this.handleChangeBuscador} /></th>
-                                    <th><button className="btn btn-sm btn-success" type="button" onClick={()=>this.descargarExcel()}>Descargar excel</button></th>
-                                </tr>
                                 <tr>
                                     <th>Nombres</th>
                                     <th>Apellidos</th>
@@ -197,9 +216,9 @@ class IndexVerificaciones extends Component {
                                     this.state.tb_verificaciones.data.map((task,index) =>{
                                         return (
                                             <tr key={index}>
-                                                <td>{task.usuario.nombres}</td>
-                                                <td>{task.usuario.apellidos}</td>
-                                                <td>{task.usuario.correo}</td>
+                                                <td>{task.nombres}</td>
+                                                <td>{task.apellidos}</td>
+                                                <td>{task.correo}</td>
                                                 <td>{task.concepto}</td>
                                                 <td>{task.descripcion}</td>
                                                 <td>
