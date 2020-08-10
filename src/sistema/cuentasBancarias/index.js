@@ -349,9 +349,9 @@ class IndexCuentas extends Component {
                                   :<th>Titular</th>
                                 }
                                 {
-                                  this.state.tb_cuentasBancariasAdmin[0]['titular']  == null
+                                  this.state.tb_cuentasBancariasAdmin[0]['idBanco']  == null
                                   ?null
-                                  :<th>Banco</th>
+                                  :<th>Banco</th> 
                                 }
                                 {
                                   this.state.tb_cuentasBancariasAdmin[0]['imagenQr']  == null
@@ -387,11 +387,6 @@ class IndexCuentas extends Component {
                                   this.state.tb_cuentasBancariasAdmin[0]['cci']  == null
                                   ?null
                                   :<th>CCI</th>
-                                }
-                                {
-                                  this.state.tb_cuentasBancariasAdmin[0]['idBanco']  == null
-                                  ?null
-                                  :<th>Banco</th> 
                                 }
                                 {
                                   this.state.tb_cuentasBancariasAdmin[0]['numero'] == null
