@@ -54,15 +54,13 @@ class IndexSlider extends Component {
         if(data){
           this.setState({
             tb_sliders: data
-          },()=>{console.log(this.state.tb_sliders)})
+          })
         }
-        else{
-          console.log(data)
-          console.log("hubo un error con la peticion")
-        }
+
     }).catch((error)=> {
-      console.log('Hubo un problema con la petición Fetch:' + error.message);
-  });  }
+
+  });
+}
 
   editarSlider(id,titulo,url,imagen){
 
@@ -117,11 +115,10 @@ class IndexSlider extends Component {
             this.clean();
           }
           else{
-            console.log(data)
-            console.log("hubo un error con la peticion")
+            cogoToast.error("Hubo un error, no se creo slider")
           }
       }).catch((error)=> {
-        console.log('Hubo un problema con la petición Fetch:' + error.message);
+        cogoToast.error("Hubo un error, no se creo Slider")
     });
   }
 }
@@ -149,11 +146,10 @@ class IndexSlider extends Component {
         this.fetchSliders();
       }
       else{
-        console.log(data)
-        console.log("hubo un error con la peticion")
+        cogoToast.error("hubo un error, no se pudo eliminar")
       }
   }).catch((error)=> {
-    console.log('Hubo un problema con la petición Fetch:' + error.message);
+    cogoToast.error("hubo un error, no se pudo eliminar");
   });
 }
 
@@ -184,21 +180,18 @@ class IndexSlider extends Component {
           this.clean();
         }
         else{
-          console.log(data)
-          console.log("hubo un error con la peticion")
+          cogoToast.error("hubo un error, no se pudo editar")
         }
     }).catch((error)=> {
-      console.log('Hubo un problema con la petición Fetch:' + error.message);
+      cogoToast.error("hubo un error, no se pudo editar")
   });
-}
+ }
 }
 
   handleChange(e){
     const {name, value} = e.target;
     this.setState({
       [name]: value
-    },()=>{
-
     })
   }
 
@@ -233,7 +226,6 @@ class IndexSlider extends Component {
 
   componentDidMount(){
     this.fetchSliders();
-    console.log(localStorage.getItem('token'));
   }
 
     render() {

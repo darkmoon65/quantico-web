@@ -44,8 +44,6 @@ class IndexSugerencias extends Component {
     const {name, value} = e.target;
     this.setState({
       [name]: value
-    },()=>{
-      console.log(value)
     })
   }
   handleChangeBuscador(e){
@@ -53,7 +51,6 @@ class IndexSugerencias extends Component {
     this.setState({
       valor: value
     },()=>{
-      console.log(value);
       this.fetchSugerencias();
     })
   }
@@ -90,19 +87,17 @@ class IndexSugerencias extends Component {
             this.setState({
               tb_sugerencias: data['datos'],
               var_texto_numeroPagina: numero
-            },()=>{console.log(this.state.tb_sugerencias)})
+            })
           }
-          else{
-            console.log(data)
-            console.log("hubo un error con la peticion")
-          }
+
       }).catch((error)=> {
-        console.log('Hubo un problema con la petición Fetch:' + error.message);
-    });  }
+
+    });
+  }
 
   componentDidMount(){
       this.fetchSugerencias(true,1);
-      console.log(localStorage.getItem('token'));
+
     }
     render() {
         return (

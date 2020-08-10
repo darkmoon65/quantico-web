@@ -42,8 +42,6 @@ class IndexAsistencias extends Component {
     const {name, value} = e.target;
     this.setState({
       [name]: value
-    },()=>{
-      console.log(value)
     })
   }
   handleChangeBuscador(e){
@@ -51,7 +49,6 @@ class IndexAsistencias extends Component {
     this.setState({
       valor: value
     },()=>{
-      console.log(value);
       this.fetchAsistencias();
     })
   }
@@ -88,18 +85,14 @@ class IndexAsistencias extends Component {
         .then(res =>res.json())
         .then(data => {
           if(data.respuesta==true){
-            console.log(data);
             this.setState({
               tb_asistencias: data['datos']
-            },()=>{console.log(this.state.tb_asistencias)})
-          }
-          else{
-            console.log(data)
-            console.log("hubo un error con la peticion")
+            })
           }
       }).catch((error)=> {
-        console.log('Hubo un problema con la petición Fetch:' + error.message);
-    });  }
+
+    });
+  }
   cambiarVerAsistencias(id){
       var array = this.state.tb_asistencias.data
       let asistencias
@@ -121,7 +114,6 @@ class IndexAsistencias extends Component {
   }
   componentDidMount(){
       this.fetchAsistencias();
-      console.log(localStorage.getItem('token'));
     }
     render() {
         return (

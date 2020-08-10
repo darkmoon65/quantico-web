@@ -43,8 +43,6 @@ class IndexRegalos extends Component {
     const {name, value} = e.target;
     this.setState({
       [name]: value
-    },()=>{
-      console.log(value)
     })
   }
   handleChangeBuscador(e){
@@ -52,7 +50,6 @@ class IndexRegalos extends Component {
     this.setState({
       valor: value
     },()=>{
-      console.log(value);
       this.fetchRegalos();
     })
   }
@@ -82,11 +79,10 @@ class IndexRegalos extends Component {
         }
         else{
           cogoToast.error("Error al enviar")
-          console.log("hubo un error con la peticion")
+
         }
     }).catch((error)=> {
       cogoToast.error("Hubo un error al enviar regalo")
-      console.log('Hubo un problema con la petición Fetch:' + error.message);
   });
 }
   enviarRegalo(id){
@@ -112,18 +108,14 @@ class IndexRegalos extends Component {
             this.setState({
               tb_regalos: data['datos'],
               var_texto_numeroPagina:numero
-            },()=>{console.log(this.state.tb_regalos)})
-          }
-          else{
-            console.log(data)
-            console.log("hubo un error con la peticion")
+            })
           }
       }).catch((error)=> {
-        console.log('Hubo un problema con la petición Fetch:' + error.message);
-    });  }
+
+    });
+  }
   componentDidMount(){
       this.fetchRegalos(true,1);
-      console.log(localStorage.getItem('token'));
     }
     render() {
         return (

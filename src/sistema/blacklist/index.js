@@ -52,12 +52,10 @@ class IndexBlackList extends Component {
           this.clean()
         }
         else{
-          console.log(data)
           cogoToast.error("Error, no se pudo desbloquear");
         }
     }).catch((error)=> {
       cogoToast.error("Error, no se pudo desbloquear");
-      console.log('Hubo un problema con la petición Fetch:' + error.message);
   });
 }
   bloquear(id){
@@ -87,7 +85,6 @@ class IndexBlackList extends Component {
         }
     }).catch((error)=> {
       cogoToast.error("Error, no se pudo bloquear");
-      console.log('Hubo un problema con la petición Fetch:' + error.message);
   });
 }
 
@@ -95,8 +92,6 @@ class IndexBlackList extends Component {
     const {name, value} = e.target;
     this.setState({
       [name]: value
-    },()=>{
-      console.log(value)
     })
   }
 
@@ -115,22 +110,17 @@ class IndexBlackList extends Component {
       )
         .then(res =>res.json())
         .then(data => {
-          console.log(data)
           if(data.respuesta==true){
             this.setState({
               tb_blackList: data
-            },()=>{console.log(this.state.tb_blackList)})
-          }
-          else{
-            console.log(data)
-            console.log("hubo un error con la peticion")
+            })
           }
       }).catch((error)=> {
-        console.log('Hubo un problema con la petición Fetch:' + error.message);
-    });  }
+
+    });
+  }
   componentDidMount(){
       this.fetchBlacklist();
-      console.log(localStorage.getItem('token'));
     }
     render() {
         return (

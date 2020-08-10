@@ -60,8 +60,6 @@ class IndexInversiones extends Component {
 
     this.setState({
       [name]: value
-    },()=>{
-      console.log(value)
     })
   }
   handleChangeFile (e){
@@ -132,11 +130,9 @@ class IndexInversiones extends Component {
         }
         else{
           cogoToast.error("Error al crear la inversion")
-          console.log("hubo un error con la peticion")
         }
     }).catch((error)=> {
       cogoToast.error("Hubo un error al crear la inversion")
-      console.log('Hubo un problema con la petición Fetch:' + error.message);
   });
 }
   enviarEditarInversiones(){
@@ -169,11 +165,9 @@ class IndexInversiones extends Component {
         }
         else{
           cogoToast.error("Error al editar la inversion")
-          console.log("hubo un error con la peticion")
         }
     }).catch((error)=> {
       cogoToast.error("Hubo un error al editar la inversion")
-      console.log('Hubo un problema con la petición Fetch:' + error.message);
   });
 }
 
@@ -201,11 +195,9 @@ class IndexInversiones extends Component {
         }
         else{
           cogoToast.error("Error al crear la inversion")
-          console.log("hubo un error con la peticion")
         }
     }).catch((error)=> {
       cogoToast.error("Hubo un error al crear la inversion")
-      console.log('Hubo un problema con la petición Fetch:' + error.message);
   });
 }
   fetchInversiones(){
@@ -226,17 +218,13 @@ class IndexInversiones extends Component {
             this.setState({
               tb_inversionesH: data
             },()=>{
-              console.log(this.state.tb_inversionesH)
               this.limpiarInversiones()
             })
           }
-          else{
-            console.log(data)
-            console.log("hubo un error con la peticion")
-          }
       }).catch((error)=> {
-        console.log('Hubo un problema con la petición Fetch:' + error.message);
-    });  }
+
+    });
+  }
 
     limpiarInversiones(){
       let array = this.state.tb_inversionesH
@@ -264,12 +252,11 @@ class IndexInversiones extends Component {
       })
       this.setState({
         tb_inversiones: newArray
-      },()=>console.log(this.state.tb_inversiones))
+      })
     }
 
   componentDidMount(){
       this.fetchInversiones();
-      console.log(localStorage.getItem('token'));
     }
     render() {
         return (

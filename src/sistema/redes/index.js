@@ -53,8 +53,6 @@ class IndexRedes extends Component {
     const {name, value} = e.target;
     this.setState({
       [name]: value
-    },()=>{
-      console.log(value)
     })
   }
 
@@ -103,11 +101,11 @@ class IndexRedes extends Component {
         }
         else{
           cogoToast.error("Error al crear el enlace")
-          console.log("hubo un error con la peticion")
+
         }
     }).catch((error)=> {
       cogoToast.error("Hubo un error al crear el enlace")
-      console.log('Hubo un problema con la petición Fetch:' + error.message);
+
   });
 }
   editarRed(){
@@ -137,11 +135,9 @@ class IndexRedes extends Component {
         }
         else{
           cogoToast.error("Error al editar enlace")
-          console.log("hubo un error con la peticion")
         }
     }).catch((error)=> {
       cogoToast.error("Hubo un error al editar enlace")
-      console.log('Hubo un problema con la petición Fetch:' + error.message);
   });
 }
   eliminarRed(id){
@@ -168,11 +164,9 @@ class IndexRedes extends Component {
         }
         else{
           cogoToast.error("Error al eliminar enlaces")
-          console.log("hubo un error con la peticion")
         }
     }).catch((error)=> {
       cogoToast.error("Hubo un error al eliminar enlaces")
-      console.log('Hubo un problema con la petición Fetch:' + error.message);
   });
 }
   fetchRedes(){
@@ -192,18 +186,15 @@ class IndexRedes extends Component {
           if(data.respuesta==true){
             this.setState({
               tb_redes: data
-            },()=>{console.log(this.state.tb_redes)})
+            })
           }
-          else{
-            console.log(data)
-            console.log("hubo un error con la peticion")
-          }
+
       }).catch((error)=> {
-        console.log('Hubo un problema con la petición Fetch:' + error.message);
-    });  }
+
+    });
+  }
   componentDidMount(){
       this.fetchRedes();
-      console.log(localStorage.getItem('token'));
     }
     render() {
         return (

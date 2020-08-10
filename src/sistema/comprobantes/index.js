@@ -48,8 +48,6 @@ class IndexComprobantes extends Component {
     const {name, value} = e.target;
     this.setState({
       [name]: value
-    },()=>{
-      console.log(value)
     })
   }
   handleChangeBuscador(e){
@@ -57,7 +55,6 @@ class IndexComprobantes extends Component {
     this.setState({
       valor: value
     },()=>{
-      console.log(value);
       this.fetchComprobantes(true,1);
     })
   }
@@ -78,18 +75,15 @@ class IndexComprobantes extends Component {
         .then(res =>res.json())
         .then(data => {
           if(data.respuesta==true){
-            this.setState({
-              tb_comprobantes: data['datos'],
-              var_texto_numeroPagina:numero
-            },()=>{console.log(this.state.tb_comprobantes)})
-          }
-          else{
-            console.log(data)
-            console.log("hubo un error con la peticion")
+              this.setState({
+                tb_comprobantes: data['datos'],
+                var_texto_numeroPagina:numero
+              })
           }
       }).catch((error)=> {
-        console.log('Hubo un problema con la petición Fetch:' + error.message);
-    });  }
+
+    });
+  }
   clean(){
       this.setState({
         estadoModalSubirComprobantes: false,
@@ -121,11 +115,10 @@ class IndexComprobantes extends Component {
           this.clean();
         }
         else{
-          console.log(data)
           cogoToast.error("Error al enviar comprobante");
         }
     }).catch((error)=> {
-      console.log('Hubo un problema con la petición Fetch:' + error.message);
+      cogoToast.error("Error al enviar comprobante");
   });
 }
 
@@ -142,7 +135,6 @@ class IndexComprobantes extends Component {
               this.setState({imgComprobante: fileData.result},
                 ()=>{
                     cogoToast.success("Imagen de comprobante lista");
-                    console.log(this.state.imgComprobante)
                   }
                 );
               }
@@ -160,14 +152,12 @@ class IndexComprobantes extends Component {
               this.setState({imgComprobante: fileData.result},
                   ()=>{
                       cogoToast.success("Documento pdf listo");
-                      console.log(this.state.imgComprobante)
                     }
                     );
                   }
           }
   componentDidMount(){
       this.fetchComprobantes(true,1);
-      console.log(localStorage.getItem('token'));
     }
     render() {
         return (

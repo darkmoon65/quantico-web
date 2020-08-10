@@ -32,33 +32,30 @@ class App extends Component {
         localStorage.setItem('completos',completos);
         localStorage.setItem('usuarios',usuarios);
     }
-    fetchNumeros(){
-         fetch(`${Config.api}verificaciones/totales`,
-              {
-                mode:'cors',
-                method: 'GET',
-                headers: {
-                    'Accept' : 'application/json',
-                    'Content-type' : 'application/json',
-                    'api_token': localStorage.getItem('token')
-                }
-              }
-            )
-              .then(res =>res.json())
-              .then(data => {
-                if(data.respuesta==true){
+
+    comprobar(){
+      fetch(`${Config.api}verificaciones/totales`,
+           {
+             mode:'cors',
+             method: 'GET',
+             headers: {
+                 'Accept' : 'application/json',
+                 'Content-type' : 'application/json',
+                 'api_token': localStorage.getItem('token')
+             }
+           }
+         )
+           .then(res=>res.json())
+           .then(data =>{
+               if(data.respuesta==true){
                   this.agregarNumeros(data.sinVerificar,data.sinComprobante,data.completos,data.usuarios)
-                }
-                else{
-                  console.log(data)
-                  console.log("hubo un error con la peticion")
-                }
-            }).catch((error)=> {
-              console.log('Hubo un problema con la petición Fetch:' + error.message);
-          });  }
-    componentDidMount(){
-        this.fetchNumeros()
-    }
+                  
+                  }
+               })
+            .catch((error)=> {
+
+            });
+      }
 
     render() {
         const menu = routes.map((route, index) => {
@@ -77,7 +74,9 @@ class App extends Component {
         return (
             localStorage.getItem('token') === null
             ?<IndexLogin/>
-            :<Aux>
+            :
+            <Aux>
+             {this.comprobar()}
                 <ScrollToTop>
                     <Suspense fallback={<Loader/>}>
                         <Switch>

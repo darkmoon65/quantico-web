@@ -51,8 +51,6 @@ class IndexBancos extends Component {
     const {name, value} = e.target;
     this.setState({
       [name]: value
-    },()=>{
-      console.log(value)
     })
   }
 
@@ -81,11 +79,9 @@ class IndexBancos extends Component {
         }
         else{
           cogoToast.error("Error al crear el Banco")
-          console.log("hubo un error con la peticion")
         }
     }).catch((error)=> {
       cogoToast.error("Hubo un error al crear el Banco")
-      console.log('Hubo un problema con la petición Fetch:' + error.message);
   });
 }
   eliminarBanco(id){
@@ -112,11 +108,9 @@ class IndexBancos extends Component {
         }
         else{
           cogoToast.error("Error al eliminar el banco")
-          console.log("hubo un error con la peticion")
         }
     }).catch((error)=> {
       cogoToast.error("Hubo un error al eliminar el banco")
-      console.log('Hubo un problema con la petición Fetch:' + error.message);
   });
 }
   fetchBancos(){
@@ -136,15 +130,12 @@ class IndexBancos extends Component {
           if(data.respuesta==true){
             this.setState({
               tb_bancos: data
-            },()=>{console.log(this.state.tb_bancos)})
-          }
-          else{
-            console.log(data)
-            console.log("hubo un error con la peticion")
+            })
           }
       }).catch((error)=> {
-        console.log('Hubo un problema con la petición Fetch:' + error.message);
-    });  }
+
+    });
+  }
 
   handleChangeFile (e){
       var file = e.target.files[0];
@@ -167,7 +158,6 @@ class IndexBancos extends Component {
 
   componentDidMount(){
       this.fetchBancos();
-      console.log(localStorage.getItem('token'));
     }
     render() {
         return (

@@ -129,7 +129,7 @@ class IndexProductos extends Component {
       })
       this.setState({
         countMembresia: r
-      },()=>console.log(this.state.countMembresia))
+      })
     }
 
     enviarCrearProducto(){
@@ -166,13 +166,10 @@ class IndexProductos extends Component {
               this.clean();
             }
             else{
-              console.log(data)
               cogoToast.error("No se creo,verifique los datos")
-              console.log("hubo un error con la peticion")
             }
         }).catch((error)=> {
           cogoToast.error("No se creo el producto")
-          console.log('Hubo un problema con la petición Fetch:' + error.message);
       });
     }
     else {
@@ -214,13 +211,10 @@ class IndexProductos extends Component {
                 this.clean();
               }
               else{
-                console.log(data)
                 cogoToast.error("No se creo,verifique los datos")
-                console.log("hubo un error con la peticion")
               }
           }).catch((error)=> {
             cogoToast.error("No se creo el producto")
-            console.log('Hubo un problema con la petición Fetch:' + error.message);
         });
       }
     }
@@ -259,13 +253,10 @@ class IndexProductos extends Component {
               this.clean();
             }
             else{
-              console.log(data)
               cogoToast.error("No se creo,verifique los datos")
-              console.log("hubo un error con la peticion")
             }
         }).catch((error)=> {
           cogoToast.error("No se creo el producto")
-          console.log('Hubo un problema con la petición Fetch:' + error.message);
       });
     }
     else {
@@ -308,13 +299,10 @@ class IndexProductos extends Component {
                 this.clean();
               }
               else{
-                console.log(data)
                 cogoToast.error("No se creo,verifique los datos")
-                console.log("hubo un error con la peticion")
               }
           }).catch((error)=> {
             cogoToast.error("No se creo el producto")
-            console.log('Hubo un problema con la petición Fetch:' + error.message);
         });
       }
     }
@@ -402,13 +390,10 @@ class IndexProductos extends Component {
               this.clean();
             }
             else{
-              console.log(data)
               cogoToast.error("No se pudo eliminar el producto")
-              console.log("hubo un error con la peticion")
             }
         }).catch((error)=> {
           cogoToast.error("No se pudo eliminar el producto")
-          console.log('Hubo un problema con la petición Fetch:' + error.message);
       });
     }
     tablaPulirPre(){
@@ -427,7 +412,7 @@ class IndexProductos extends Component {
         tb_cursosPre: array
       })
     }
-    fetchProductos(bolean,numero){
+  fetchProductos(bolean,numero){
       fetch(`${Config.api}productos/mostrar?page=${numero}`,
         {
           mode:'cors',
@@ -446,19 +431,14 @@ class IndexProductos extends Component {
               tb_productos: data,
               var_texto_numeroPagina: numero
             },()=>{
-              console.log(this.state.tb_productos);
               this.tablaPulirPre();
-
             })
           }
-          else{
-            console.log(data)
-            console.log("hubo un error con la peticion")
-          }
       }).catch((error)=> {
-        console.log('Hubo un problema con la petición Fetch:' + error.message);
-    });  }
-    fetchMembresias(){
+
+    });
+  }
+  fetchMembresias(){
         fetch(`${Config.api}membresia/mostrar`,
           {
             mode:'cors',
@@ -476,17 +456,13 @@ class IndexProductos extends Component {
               this.setState({
                 tb_membresias: data
               },()=>{
-                console.log(this.state.tb_membresias);
                 this.membresiaCount();
               })
             }
-            else{
-              console.log(data)
-              console.log("hubo un error con la peticion")
-            }
         }).catch((error)=> {
-          console.log('Hubo un problema con la petición Fetch:' + error.message);
-      });  }
+
+      });
+  }
 
     fetchTipoProductos(){
           fetch(`${Config.api}productos/mostrarTipos`,
@@ -504,18 +480,14 @@ class IndexProductos extends Component {
             .then(res =>res.json())
             .then(data => {
               if(data.respuesta==true){
-                console.log(data)
                 this.setState({
                   tb_tipoProductos: data
-                },()=>{console.log(this.state.tb_tipoProductos)})
-              }
-              else{
-                console.log(data)
-                console.log("hubo un error con la peticion")
+                })
               }
           }).catch((error)=> {
-            console.log('Hubo un problema con la petición Fetch:' + error.message);
-        });  }
+
+        });
+  }
 
     handleChange(e){
       const {name, value} = e.target;
@@ -543,11 +515,9 @@ class IndexProductos extends Component {
 
       this.setState({
         [name]: value
-      },()=>{
-        console.log(value)
       })
-
     }
+
     handleChangeFile (e){
           var file = e.target.files[0];
           var fileData = new FileReader();
@@ -581,7 +551,6 @@ class IndexProductos extends Component {
       this.fetchProductos(true,1);
       this.fetchTipoProductos();
       this.fetchMembresias();
-      console.log(localStorage.getItem('token'));
     }
 
 

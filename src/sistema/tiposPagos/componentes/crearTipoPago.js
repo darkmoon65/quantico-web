@@ -67,7 +67,7 @@ class CrearTipoPago extends Component {
                     tb_membresias: data
                 });
 
-                
+
                 let newArray = []
                 this.state.tb_membresias.datos.map((data)=>{
                     newArray.push({
@@ -82,10 +82,10 @@ class CrearTipoPago extends Component {
                 })
             }
             else{
-                
+
             }
         }).catch((error)=> {
-            console.log('Hubo un problema con la petición Fetch:' + error.message);
+
         });
     }
 
@@ -193,7 +193,7 @@ class CrearTipoPago extends Component {
     obtenerCambioInputMembresias(e){
 
         this.state.tb_membresias.datos[e.target.name]['seleccionado'] = !this.state.tb_membresias.datos[e.target.name]['seleccionado'];
-        
+
         this.setState({
             tb_membresias : this.state.tb_membresias
         })
@@ -202,7 +202,7 @@ class CrearTipoPago extends Component {
     obtenerCambioInputTiposProducto(e){
 
         this.state.tb_tipoProductos.datos[e.target.name]['seleccionado'] = !this.state.tb_tipoProductos.datos[e.target.name]['seleccionado'];
-        
+
         this.setState({
             tb_tipoProductos : this.state.tb_tipoProductos
         })
@@ -210,7 +210,7 @@ class CrearTipoPago extends Component {
 
     handleChange(e){
         let {name, value} = e.target;
-        // console.log(value);
+
         if(value == 'on')
         {
             if(this.state[name] == 0)
@@ -220,7 +220,7 @@ class CrearTipoPago extends Component {
                 value = 0;
             }
         }
-        // console.log(value);
+    
         this.setState({
           [name]: value
         })
@@ -272,8 +272,8 @@ class CrearTipoPago extends Component {
                                         <Col>
                                             <Form>
                                                 <Form.Group controlId="formAvanzadoCheckOculto">
-                                                    <Form.Check 
-                                                        type     = "checkbox" 
+                                                    <Form.Check
+                                                        type     = "checkbox"
                                                         label    = "¿Esta Oculto?"
                                                         name     = "ocultoCrear"
                                                         onChange = {this.handleChange}
@@ -291,9 +291,9 @@ class CrearTipoPago extends Component {
                                                     </Form.Text>
                                                 </Form.Group>
                                                 <Form.Group controlId="formAvanzadoCheckIntegracion">
-                                                    <Form.Check 
-                                                        type     = "checkbox" 
-                                                        label    = "¿Tiene alguna integración?" 
+                                                    <Form.Check
+                                                        type     = "checkbox"
+                                                        label    = "¿Tiene alguna integración?"
                                                         name     = "integracionCrear"
                                                         onChange = {this.handleChange}
                                                         checked  = {
@@ -310,9 +310,9 @@ class CrearTipoPago extends Component {
                                                     </Form.Text>
                                                 </Form.Group>
                                                 <Form.Group controlId="formAvanzadoCheckCuentaBancaria">
-                                                    <Form.Check 
-                                                        type     = "checkbox" 
-                                                        label    = "¿Es una cuenta bancaria?" 
+                                                    <Form.Check
+                                                        type     = "checkbox"
+                                                        label    = "¿Es una cuenta bancaria?"
                                                         name     = "esCuentaBancariaCrear"
                                                         onChange = {this.handleChange}
                                                         checked  = {
@@ -329,9 +329,9 @@ class CrearTipoPago extends Component {
                                                     </Form.Text>
                                                 </Form.Group>
                                                 <Form.Group controlId="formAvanzadoCheckDatoFinanciero">
-                                                    <Form.Check 
-                                                        type     = "checkbox" 
-                                                        label    = "¿Es un dato financiero?" 
+                                                    <Form.Check
+                                                        type     = "checkbox"
+                                                        label    = "¿Es un dato financiero?"
                                                         name     = "esDatoFinanciero"
                                                         onChange = {this.handleChange}
                                                         checked  = {
@@ -366,8 +366,8 @@ class CrearTipoPago extends Component {
                                             <Form.Group controlId="formNombre">
                                                 <Form.Label>Nombre:</Form.Label>
                                                 <Form.Control
-                                                    type="nombreTipoPago" 
-                                                    placeholder="" 
+                                                    type="nombreTipoPago"
+                                                    placeholder=""
                                                     name="nombreTiposPago"
                                                     onChange={this.handleChange}
                                                 />
@@ -379,10 +379,10 @@ class CrearTipoPago extends Component {
                                         <Form>
                                             <Form.Group controlId="formImagen">
                                                 <Form.Label>Imagen:</Form.Label>
-                                                <input 
-                                                    type="file" 
-                                                    className="form-control-file" 
-                                                    name="imagen" 
+                                                <input
+                                                    type="file"
+                                                    className="form-control-file"
+                                                    name="imagen"
                                                     onChange={e =>this.handleChangeFile(e)}
                                                 />
                                             </Form.Group>
@@ -390,84 +390,84 @@ class CrearTipoPago extends Component {
 
                                         <Form.Label>Marca los campos que tendrá este nuevo tipo de pago:</Form.Label>
                                         <Form.Check
-                                            type="checkbox" 
+                                            type="checkbox"
                                             label={"Titular"}
                                             name="titular"
                                             onChange={this.handleChange}
                                         />
-                                        <Form.Check 
-                                            type="checkbox" 
+                                        <Form.Check
+                                            type="checkbox"
                                             name="bancos"
                                             onChange={this.handleChange}
                                             label={"Bancos"}
                                         />
-                                        <Form.Check 
-                                            type="checkbox" 
+                                        <Form.Check
+                                            type="checkbox"
                                             label={"Numeros de Cuenta"}
                                             name="numerosCuenta"
                                             onChange={this.handleChange}
                                         />
-                                        <Form.Check 
-                                            type="checkbox" 
+                                        <Form.Check
+                                            type="checkbox"
                                             label={"Código de Cuenta Interbancaria"}
                                             name="codigoInterbancaria"
                                             onChange={this.handleChange}
                                         />
-                                        <Form.Check 
-                                            type="checkbox" 
+                                        <Form.Check
+                                            type="checkbox"
                                             label={"Tipos de Pago"}
                                             name="tiposPago"
                                             onChange={this.handleChange}
                                         />
-                                        <Form.Check 
-                                            type="checkbox" 
+                                        <Form.Check
+                                            type="checkbox"
                                             label={"Tipos de Cuenta Bancaria"}
                                             name="tiposCuentaBancaria"
                                             onChange={this.handleChange}
                                         />
-                                        <Form.Check 
-                                            type="checkbox" 
+                                        <Form.Check
+                                            type="checkbox"
                                             label={"Tipos de Número"}
                                             name="tiposNumero"
                                             onChange={this.handleChange}
                                         />
-                                        <Form.Check 
-                                            type="checkbox" 
+                                        <Form.Check
+                                            type="checkbox"
                                             label={"Tipos de Tarjeta"}
                                             name="tiposTarjeta"
                                             onChange={this.handleChange}
                                         />
-                                        <Form.Check 
-                                            type="checkbox" 
+                                        <Form.Check
+                                            type="checkbox"
                                             label={"Tipos de Operador"}
                                             name="tiposOperador"
                                             onChange={this.handleChange}
                                         />
-                                        <Form.Check 
-                                            type="checkbox" 
+                                        <Form.Check
+                                            type="checkbox"
                                             label={"Número"}
                                             name="numero"
                                             onChange={this.handleChange}
                                         />
-                                        <Form.Check 
-                                            type="checkbox" 
+                                        <Form.Check
+                                            type="checkbox"
                                             label={"Teléfono"}
                                             name="telefono"
                                             onChange={this.handleChange}
                                         />
-                                        <Form.Check 
-                                            type="checkbox" 
+                                        <Form.Check
+                                            type="checkbox"
                                             label={"Imagen QR"}
                                             name="imagenQR"
                                             onChange={this.handleChange}
                                         />
-                                        <Form.Check 
-                                            type="checkbox" 
+                                        <Form.Check
+                                            type="checkbox"
                                             label={"Número de Documento Identidad"}
                                             name="numeroDocumentoIdentidad"
                                             onChange={this.handleChange}
                                         />
-                                        
+
                                     </Col>
                                     <Col md={6}>
                                         <Form>
@@ -477,15 +477,15 @@ class CrearTipoPago extends Component {
                                                     this.state.tb_membresias.datos
                                                     ?this.state.tb_membresias.datos.map((task, posicion) => {
                                                         return (
-                                                            <Form.Check 
+                                                            <Form.Check
                                                                 key      = {posicion}
-                                                                type    = "checkbox" 
-                                                                name     = {posicion} 
+                                                                type    = "checkbox"
+                                                                name     = {posicion}
                                                                 onChange = {this.obtenerCambioInputMembresias}
                                                                 checked = {task.seleccionado}
                                                                 label   = {task.nombre}
 
-                                                                
+
                                                             />
                                                         );
                                                     })
@@ -502,9 +502,9 @@ class CrearTipoPago extends Component {
                                                         return (
                                                             <Form.Check
                                                                 key      = {posicion}
-                                                                name     = {posicion} 
+                                                                name     = {posicion}
                                                                 onChange = {this.obtenerCambioInputTiposProducto}
-                                                                type     = "checkbox" 
+                                                                type     = "checkbox"
                                                                 checked  = {task.seleccionado}
                                                                 label    = {task.nombre}
                                                             />
@@ -523,9 +523,9 @@ class CrearTipoPago extends Component {
                                                 loading={true}
                                             />
                                             :<div className="mx-auto p-2">
-                                                <button 
-                                                    type="button" 
-                                                    className="btn btn-sm btn-primary ver" 
+                                                <button
+                                                    type="button"
+                                                    className="btn btn-sm btn-primary ver"
                                                     onClick={() => this.enviarCrearTiposPago()}>Crear Nuevo Tipo Pago</button>
                                             </div>
                                         }

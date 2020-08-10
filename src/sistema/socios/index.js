@@ -77,11 +77,9 @@ class IndexSocios extends Component {
         }
         else{
           cogoToast.error("Error al eliminar el socio")
-          console.log("hubo un error con la peticion")
         }
     }).catch((error)=> {
       cogoToast.error("Hubo un error al eliminar el socio")
-      console.log('Hubo un problema con la petición Fetch:' + error.message);
     });
   }
 
@@ -89,8 +87,6 @@ class IndexSocios extends Component {
     const {name, value} = e.target;
     this.setState({
       [name]: value
-    },()=>{
-      console.log(value)
     })
   }
   handleChangeFile (e){
@@ -138,11 +134,9 @@ class IndexSocios extends Component {
         }
         else{
           cogoToast.error("Error al crear el socio")
-          console.log("hubo un error con la peticion")
         }
     }).catch((error)=> {
       cogoToast.error("Hubo un error al crear el socio")
-      console.log('Hubo un problema con la petición Fetch:' + error.message);
   });
 }
   editarSocio(){
@@ -173,11 +167,10 @@ class IndexSocios extends Component {
         }
         else{
           cogoToast.error("Error al editar el socio")
-          console.log("hubo un error con la peticion")
         }
     }).catch((error)=> {
       cogoToast.error("Hubo un error al editar el socio")
-      console.log('Hubo un problema con la petición Fetch:' + error.message);
+
   });
   }
 
@@ -198,18 +191,15 @@ class IndexSocios extends Component {
           if(data.respuesta==true){
             this.setState({
               tb_socios: data['datos']
-            },()=>{console.log(this.state.tb_socios)})
+            })
           }
-          else{
-            console.log(data)
-            console.log("hubo un error con la peticion")
-          }
+
       }).catch((error)=> {
-        console.log('Hubo un problema con la petición Fetch:' + error.message);
-    });  }
+
+    });
+  }
   componentDidMount(){
       this.fetchSocios();
-      console.log(localStorage.getItem('token'));
     }
     render() {
         return (

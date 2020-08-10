@@ -57,8 +57,6 @@ class IndexIntranet extends Component {
     const {name, value} = e.target;
     this.setState({
       [name]: value
-    },()=>{
-      console.log(value)
     })
   }
 
@@ -88,11 +86,9 @@ class IndexIntranet extends Component {
         }
         else{
           cogoToast.error("Error al crear el contacto")
-          console.log("hubo un error con la peticion")
         }
     }).catch((error)=> {
       cogoToast.error("Hubo un error al crear el contacto")
-      console.log('Hubo un problema con la petición Fetch:' + error.message);
   });
 }
   editarCuenta(){
@@ -121,11 +117,9 @@ class IndexIntranet extends Component {
         }
         else{
           cogoToast.error("Error al editar el contacto")
-          console.log("hubo un error con la peticion")
         }
     }).catch((error)=> {
       cogoToast.error("Hubo un error al editar el contacto")
-      console.log('Hubo un problema con la petición Fetch:' + error.message);
   });
 }
   eliminarContacto(id){
@@ -152,11 +146,9 @@ class IndexIntranet extends Component {
         }
         else{
           cogoToast.error("Error al crear el contacto")
-          console.log("hubo un error con la peticion")
         }
     }).catch((error)=> {
       cogoToast.error("Hubo un error al crear el contacto")
-      console.log('Hubo un problema con la petición Fetch:' + error.message);
   });
 }
   fetchIntranet(boleano,numero){
@@ -177,18 +169,14 @@ class IndexIntranet extends Component {
             this.setState({
               tb_intranet: data['datos'],
               var_texto_numeroPagina: numero
-            },()=>{console.log(this.state.tb_intranet)})
-          }
-          else{
-            console.log(data)
-            console.log("hubo un error con la peticion")
+            })
           }
       }).catch((error)=> {
-        console.log('Hubo un problema con la petición Fetch:' + error.message);
-    });  }
+
+    });
+  }
   componentDidMount(){
       this.fetchIntranet();
-      console.log(localStorage.getItem('token'));
     }
     render() {
         return (

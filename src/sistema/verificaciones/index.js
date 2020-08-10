@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Row, Col,Modal,Pagination} from 'react-bootstrap';
+import {Row, Col,Modal,Pagination,Table} from 'react-bootstrap';
 
 import Aux from "../../hoc/_Aux";
 import Card from "../../App/components/MainCard";
@@ -36,7 +36,7 @@ class IndexVerificaciones extends Component {
   verVerificaciones(imagenes){
     this.setState({
       arrayImagenes: imagenes
-    },()=>console.log(this.state.arrayImagenes))
+    })
     this.cambiarModalVerVerificaciones();
   }
 
@@ -78,7 +78,7 @@ class IndexVerificaciones extends Component {
           .then(res =>res.json())
           .then(data => {
             if(data.respuesta==true){
-              console.log(data)
+
               if(concepto=="Membresia"){
                   cogoToast.warn(data.mensaje);
                   this.imagenQuitar(index,id);
@@ -89,11 +89,10 @@ class IndexVerificaciones extends Component {
               }
             }
             else{
-              console.log(data)
-              console.log("No se puede denegar la membresia")
+              cogoToast.error("No se puede denegar la membresia")
             }
         }).catch((error)=> {
-          console.log('Hubo un problema con la petición Fetch:' + error.message);
+          cogoToast.error("No se pudo denegar la membresia");
       });}
   }
   sendAceptar(id,estado,concepto,index){
@@ -121,11 +120,10 @@ class IndexVerificaciones extends Component {
             this.imagenQuitar(index);
           }
         else{
-          console.log(data)
           cogoToast.error(data.mensaje)
         }
     }).catch((error)=> {
-      console.log('Hubo un problema con la petición Fetch:' + error.message);
+      cogoToast.error("No se pudo aceptar")
   });
 }
 
@@ -134,9 +132,6 @@ class IndexVerificaciones extends Component {
     const {name, value} = e.target;
     this.setState({
       [name]: value
-    },()=>{
-      console.log(value)
-      console.log(name)
     })
   }
   handleChangeBuscador(e){
@@ -144,7 +139,6 @@ class IndexVerificaciones extends Component {
     this.setState({
       valor: value
     },()=>{
-      console.log(value);
       this.fetchVerificaciones(true,1);
     })
   }
@@ -165,22 +159,17 @@ class IndexVerificaciones extends Component {
         .then(res =>res.json())
         .then(data => {
           if(data.respuesta==true){
-            console.log(data)
-            this.setState({
-              tb_verificaciones: data['datos'],
-              var_texto_numeroPagina: numero
-            },()=>{console.log(this.state.tb_verificaciones)})
-          }
-          else{
-            console.log(data)
-            console.log("hubo un error con la peticion")
+              this.setState({
+                tb_verificaciones: data['datos'],
+                var_texto_numeroPagina: numero
+              })
           }
       }).catch((error)=> {
-        console.log('Hubo un problema con la petición Fetch:' + error.message);
-    });  }
+
+    });
+  }
   componentDidMount(){
       this.fetchVerificaciones(true,1);
-      console.log(localStorage.getItem('token'));
     }
     render() {
         return (
@@ -270,36 +259,47 @@ class IndexVerificaciones extends Component {
                       </Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                            <div className="card w-100">
-                                <div className="modal-body">
-                                    <div className="card-body text-center">
-
-                                    {
-                                     this.state.arrayImagenes ?
-                                     this.state.arrayImagenes.map((task,index) =>{
-                                         return (
-                                            <div>
-                                                <div>
-                                                  <label>Imagen:</label><br/>
-                                                  <label>{task.concepto}</label><br/>
-                                                  <img src={task.imagen} width="400" height="500"/>
-                                                </div>
-                                                <div>
-                                                  <button className="btn btn-danger" onClick={()=>this.sendDenegar(task.id,2,task.concepto,index,this.state['comentario'+task.id])} ><i className="fa fa-remove"></i></button>
-                                                  <button className="btn btn-success" onClick={()=>this.sendAceptar(task.id,1,task.concepto,index)}><i className="fa fa-check"></i></button>
-                                                </div>
-                                                <div className="p-2">
-                                                    <label>Comentario:</label><br/>
-                                                    <textarea name={'comentario'+task.id} cols="50" rows="6" value={this.state['comentario'+task.id]}  onChange={this.handleChange}></textarea>
-                                                </div>
-                                            </div>
-
-                                          )
-                                    }):null
-                                  }
-                                      </div>
-                                  </div>
-                              </div>
+                        <Row>
+                        <Col md={4}>
+                          <div style={{position:'fixed'}}>
+                            <p >NOMBRE COMPLETO</p>
+                            <p >DNI</p>
+                            <p >TELEFONO</p>
+                            <p >OTROS</p>
+                            <p >CAMPO EXTRA</p>
+                          </div>
+                          </Col>
+                          <Col md={8}>
+                            <Table responsive>
+                              <tbody>
+                                  {
+                                   this.state.arrayImagenes ?
+                                   this.state.arrayImagenes.map((task,index) =>{
+                                       return (
+                                          <tr>
+                                          <td key={index} className="card w-80 bg-light ">
+                                              <div>
+                                                <label>Imagen:</label><br/>
+                                                <h4>{task.concepto}</h4><br/>
+                                                <img src={task.imagen} width="400" height="500"/>
+                                              </div>
+                                              <div>
+                                                <button className="btn btn-sm btn-danger" onClick={()=>this.sendDenegar(task.id,2,task.concepto,index,this.state['comentario'+task.id])} ><i className="fa fa-remove"></i></button>
+                                                <button className="btn btn-sm btn-success" onClick={()=>this.sendAceptar(task.id,1,task.concepto,index)}><i className="fa fa-check"></i></button>
+                                              </div>
+                                              <div className="p-2">
+                                                  <label>Comentario:</label><br/>
+                                                  <textarea name={'comentario'+task.id} cols="50" rows="6" value={this.state['comentario'+task.id]}  onChange={this.handleChange}></textarea>
+                                              </div>
+                                          </td>
+                                        </tr>
+                                        )
+                                  }):null
+                                }
+                              </tbody>
+                            </Table>
+                          </Col>
+                        </Row>
                     </Modal.Body>
                   </Modal>
             </Aux>

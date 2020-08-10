@@ -33,7 +33,6 @@ const Herramientas      = React.lazy(() => import('./sistema/herramientas/index'
 const Asistencias       = React.lazy(() => import('./sistema/asistencias/index'));
 const Intranet          = React.lazy(() => import('./sistema/intranet/index'));
 
-const DatosFinancieros = React.lazy(() => import('./sistema/datosFinancieros/index'));
 const Notificaciones = React.lazy(() => import('./sistema/notificaciones/index'));
 
 const routes = [
@@ -192,12 +191,6 @@ const routes = [
         exact: true,
         name: 'Asistencias',
         component: Asistencias
-    },
-    {
-        path: '/datosFinancieros',
-        exact: true,
-        name: 'DatosFinancieros',
-        component: DatosFinancieros
     },
     {
         path: '/intranet',

@@ -50,7 +50,6 @@ class IndexUsuarios extends Component {
     this.setState({
       valor: value
     },()=>{
-      console.log(value);
       this.fetchTable();
     })
   }
@@ -69,21 +68,17 @@ class IndexUsuarios extends Component {
       .then(res =>res.json())
       .then(data => {
         if(data.respuesta==true){
-          this.setState({
-            tb_users: data['datos'],
-            var_texto_numeroPagina: numero
-          },()=>{console.log(this.state.tb_users)})
-        }
-        else{
-          console.log(data)
-          console.log("hubo un error con la peticion")
+            this.setState({
+              tb_users: data['datos'],
+              var_texto_numeroPagina: numero
+            })
         }
     }).catch((error)=> {
-      console.log('Hubo un problema con la petición Fetch:' + error.message);
-  });  }
+
+    });
+}
 
   cambiarModalUsers(){
-     console.log("ok");
       this.setState({
           estadoModalUsers: !this.state.estadoModalUsers
       })
@@ -116,7 +111,6 @@ class IndexUsuarios extends Component {
       blackListId: bloqueadoId,
       blackListIdMod: bloqueadoId,
     },()=>{
-      console.log(this.state.blackList)
       this.fetchRol();
       this.fetchMembresia();
       this.cambiarModalUsers();
@@ -139,13 +133,10 @@ class IndexUsuarios extends Component {
         if(data){
           this.setState({
             rol_tb: data
-          },()=>{console.log(this.state.rol_tb)})
-        }
-        else{
-          console.log("hubo un error con la peticion")
+          })
         }
     }).catch((error)=> {
-      console.log('Hubo un problema con la petición Fetch:' + error.message);
+
   });
 }
 
@@ -166,14 +157,10 @@ class IndexUsuarios extends Component {
         if(data){
           this.setState({
             membresia_tb: data
-          },()=>{console.log(this.state.membresia_tb)})
-        }
-        else{
-          console.log(data)
-          console.log("hubo un error con la peticion")
+          })
         }
     }).catch((error)=> {
-      console.log('Hubo un problema con la petición Fetch:' + error.message);
+
   });
 }
 
@@ -263,16 +250,13 @@ class IndexUsuarios extends Component {
       .then(res =>res.json())
       .then(data => {
         if(data){
-          console.log("baneado")
           this.setState({opeBlackList:true});
         }
         else{
           this.setState({opeBlackList:false});
-          console.log("hubo un error con la peticion")
         }
     }).catch((error)=> {
       this.setState({opeBlackList:false})
-      console.log('Hubo un problema con la petición Fetch:' + error.message);
   });
   return true;
  }
@@ -295,16 +279,13 @@ class IndexUsuarios extends Component {
      .then(res =>res.json())
      .then(data => {
        if(data.respuesta==true){
-         console.log("Desbaneado papu")
          this.setState({opeBlackList:true})
        }
        else{
          this.setState({opeBlackList:false})
-         console.log("hubo un error con la peticion")
        }
    }).catch((error)=> {
      this.setState({opeBlackList:false})
-     console.log('Hubo un problema con la petición Fetch:' + error.message);
  });
  return true;
 }
@@ -328,15 +309,12 @@ class IndexUsuarios extends Component {
       .then(res =>res.json())
       .then(data => {
         if(data.respuesta==true){
-          console.log("true pe")
           this.setState({opeRol: true})
         }
         else{
-          console.log("hubo un error con la peticion")
           this.setState({opeRol: false})
         }
     }).catch((error)=> {
-      console.log('Hubo un problema con la petición Fetch:' + error.message);
       this.setState({opeRol: false})
   });
   return true;
@@ -361,15 +339,12 @@ class IndexUsuarios extends Component {
       .then(res =>res.json())
       .then(data => {
         if(data.respuesta==true){
-          console.log("membresia cambiada")
           this.setState({opeMembre: true})
         }
         else{
-          console.log("hubo un error con la peticion")
           this.setState({opeMembre: false})
         }
     }).catch((error)=> {
-      console.log('Hubo un problema con la petición Fetch:' + error.message);
       this.setState({opeMembre: false})
   });
    return true;
@@ -385,7 +360,6 @@ class IndexUsuarios extends Component {
 
   componentDidMount(){
     this.fetchTable(true,1);
-    console.log(localStorage.getItem('token'));
   }
 
 

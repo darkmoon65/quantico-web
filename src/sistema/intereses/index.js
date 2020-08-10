@@ -45,8 +45,6 @@ class IndexIntereses extends Component {
     const {name, value} = e.target;
     this.setState({
       [name]: value
-    },()=>{
-      console.log(value)
     })
   }
 
@@ -74,11 +72,9 @@ class IndexIntereses extends Component {
         }
         else{
           cogoToast.error("Error al crear el interes")
-          console.log("hubo un error con la peticion")
         }
     }).catch((error)=> {
       cogoToast.error("Hubo un error al crear el interes")
-      console.log('Hubo un problema con la petición Fetch:' + error.message);
   });
 }
 
@@ -114,11 +110,9 @@ class IndexIntereses extends Component {
         }
         else{
           cogoToast.error("Error al editar el interes")
-          console.log("hubo un error con la peticion")
         }
     }).catch((error)=> {
       cogoToast.error("Hubo un error al editar el interes")
-      console.log('Hubo un problema con la petición Fetch:' + error.message);
   });
 }
   fetchIntereses(){
@@ -138,18 +132,14 @@ class IndexIntereses extends Component {
           if(data.respuesta==true){
             this.setState({
               tb_intereses: data
-            },()=>{console.log(this.state.tb_intereses)})
-          }
-          else{
-            console.log(data)
-            console.log("hubo un error con la peticion")
+            })
           }
       }).catch((error)=> {
-        console.log('Hubo un problema con la petición Fetch:' + error.message);
-    });  }
+
+    });
+  }
   componentDidMount(){
       this.fetchIntereses();
-      console.log(localStorage.getItem('token'));
     }
     render() {
         return (

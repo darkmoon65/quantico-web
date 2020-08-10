@@ -170,13 +170,10 @@ class IndexMembresias extends Component {
             this.clean();
           }
           else{
-            console.log(data)
             cogoToast.error("No se creo,verifique los datos")
-            console.log("hubo un error con la peticion")
           }
       }).catch((error)=> {
         cogoToast.error("No se creo la membresia")
-        console.log('Hubo un problema con la petición Fetch:' + error.message);
     });
 }
     enviarEditarMembresia(){
@@ -210,13 +207,10 @@ class IndexMembresias extends Component {
             this.clean();
           }
           else{
-            console.log(data)
             cogoToast.error("No se edito la membresia")
-            console.log("hubo un error con la peticion")
           }
       }).catch((error)=> {
         cogoToast.error("No se edito la membresia")
-        console.log('Hubo un problema con la petición Fetch:' + error.message);
     });
 }
     eliminarMembresia(){
@@ -229,7 +223,7 @@ class IndexMembresias extends Component {
           a.push(1)
           this.setState({
             boxes: a
-          },()=>console.log(this.state.boxes))
+          })
         }
         else{
           cogoToast.warn("Solo se permiten maximo 3 detalles")
@@ -241,7 +235,7 @@ class IndexMembresias extends Component {
         a.pop()
         this.setState({
           boxes: a
-        },()=>console.log(this.state.boxes))
+        })
     }
     addBoxesEdit(){
         let a = this.state.detallesEditar
@@ -249,7 +243,7 @@ class IndexMembresias extends Component {
           a.push('')
           this.setState({
             detallesEditar: a
-          },()=>console.log(this.state.detallesEditar))
+          })
         }
         else{
           cogoToast.warn("Solo se permiten maximo 3 detalles")
@@ -261,15 +255,13 @@ class IndexMembresias extends Component {
         a.pop()
         this.setState({
             detallesEditar: a
-          },()=>console.log(this.state.detallesEditar))
+          })
     }
 
     handleChange(e){
       const {name, value} = e.target;
       this.setState({
         [name]: value
-      },()=>{
-        console.log(value)
       })
     }
     handleChangeFile (e){
@@ -318,19 +310,15 @@ class IndexMembresias extends Component {
             if(data.respuesta==true){
               this.setState({
                 tb_membresias: data
-              },()=>{console.log(this.state.tb_membresias)})
-            }
-            else{
-              console.log(data)
-              console.log("hubo un error con la peticion")
+              })
             }
         }).catch((error)=> {
-          console.log('Hubo un problema con la petición Fetch:' + error.message);
-      });  }
+
+      });
+    }
     componentDidMount(){
         this.fetchMembresias();
-        console.log(localStorage.getItem('token'));
-      }
+    }
 
     render() {
         return (

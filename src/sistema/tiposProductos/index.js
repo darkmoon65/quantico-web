@@ -38,8 +38,6 @@ class IndexTipoProductos extends Component {
     const {name, value} = e.target;
     this.setState({
       [name]: value
-    },()=>{
-      console.log(value)
     })
   }
 
@@ -66,13 +64,10 @@ class IndexTipoProductos extends Component {
                 this.clean();
               }
               else{
-                console.log(data)
                 cogoToast.error("No se creo,verifique los datos")
-                console.log("hubo un error con la peticion")
               }
           }).catch((error)=> {
             cogoToast.error("No se creo el tipo de producto")
-            console.log('Hubo un problema con la petición Fetch:' + error.message);
         });
     }
     enviarEliminarTipoProducto(id){
@@ -98,13 +93,10 @@ class IndexTipoProductos extends Component {
                   this.clean();
                 }
                 else{
-                  console.log(data)
                   cogoToast.error("No se elimino verifique los datos")
-                  console.log("hubo un error con la peticion")
                 }
             }).catch((error)=> {
               cogoToast.error("No se elimino el tipo de producto")
-              console.log('Hubo un problema con la petición Fetch:' + error.message);
           });
       }
 
@@ -125,21 +117,16 @@ class IndexTipoProductos extends Component {
         .then(res =>res.json())
         .then(data => {
           if(data.respuesta==true){
-            console.log(data)
             this.setState({
               tb_tipoProductos: data
-            },()=>{console.log(this.state.tb_tipoProductos)})
-          }
-          else{
-            console.log(data)
-            console.log("hubo un error con la peticion")
+            })
           }
       }).catch((error)=> {
-        console.log('Hubo un problema con la petición Fetch:' + error.message);
-    });  }
+
+    });
+  }
   componentDidMount(){
       this.fetchTipoProductos();
-      console.log(localStorage.getItem('token'));
     }
     render() {
         return (

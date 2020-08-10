@@ -35,25 +35,18 @@ class IndexComprobantes extends Component {
         .then(res =>res.json())
         .then(data => {
 
-            console.log(data);
             if(data['respuesta']){
                 this.setState({
-                    tb_notificaciones: data['data']
+                    tb_notificaciones: data['datos']
                 })
             }
-            else{
-                console.log(data)
-                console.log("hubo un error con la peticion")
-            }
         }).catch((error)=> {
-            console.log(error);
-          console.log('Hubo un problema con la petición Fetch:' + error.message);
+
         });
     }
 
     componentDidMount(){
       this.fetchNotificaciones();
-      console.log(localStorage.getItem('token'));
     }
 
     agregarNotificacion(){
@@ -82,11 +75,10 @@ class IndexComprobantes extends Component {
                 this.fetchNotificaciones();
             }
             else{
-              console.log(data)
               cogoToast.error("Error al enviar la notificación");
             }
         }).catch((error)=> {
-          console.log('Hubo un problema con la petición Fetch:' + error.message);
+          cogoToast.error("Error al enviar la notificación");
         });
     }
 

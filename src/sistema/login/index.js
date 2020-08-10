@@ -50,11 +50,8 @@ class IndexLogin extends React.Component {
                 localStorage.setItem('token',data.api_token);
                 window.location.href="/"
               }
-              else{
-                console.log("error datos invalidos")
-              }
           }).catch((error)=> {
-            console.log('Hubo un problema con la petición Fetch:' + error.message);
+  
         });
     }
 
