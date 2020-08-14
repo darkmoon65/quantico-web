@@ -13,6 +13,7 @@ class IndexVerificaciones extends Component {
     super();
     this.state = {
       tb_verificaciones:[],
+      tb_respuestas:[],
       arrayImagenes:[],
       var_texto_numeroPagina:1,
       buscarT:"nombres",
@@ -23,19 +24,46 @@ class IndexVerificaciones extends Component {
     }
     this.handleChange = this.handleChange.bind(this);
     this.handleChangeBuscador = this.handleChangeBuscador.bind(this);
+    this.handleChangeComentario = this.handleChangeComentario.bind(this);
   }
   descargarExcel(){
     Files.exportToCSV(this.state.tb_verificaciones.data,"verificaciones");
   }
-  cambiarModalVerVerificaciones(){
+
+  cambiarModalVerVerificaciones(ope){
         this.setState({
           estadoModalVerVerificaciones: !this.state.estadoModalVerVerificaciones
         })
+        if(ope=="salir"){
+            this.fetchVerificaciones(true,1)
+        }
   }
 
-  verVerificaciones(imagenes){
+  verVerificaciones(imagenes,nombres,apellidos,datosExtras){
+    let fechaNacimiento;
+    let direccion;
+    let dni;
+    let num;
+    if(datosExtras){
+      fechaNacimiento = datosExtras.fechaNacimiento;
+      direccion = datosExtras.direccion;
+      dni = datosExtras.documentoIdentidad
+    }
+    for (var i = 0; i < imagenes.length; i++) {
+        if (imagenes[i].concepto == "Membresia") {
+          num = i-1;
+          break;
+        }
+    }
+
     this.setState({
-      arrayImagenes: imagenes
+      numerito : num,
+      arrayImagenes: imagenes,
+      nombresVer: nombres,
+      apellidosVer: apellidos,
+      fechaNacimientoVer: fechaNacimiento,
+      direccionVer: direccion,
+      documentoIdentidadVer: dni
     })
     this.cambiarModalVerVerificaciones();
   }
@@ -43,14 +71,18 @@ class IndexVerificaciones extends Component {
   imagenQuitar(index,id){
     let num = id +1
     let a = this.state.arrayImagenes
-        a.splice(index,1)
-
+    if (a.length==1){
+      this.cambiarModalVerVerificaciones("salir");
+    }else{
+      a.splice(index,1)
       this.setState({
         ['comentario'+num]:'',
         arrayImagenes: a
-      },()=>{
+        },()=>{
         this.fetchVerificaciones(true,1)
       })
+    }
+
   }
 
   sendDenegar(id,estado,concepto,index,msg){
@@ -78,15 +110,8 @@ class IndexVerificaciones extends Component {
           .then(res =>res.json())
           .then(data => {
             if(data.respuesta==true){
-
-              if(concepto=="Membresia"){
-                  cogoToast.warn(data.mensaje);
-                  this.imagenQuitar(index,id);
-              }
-              else{
-                  cogoToast.success("Imagen denegada");
-                  this.imagenQuitar(index,id);
-              }
+                cogoToast.success("Imagen denegada");
+                this.imagenQuitar(index,id);
             }
             else{
               cogoToast.error("No se puede denegar la membresia")
@@ -130,10 +155,21 @@ class IndexVerificaciones extends Component {
 
   handleChange(e){
     const {name, value} = e.target;
+
     this.setState({
       [name]: value
     })
   }
+  handleChangeComentario(e){
+    const {name, value} = e.target;
+    const selectedIndex = e.target.options.selectedIndex;
+    const number = e.target.options[selectedIndex].getAttribute('kr');
+
+    this.setState({
+      ['comentario'+number]: value
+    })
+  }
+
   handleChangeBuscador(e){
     const value = e.target.value;
     this.setState({
@@ -168,8 +204,32 @@ class IndexVerificaciones extends Component {
 
     });
   }
+  fetchRespuestas(){
+      fetch(`${Config.api}comentarios/mostrar`,
+        {
+          mode:'cors',
+          method: 'GET',
+          headers: {
+              'Accept' : 'application/json',
+              'Content-type' : 'application/json',
+              'api_token': localStorage.getItem('token')
+          }
+        }
+      )
+        .then(res =>res.json())
+        .then(data => {
+          if(data.respuesta==true){
+            this.setState({
+              tb_respuestas: data['datos']
+            })
+          }
+      }).catch((error)=> {
+
+    });
+  }
   componentDidMount(){
       this.fetchVerificaciones(true,1);
+      this.fetchRespuestas();
     }
     render() {
         return (
@@ -186,6 +246,7 @@ class IndexVerificaciones extends Component {
                                 <option key={2} value={"apellidos"}>Apellidos</option>
                                 <option key={3} value={"correo"}>Correo</option>
                                 <option key={4} value={"descripcion"}>Descripcion</option>
+                                <option key={5} value={"nroTarjeta"}>Tarjeta</option>
                             </select>
                         </span>
                         <span className="p-5"><button className="btn btn-sm btn-success" type="button" onClick={()=>this.descargarExcel()}>Descargar excel</button></span>
@@ -197,6 +258,7 @@ class IndexVerificaciones extends Component {
                                     <th>Correo</th>
                                     <th>Concepto</th>
                                     <th>Descripcion</th>
+                                    <th>Tarjeta</th>
                                 </tr>
                               </thead>
                               <tbody>
@@ -210,9 +272,13 @@ class IndexVerificaciones extends Component {
                                                 <td>{task.correo}</td>
                                                 <td>{task.concepto}</td>
                                                 <td>{task.descripcion}</td>
+                                                <td>{task.nroTarjeta}</td>
                                                 <td>
                                                   <button className="btn btn-sm btn-primary ver" type="button" onClick={()=>this.verVerificaciones(
-                                                      task.imagenes
+                                                      task.imagenes,
+                                                      task.nombres,
+                                                      task.apellidos,
+                                                      task.datosPersonales
                                                   )}><i className="fa fa-pencil"/></button>
                                                 </td>
                                             </tr>
@@ -261,12 +327,19 @@ class IndexVerificaciones extends Component {
                     <Modal.Body>
                         <Row>
                         <Col md={4}>
-                          <div style={{position:'fixed'}}>
-                            <p >NOMBRE COMPLETO</p>
-                            <p >DNI</p>
-                            <p >TELEFONO</p>
-                            <p >OTROS</p>
-                            <p >CAMPO EXTRA</p>
+                          <div style={{position:'fixed', width:'20%'}}>
+
+                            <p >Nombres:</p>
+                            <h5>{this.state.nombresVer}</h5>
+                            <p >Apellidos:</p>
+                            <h5>{this.state.apellidosVer}</h5>
+                            <p >DNI:</p>
+                            <h5>{this.state.documentoIdentidadVer}</h5>
+                            <p >Fecha Nacimiento:</p>
+                            <h5>{this.state.fechaNacimientoVer}</h5>
+                            <p >Direccion:</p>
+                            <h6>{this.state.direccionVer}</h6>
+
                           </div>
                           </Col>
                           <Col md={8}>
@@ -276,20 +349,42 @@ class IndexVerificaciones extends Component {
                                    this.state.arrayImagenes ?
                                    this.state.arrayImagenes.map((task,index) =>{
                                        return (
-                                          <tr>
-                                          <td key={index} className="card w-80 bg-light ">
+                                          <tr key={index}>
+                                          <td  className="card w-80 bg-light ">
                                               <div>
                                                 <label>Imagen:</label><br/>
-                                                <h4>{task.concepto}</h4><br/>
+                                                {
+                                                  (task.concepto=="Membresia")?
+                                                  <div>
+
+                                                   <h4>Comprobante {index-(this.state.numerito)}</h4>
+                                                  </div>
+                                                  :<h4>{task.concepto}</h4>
+                                                }
+
                                                 <img src={task.imagen} width="400" height="500"/>
                                               </div>
                                               <div>
                                                 <button className="btn btn-sm btn-danger" onClick={()=>this.sendDenegar(task.id,2,task.concepto,index,this.state['comentario'+task.id])} ><i className="fa fa-remove"></i></button>
                                                 <button className="btn btn-sm btn-success" onClick={()=>this.sendAceptar(task.id,1,task.concepto,index)}><i className="fa fa-check"></i></button>
                                               </div>
+                                              <div>
+                                                  <select className="form-control" name={'respuestaSelect'+task.id} style={{width: '90%'}} onChange={this.handleChangeComentario} value={this.state['respuestaSelect'+task.id]} >
+                                                      <option key={0} value={null}>-Elige una opcion-</option>
+                                                      {
+                                                      this.state.tb_respuestas?
+                                                      this.state.tb_respuestas.map((data,index)=>{
+                                                       return(
+                                                          <option key={data.id} kr={task.id} value={data.comentario}>{data.comentario}</option>
+                                                       )
+                                                      }):null
+                                                      }
+
+                                                  </select>
+                                              </div>
                                               <div className="p-2">
                                                   <label>Comentario:</label><br/>
-                                                  <textarea name={'comentario'+task.id} cols="50" rows="6" value={this.state['comentario'+task.id]}  onChange={this.handleChange}></textarea>
+                                                  <textarea name={'comentario'+task.id} cols="50" rows="6" maxLength="250" value={this.state['comentario'+task.id]}  onChange={this.handleChange}></textarea>
                                               </div>
                                           </td>
                                         </tr>

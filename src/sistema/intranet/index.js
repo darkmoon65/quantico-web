@@ -14,11 +14,14 @@ class IndexIntranet extends Component {
     this.state = {
       tb_intranet:[],
       var_texto_numeroPagina:1,
+      valor:'',
+      buscarT:'nroTarjeta',
       //modales
       estadoModalCrearIntranet:false,
       estadoModalEditarIntranet:false,
     }
     this.handleChange = this.handleChange.bind(this);
+    this.handleChangeBuscador = this.handleChangeBuscador.bind(this);
   }
 
   descargarExcel(){
@@ -57,6 +60,14 @@ class IndexIntranet extends Component {
     const {name, value} = e.target;
     this.setState({
       [name]: value
+    })
+  }
+  handleChangeBuscador(e){
+    const value = e.target.value;
+    this.setState({
+      valor: value
+    },()=>{
+      this.fetchIntranet();
     })
   }
 
@@ -152,7 +163,7 @@ class IndexIntranet extends Component {
   });
 }
   fetchIntranet(boleano,numero){
-      fetch(`${Config.api}inversiones/mostrarCuentas?page=${numero}`,
+      fetch(`${Config.api}inversiones/mostrarCuentas?page=${numero}&columna=${this.state.buscarT}&buscar=${this.state.valor}`,
         {
           mode:'cors',
           method: 'GET',
@@ -184,15 +195,16 @@ class IndexIntranet extends Component {
                 <Row>
                     <Col>
                         <Card title='Intranet' isOption>
+                        <h4 className="card-title">Buscar</h4>
+                        <input type="text" onChange={this.handleChangeBuscador} />
+                        <span className="p-5"><button className="btn btn-sm btn-success" type="button" onClick={()=>this.descargarExcel()}>Descargar excel</button></span>
                         <table id="tb_membresia" className="table table-striped" style={{width:'100%'}}>
                             <thead>
-                                <tr>
-                                    <th><button className="btn btn-sm btn-success" type="button" onClick={()=>this.descargarExcel()}>Descargar excel</button></th>
-                                </tr>
                                 <tr>
                                     <th>Nombres</th>
                                     <th>Apellidos</th>
                                     <th>Correos</th>
+                                    <th>Tarjeta</th>
                                 </tr>
                               </thead>
                               <tbody>
@@ -204,6 +216,7 @@ class IndexIntranet extends Component {
                                                 <td>{task.nombres}</td>
                                                 <td>{task.apellidos}</td>
                                                 <td>{task.correo}</td>
+                                                <td>{task.nroTarjeta}</td>
                                                 <td>
                                                   <button className="btn btn-sm btn-primary"  type="button" onClick={()=>this.editarIntranet(task.id)}>
                                                     <i className="fa fa-pencil"/>

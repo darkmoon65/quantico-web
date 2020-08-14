@@ -222,6 +222,14 @@ export default {
                             url: '/herramientas',
                             icon: 'feather icon-settings',
                         },
+                        {
+                            id: 'respuestas',
+                            title: 'Respuestas',
+                            type: 'item',
+                            url: '/respuestas',
+                            icon: 'fa fa-question',
+                        },
+
                   ]
                 },
 

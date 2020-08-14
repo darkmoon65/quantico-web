@@ -68,6 +68,7 @@ class IndexUsuarios extends Component {
       .then(res =>res.json())
       .then(data => {
         if(data.respuesta==true){
+           console.log(data)
             this.setState({
               tb_users: data['datos'],
               var_texto_numeroPagina: numero
@@ -379,6 +380,7 @@ class IndexUsuarios extends Component {
                                     <option key={3} value={"membresia"}>Membresia</option>
                                     <option key={4} value={"rol"}>Rol</option>
                                     <option key={5} value={"correo"}>Correo</option>
+                                    <option key={6} value={"nroTarjeta"}>Tarjeta</option>
                                 </select>
                             </span>
                             <span className="p-5"><button className="btn btn-sm btn-success" type="button" onClick={()=>this.descargarExcel()}>Descargar excel</button></span>
@@ -390,7 +392,9 @@ class IndexUsuarios extends Component {
                                           <th>Membresia</th>
                                           <th>Rol</th>
                                           <th>Correo</th>
+                                          <th>Tarjeta</th>
                                           <th>Bloqueado</th>
+
                                       </tr>
                                     </thead>
                                     <tbody>
@@ -404,6 +408,7 @@ class IndexUsuarios extends Component {
                                                       <td>{task.membresia}</td>
                                                       <td>{task.rol}</td>
                                                       <td>{task.correo}</td>
+                                                      <td>{task.nroTarjeta}</td>
                                                       {task.bloqueado ?
                                                          <td>si</td>
                                                        : <td>No</td>}

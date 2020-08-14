@@ -87,10 +87,10 @@ class IndexComprobantes extends Component {
   clean(){
       this.setState({
         estadoModalSubirComprobantes: false,
-      },()=>this.fetchComprobantes())
+      },()=>this.fetchComprobantes(true,1))
     }
   sendComprobante(){
-    fetch(`${Config.api}verificaciones/enviarComprobante`,
+    cogoToast.loading('Cargando...',fetch(`${Config.api}verificaciones/enviarComprobante`,
       {
         mode:'cors',
         method: 'POST',
@@ -107,19 +107,20 @@ class IndexComprobantes extends Component {
 
         }
       }
-    )
-      .then(res =>res.json())
-      .then(data => {
-        if(data.respuesta==true){
-          cogoToast.success("Comprobante enviado");
-          this.clean();
-        }
-        else{
-          cogoToast.error("Error al enviar comprobante");
-        }
-    }).catch((error)=> {
-      cogoToast.error("Error al enviar comprobante");
-  });
+    ).then(res =>res.json())
+     .then(data => {
+          if(data.respuesta==true){
+            this.clean();
+          }
+          else{
+            cogoToast.error("Error al enviar comprobante");
+          }
+      }).catch((error)=> {
+        cogoToast.error("Error al enviar comprobante");
+    })
+  ).then(() => {
+        cogoToast.success('Comprobante enviado');
+    });
 }
 
   handleChangeFileImagen (e){
@@ -174,6 +175,7 @@ class IndexComprobantes extends Component {
                                 <option key={2} value={"apellidos"}>Apellidos</option>
                                 <option key={3} value={"correo"}>Correo</option>
                                 <option key={4} value={"descripcion"}>Descripcion</option>
+                                <option key={5} value={"nroTarjeta"}>Tarjeta</option>
                             </select>
                         </span>
                         <span className="p-5"><button className="btn btn-sm btn-success" type="button" onClick={()=>this.descargarExcel()}>Descargar excel</button></span>
@@ -186,6 +188,7 @@ class IndexComprobantes extends Component {
                                     <th>Total</th>
                                     <th>Concepto</th>
                                     <th>Descripcion</th>
+                                    <th>Tarjeta</th>
                                     <th>Estado</th>
                                 </tr>
                               </thead>
@@ -200,6 +203,7 @@ class IndexComprobantes extends Component {
                                                 <td>{task.total}</td>
                                                 <td>{task.concepto}</td>
                                                 <td>{task.descripcion}</td>
+                                                <td>{task.nroTarjeta}</td>
                                                 <td>pendiente Comprobante</td>
                                                 <td>
                                                   <button className="btn btn-sm btn-info"  type="button" onClick={()=>this.subirVerificaciones(task.id,task.concepto)}>

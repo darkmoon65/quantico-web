@@ -49,6 +49,7 @@ class IndexProductos extends Component {
         estadoModalCrearProductos: false,
         estadoModalEditarProductos: false,
         tipoCrearId : '',
+        contenidoDigital : null,
         prodPropio: '',
         nombre: '',
         descripcion: '',
@@ -102,20 +103,29 @@ class IndexProductos extends Component {
     }
 
     let z = this.state.productoCrearId
+    let content = this.state.contenidoDigital
+
     if(z == 0){
       z = false
     }else{
       z = true
     }
+    if(content==1){
+      content = true
+    }else{
+      content = false
+    }
     if (ope=="crear"){
       this.setState({
         descuentosArray: r,
-        productoCrearId: z
+        productoCrearId: z,
+        contenidoDigital: content
       },()=>this.enviarCrearProducto())
     }else if (ope=="editar") {
       this.setState({
         descuentosArray: r,
-        productoCrearId: z
+        productoCrearId: z,
+        contenidoDigital: content
       },()=>this.enviarEditarProducto())
     }
 
@@ -140,6 +150,9 @@ class IndexProductos extends Component {
             method: 'POST',
             body: JSON.stringify({
               tipo : this.state.tipoCrearId,
+              contenidoDigital: this.state.contenidoDigital,
+              linkLibro: this.state.linkLibroCrear,
+              indicacion: this.state.indicacionCrear,
               prodPropio: this.state.productoCrearId,
               nombre: this.state.nombreCrear,
               descripcion: this.state.descripcionCrear,
@@ -227,6 +240,9 @@ class IndexProductos extends Component {
             body: JSON.stringify({
               id: this.state.id,
               tipo : this.state.tipoEditarId,
+              contenidoDigital: this.state.contenidoDigital,
+              linkLibro: this.state.linkLibroEditar,
+              indicacion: this.state.indicacionEditar,
               prodPropio: this.state.productoEditarId,
               nombre: this.state.nombreEditar,
               descripcion: this.state.descripcionEditar,
@@ -321,6 +337,9 @@ class IndexProductos extends Component {
       let imagen = datosExtra.imagen;
       let linkppt = datosExtra.linkPPT;
       let linkSala = datosExtra.linkSala;
+      let contenidoDigital = datosExtra.contenidoDigital;
+      let linkLibro = datosExtra.linkLibro;
+      let indicacion = datosExtra.indicacion;
 
       if(tipoId==2){
         this.setState({detallesExtras:[0]})
@@ -348,6 +367,9 @@ class IndexProductos extends Component {
       this.setState({
           id:id,
           nombreEditar:nombre,
+          contenidoDigital : contenidoDigital,
+          linkLibroEditar : linkLibro,
+          indicacionEditar : indicacion,
           tipoEditarId:tipoId,
           costoEditar:costo,
           productoEditarId: prodPropio,
@@ -427,6 +449,7 @@ class IndexProductos extends Component {
         .then(res =>res.json())
         .then(data => {
           if(data){
+            console.log(data)
             this.setState({
               tb_productos: data,
               var_texto_numeroPagina: numero
@@ -663,6 +686,40 @@ class IndexProductos extends Component {
 
                                             </select>
                                           </div>
+                                          {
+                                              this.state.detallesExtras==0 ?
+                                              <div>
+                                                  <label>Tipo de contenido:</label>
+                                                  <select className="form-control" name="contenidoDigital" style={{width: '50%'}} onChange={this.handleChange} value={this.state.contenidoDigital}>
+                                                      <option key={0} value={null}>--escoge una opcion--</option>
+                                                      <option key={1} value={1}>Contenido digital</option>
+                                                      <option key={2} value={0}>Contenido físico</option>
+
+                                                  </select>
+                                                  {
+                                                      this.state.contenidoDigital==1?
+                                                      <div>
+                                                          <label>Link del libro:</label>
+                                                          <input type="text" className="form-control" name="linkLibroCrear" onChange={this.handleChange} />
+                                                      </div>
+                                                      :null
+                                                  }
+                                                  {
+                                                      this.state.contenidoDigital==0?
+                                                      <div>
+                                                          <label>Indicacion(Direccion):</label>
+                                                          <input type="text" className="form-control" name="indicacionCrear" onChange={this.handleChange} />
+                                                      </div>
+                                                      :null
+                                                  }
+                                              </div>
+                                              :null
+                                          }
+
+
+
+
+
                                           <div>
                                             <label>Prerequisito:</label>
                                             <select className="form-control" name="preCrearId" style={{width: '50%'}} onChange={this.handleChange} value={this.state.preCrearId}>
@@ -799,12 +856,42 @@ class IndexProductos extends Component {
                                                   this.state.tb_tipoProductos.datos.map((data,index)=>{
                                                    return(
                                                       <option key={data.id} value={data.id}>{data.nombre}</option>
-                                                   )
-                                                 }):null
+                                                    )
+                                                    }):null
                                                   }
 
                                               </select>
+
                                             </div>
+                                            {
+                                                this.state.detallesExtras==0 ?
+                                                <div>
+                                                    <label>Tipo de contenido:</label>
+                                                    <select className="form-control" name="contenidoDigital" style={{width: '50%'}} onChange={this.handleChange} value={this.state.contenidoDigital}>
+                                                        <option key={0} value={null}>--escoge una opcion--</option>
+                                                        <option key={1} value={1}>Contenido digital</option>
+                                                        <option key={2} value={0}>Contenido físico</option>
+
+                                                    </select>
+                                                    {
+                                                        this.state.contenidoDigital==1?
+                                                        <div>
+                                                            <label>Link del libro:</label>
+                                                            <input type="text" className="form-control" name="linkLibroEditar" onChange={this.handleChange}  defaultValue={this.state.linkLibroEditar}/>
+                                                        </div>
+                                                        :null
+                                                    }
+                                                    {
+                                                        this.state.contenidoDigital==0?
+                                                        <div>
+                                                            <label>Indicacion(Direccion):</label>
+                                                            <input type="text" className="form-control" name="indicacionEditar" onChange={this.handleChange} defaultValue={this.state.indicacionEditar}/>
+                                                        </div>
+                                                        :null
+                                                    }
+                                                </div>
+                                                :null
+                                            }
                                             <div>
                                               <label>Prerequisito:</label>
                                               <select className="form-control" name="preEditarId" style={{width: '50%'}} onChange={this.handleChange} value={this.state.preEditarId}>

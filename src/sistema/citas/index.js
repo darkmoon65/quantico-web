@@ -187,6 +187,7 @@ class IndexCitas extends Component {
                                   <option key={1} value={"nombres"}>Nombres</option>
                                   <option key={2} value={"apellidos"}>Apellidos</option>
                                   <option key={3} value={"fecha"}>Fecha</option>
+                                  <option key={4} value={"nroTarjeta"}>Tarjeta</option>
                             </select>
                           </span>
                           <span className="p-5"><button className="btn btn-sm btn-success" type="button" onClick={()=>this.descargarExcel()}>Descargar excel</button></span>
@@ -197,6 +198,7 @@ class IndexCitas extends Component {
                                     <th>Apellidos</th>
                                     <th>Fecha</th>
                                     <th>Estado</th>
+                                    <th>Tarjeta</th>
                                 </tr>
                               </thead>
                               <tbody>
@@ -223,6 +225,7 @@ class IndexCitas extends Component {
                                                     <td>Fecha aprobada</td>
                                                   :null
                                                 }
+                                                <td>{task.nroTarjeta}</td>
                                                 <td>
                                                   <button className="btn btn-sm btn-primary" type="button" onClick={()=>this.editarCitas(task.id,task.estado_id,task.usuario_id)}>
                                                     <i className="fa fa-pencil" ></i>
@@ -300,7 +303,7 @@ class IndexCitas extends Component {
                                             this.state.linkB?
                                                 <div>
                                                     <label>Link zoom:</label><br/>
-                                                    <input type="text" className="form-control" name="linkEditar" onChange={this.handleChange}  />
+                                                    <input type="text" className="form-control"  maxlength="100" name="linkEditar" onChange={this.handleChange}  />
                                                 </div>
                                                 :null
                                           }
