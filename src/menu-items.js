@@ -147,6 +147,13 @@ export default {
                   ]
                 },
                 {
+                    id: 'quieros',
+                    title: 'Quieros',
+                    type: 'item',
+                    url: '/quiero',
+                    icon: 'feather icon-message-square',
+                },
+                {
                     id: 'sugerencias',
                     title: 'Sugerencias',
                     type: 'item',
