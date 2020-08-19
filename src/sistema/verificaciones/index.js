@@ -49,13 +49,14 @@ class IndexVerificaciones extends Component {
       direccion = datosExtras.direccion;
       dni = datosExtras.documentoIdentidad
     }
-    for (var i = 0; i < imagenes.length; i++) {
-        if (imagenes[i].concepto == "Membresia") {
-          num = i-1;
-          break;
-        }
+    if(imagenes){
+      for (var i = 0; i < imagenes.length; i++) {
+          if (imagenes[i].concepto == "Membresia") {
+            num = i-1;
+            break;
+          }
+      }
     }
-
     this.setState({
       numerito : num,
       arrayImagenes: imagenes,

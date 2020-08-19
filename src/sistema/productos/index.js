@@ -449,7 +449,6 @@ class IndexProductos extends Component {
         .then(res =>res.json())
         .then(data => {
           if(data){
-            console.log(data)
             this.setState({
               tb_productos: data,
               var_texto_numeroPagina: numero

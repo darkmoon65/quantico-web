@@ -159,7 +159,6 @@ class IndexRespuestas extends Component {
         .then(res =>res.json())
         .then(data => {
           if(data.respuesta==true){
-            console.log(data)
             this.setState({
               tb_respuestas: data['datos']
             })
